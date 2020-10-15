@@ -1,0 +1,80 @@
+package com.unlam.droidamp.auth;
+
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.util.Log;
+
+import com.unlam.droidamp.R;
+import com.unlam.droidamp.activities.LoginActivity;
+
+import java.sql.Timestamp;
+
+public class Auth {
+
+    private Context context;
+    private SharedPreferences sharedPreferences;
+    private  SharedPreferences.Editor editor;
+
+    // Static fields
+    public static final long TOKEN_EXPIRE_TIME_MINUTES = 30;
+    public static final String PARAM_REFRESH_TOKEN = "refreshToken";
+    public static final String PARAM_AUTH_TOKEN = "authToken";
+    public static final String PARAM_REFRESH_TIMESTAMP = "refreshTimeStamp";
+
+    public Auth(Context context)
+    {
+        this.context = context;
+        sharedPreferences = context.getSharedPreferences(context.getString(R.string.sharedPreferencesFile), Context.MODE_PRIVATE);
+        editor = sharedPreferences.edit();
+    }
+
+    public Boolean checkIfTokenExpired()
+    {
+        String refreshTimeStamp = sharedPreferences.getString(PARAM_REFRESH_TIMESTAMP, null);
+
+        Timestamp oldTime = Timestamp.valueOf(refreshTimeStamp);
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+
+        if (compareTwoTimeStamps(currentTime, oldTime) >= TOKEN_EXPIRE_TIME_MINUTES)
+            return true;
+
+        return  false;
+    }
+
+    public static long compareTwoTimeStamps(Timestamp currentTime, Timestamp oldTime)
+    {
+        long milliseconds1 = oldTime.getTime();
+        long milliseconds2 = currentTime.getTime();
+
+        long diff = milliseconds2 - milliseconds1;
+        //long diffSeconds = diff / 1000;
+        long diffMinutes = diff / (60 * 1000);
+        //long diffHours = diff / (60 * 60 * 1000);
+        //long diffDays = diff / (24 * 60 * 60 * 1000);
+
+        return diffMinutes;
+    }
+
+    public void saveTokens(String authToken, String refreshToken)
+    {
+        // Instantiate new encryption object
+        Encryption enc = new Encryption();
+        // Encrypt both tokens
+        String encrypted_auth = enc.encrypt(context, authToken);
+        String encrypted_refresh = enc.encrypt(context, refreshToken);
+        // Store encrypted tokens
+        editor.putString(PARAM_AUTH_TOKEN, encrypted_auth);
+        editor.putString(PARAM_REFRESH_TOKEN, encrypted_refresh);
+        editor.apply();
+    }
+
+    public void saveRefreshTimestamp()
+    {
+        // Save the timestamp of the refresh token
+        Timestamp timestamp = new Timestamp(System.currentTimeMillis());
+        editor.putString(PARAM_REFRESH_TIMESTAMP, timestamp.toString());
+        editor.apply();
+    }
+
+
+}
