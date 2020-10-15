@@ -1,4 +1,4 @@
-package com.unlam.droidamp.fragments;
+package com.unlam.droidamp.activities.login.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -7,7 +7,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.unlam.droidamp.asynctasks.LoginTask;
+import com.unlam.droidamp.activities.login.asynctasks.LoginTask;
 import com.unlam.droidamp.interfaces.LoginCallback;
 
 public class NetworkLoginFragment extends Fragment {

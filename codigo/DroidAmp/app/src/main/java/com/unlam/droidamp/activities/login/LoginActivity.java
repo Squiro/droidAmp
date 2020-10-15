@@ -1,4 +1,4 @@
-package com.unlam.droidamp.activities;
+package com.unlam.droidamp.activities.login;
 
 import androidx.appcompat.app.AppCompatActivity;
 import android.content.Context;
@@ -13,9 +13,10 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.unlam.droidamp.R;
+import com.unlam.droidamp.activities.main.MainActivity;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.auth.Encryption;
-import com.unlam.droidamp.fragments.NetworkLoginFragment;
+import com.unlam.droidamp.activities.login.fragments.NetworkLoginFragment;
 import com.unlam.droidamp.interfaces.LoginCallback;
 
 
@@ -118,15 +119,13 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
         if (intent != null) {
             String authToken = intent.getStringExtra(Auth.PARAM_AUTH_TOKEN);
             String refreshToken = intent.getStringExtra(Auth.PARAM_REFRESH_TOKEN);
-            Log.i("Log", "After intent");
-            Log.i("Log", authToken);
-            Log.i("Log", refreshToken);
-
             Auth auth = new Auth(this);
 
             auth.saveTokens(authToken, refreshToken);
             auth.saveRefreshTimestamp();
             Log.i("Log", auth.checkIfTokenExpired().toString());
+            Intent mainActivityIntent = new Intent(this, MainActivity.class);
+            startActivity(mainActivityIntent);
         }
     }
 }

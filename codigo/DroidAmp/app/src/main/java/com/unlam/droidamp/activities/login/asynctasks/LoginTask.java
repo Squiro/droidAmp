@@ -1,31 +1,24 @@
-package com.unlam.droidamp.asynctasks;
+package com.unlam.droidamp.activities.login.asynctasks;
 
-import android.accounts.AccountManager;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
-import com.unlam.droidamp.activities.LoginActivity;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.interfaces.LoginCallback;
+import com.unlam.droidamp.network.NetworkHandler;
 
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
 import javax.net.ssl.HttpsURLConnection;
-
-import static android.provider.Settings.System.getString;
 
 public class LoginTask extends AsyncTask<String, Integer, LoginTask.Result> {
 
@@ -151,29 +144,10 @@ public class LoginTask extends AsyncTask<String, Integer, LoginTask.Result> {
         DataOutputStream connectionOutputstream = null;
         HttpURLConnection connection = null;
         String result = null;
-
         JSONObject jsonObject = new JSONObject();
 
         try {
-            connection = (HttpURLConnection) url.openConnection();
-            // Timeout for reading InputStream arbitrarily set to 5000ms.
-            connection.setReadTimeout(5000);
-            // Timeout for connection.connect() arbitrarily set to 5000ms.
-            connection.setConnectTimeout(5000);
-            // For this use case, set HTTP method to POST.
-            connection.setRequestMethod("POST");
-
-            connection.setUseCaches(false);
-            connection.setAllowUserInteraction(false);
-
-            // We set the content type of the request
-            connection.setRequestProperty("Content-Type", "application/json");
-            connection.setRequestProperty("Accept", "application/json");
-
-            // Already true by default but setting just in case; needs to be true since this request
-            // is carrying an input (response) body.
-            connection.setDoInput(true);
-            connection.setDoOutput(true);
+            connection = NetworkHandler.getRequest(url, NetworkHandler.REQUEST_TYPE_POST);
 
             // We get the outputstream from the connection
             connectionOutputstream = new DataOutputStream(connection.getOutputStream());
@@ -205,7 +179,7 @@ public class LoginTask extends AsyncTask<String, Integer, LoginTask.Result> {
             publishProgress(LoginCallback.Progress.GET_INPUT_STREAM_SUCCESS, 0);
             if (stream != null) {
                 // Converts Stream to String with max length of 500.
-                result = readStream(stream, 500);
+                result = NetworkHandler.readStream(stream, 500);
             }
         }
         catch (Exception e) {
@@ -223,25 +197,4 @@ public class LoginTask extends AsyncTask<String, Integer, LoginTask.Result> {
         }
         return result;
     }
-
-    /**
-     * Converts the contents of an InputStream to a String.
-     */
-    public String readStream(InputStream stream, int maxReadSize)
-            throws IOException, UnsupportedEncodingException {
-        InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
-        char[] rawBuffer = new char[maxReadSize];
-        int readSize;
-        StringBuffer buffer = new StringBuffer();
-        while (((readSize = reader.read(rawBuffer)) != -1) && maxReadSize > 0) {
-            if (readSize > maxReadSize) {
-                readSize = maxReadSize;
-            }
-            buffer.append(rawBuffer, 0, readSize);
-            maxReadSize -= readSize;
-        }
-        return buffer.toString();
-    }
-
-
 }

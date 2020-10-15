@@ -2,10 +2,8 @@ package com.unlam.droidamp.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Log;
 
 import com.unlam.droidamp.R;
-import com.unlam.droidamp.activities.LoginActivity;
 
 import java.sql.Timestamp;
 
