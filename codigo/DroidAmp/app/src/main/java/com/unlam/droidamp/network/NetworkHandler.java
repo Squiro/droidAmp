@@ -11,8 +11,8 @@ import java.net.URL;
 
 public class NetworkHandler {
 
-    public static final int READ_TIMEOUT = 5000;
-    public static final int CONNECT_TIMEOUT = 5000;
+    private static final int READ_TIMEOUT = 5000;
+    private static final int CONNECT_TIMEOUT = 5000;
 
     public static final String REQUEST_TYPE_POST = "POST";
     public static final String REQUEST_TYPE_GET = "GET";
@@ -30,9 +30,7 @@ public class NetworkHandler {
         {
             Log.i("Exception", e.toString());
         }
-        finally {
-            return connection;
-        }
+        return connection;
     }
 
     private static void configureConnection(HttpURLConnection connection)
