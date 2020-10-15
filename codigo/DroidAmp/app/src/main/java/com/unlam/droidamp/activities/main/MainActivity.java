@@ -9,12 +9,12 @@ import com.unlam.droidamp.R;
 import android.os.Bundle;
 
 public class MainActivity extends AppCompatActivity {
-
-
     // UI Elements
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+
+    private static String[] myDataset = new String []{"Hola", "2", "3"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
