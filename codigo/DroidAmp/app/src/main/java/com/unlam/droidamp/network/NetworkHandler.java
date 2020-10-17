@@ -1,5 +1,8 @@
 package com.unlam.droidamp.network;
 
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.util.Log;
 
 import java.io.IOException;
@@ -52,7 +55,6 @@ public class NetworkHandler {
         connection.setDoInput(true);
         connection.setDoOutput(true);
     }
-
 
     /**
      * Converts the contents of an InputStream to a String.

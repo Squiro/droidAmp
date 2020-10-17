@@ -2,6 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.unlam.droidamp">
 
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission
         android:name="android.permission.AUTHENTICATE_ACCOUNTS"
@@ -16,7 +17,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".activities.register.RegisterActivity"></activity>
         <activity android:name=".activities.battery.BatteryActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -25,7 +26,7 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.main.MainActivity" />
-        <activity android:name=".activities.login.LoginActivity"></activity>
+        <activity android:name=".activities.login.LoginActivity" />
     </application>
 
 </manifest>

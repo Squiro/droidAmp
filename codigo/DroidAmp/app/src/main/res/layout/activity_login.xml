@@ -74,9 +74,21 @@
         android:layout_marginTop="404dp"
         android:text="@string/register"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#1565C0"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/txtError"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="72dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="#E53935"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/txtRegister" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
