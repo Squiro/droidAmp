@@ -1,4 +1,4 @@
-package com.unlam.droidamp.auth;
+package com.unlam.droidamp.utilities;
 
 import android.content.Context;
 import android.security.keystore.KeyGenParameterSpec;

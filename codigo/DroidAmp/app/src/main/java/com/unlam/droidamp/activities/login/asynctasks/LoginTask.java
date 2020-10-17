@@ -1,15 +1,16 @@
 package com.unlam.droidamp.activities.login.asynctasks;
 
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import com.unlam.droidamp.R;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.interfaces.LoginCallback;
+import com.unlam.droidamp.network.BroadcastConnectivity;
 import com.unlam.droidamp.network.NetworkHandler;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
@@ -62,13 +63,12 @@ public class LoginTask extends AsyncTask<String, Integer, LoginTask.Result> {
     protected void onPreExecute() {
         if (callback != null)
         {
-            NetworkInfo networkInfo = callback.getActiveNetworkInfo();
-            if (networkInfo == null || !networkInfo.isConnected() ||
-                    (networkInfo.getType() != ConnectivityManager.TYPE_WIFI
-                            && networkInfo.getType() != ConnectivityManager.TYPE_MOBILE))
+            BroadcastConnectivity broadcastConnectivity = callback.getBroadcastConnectivity();
+            if (!broadcastConnectivity.isConnected())
             {
+                Log.i("Log", "OnPreExecute");
                 // If no connectivity, cancel task and update Callback with null data.
-                callback.updateFromLogin(null);
+                callback.updateFromLogin("No hay conexión a internet.");
                 cancel(true);
             }
         }
@@ -100,9 +100,9 @@ public class LoginTask extends AsyncTask<String, Integer, LoginTask.Result> {
                     intent.putExtra(Auth.PARAM_REFRESH_TOKEN, refreshToken);
 
                     result = new Result(resultString, intent);
-                } else {
+                } /*else {
                     throw new IOException("No response received.");
-                }
+                }*/
 
             } catch(Exception e) {
                 result = new Result(e);
@@ -131,7 +131,7 @@ public class LoginTask extends AsyncTask<String, Integer, LoginTask.Result> {
      */
     @Override
     protected void onCancelled(Result result) {
-
+        callback.finishLogin(null);
     }
 
     /**
@@ -139,7 +139,7 @@ public class LoginTask extends AsyncTask<String, Integer, LoginTask.Result> {
      * If the network request is successful, it returns the response body in String form. Otherwise,
      * it will throw an IOException.
      */
-    private String login(URL url) throws IOException {
+    private String login(URL url) throws IOException, JSONException {
         InputStream stream = null;
         DataOutputStream connectionOutputstream = null;
         HttpURLConnection connection = null;
@@ -182,10 +182,10 @@ public class LoginTask extends AsyncTask<String, Integer, LoginTask.Result> {
                 result = NetworkHandler.readStream(stream, 500);
             }
         }
-        catch (Exception e) {
+        /*catch (Exception e) {
             Log.i("Exception", "Exception encountered in LoginTask after httpConection");
             Log.i("Exception", e.toString());
-        }
+        }*/
         finally {
             // Close Stream and disconnect HTTPS connection.
             if (stream != null) {

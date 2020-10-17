@@ -72,5 +72,6 @@ public class BatteryActivity extends AppCompatActivity  {
     private void redirect() {
         Intent loginActivity = new Intent(this, LoginActivity.class);
         startActivity(loginActivity);
+
     }
 }

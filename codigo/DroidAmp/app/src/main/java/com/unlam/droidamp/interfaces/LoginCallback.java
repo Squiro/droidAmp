@@ -3,6 +3,8 @@ package com.unlam.droidamp.interfaces;
 import android.content.Intent;
 import android.net.NetworkInfo;
 
+import com.unlam.droidamp.network.BroadcastConnectivity;
+
 public interface LoginCallback<T> {
     interface Progress {
         int ERROR = -1;
@@ -21,7 +23,7 @@ public interface LoginCallback<T> {
     /**
      * Get the device's active network status in the form of a NetworkInfo object.
      */
-    NetworkInfo getActiveNetworkInfo();
+    BroadcastConnectivity getBroadcastConnectivity();
 
     /**
      * Indicate to callback handler any progress update.

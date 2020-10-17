@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.unlam.droidamp.R;
+import com.unlam.droidamp.utilities.Encryption;
 
 import java.sql.Timestamp;
 

@@ -5,8 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.util.Log;
 import android.widget.Toast;
+
+import com.unlam.droidamp.R;
 
 public class BroadcastConnectivity extends BroadcastReceiver {
 
@@ -29,8 +30,8 @@ public class BroadcastConnectivity extends BroadcastReceiver {
     public boolean isConnected()
     {
         activeNetwork = cm.getActiveNetworkInfo();
-        if(activeNetwork == null || !activeNetwork.isConnectedOrConnecting()){
-            Toast.makeText(appContext, "No hay conexión a internet.", Toast.LENGTH_LONG).show();
+        if(activeNetwork == null || !activeNetwork.isConnectedOrConnecting() || (activeNetwork.getType() != ConnectivityManager.TYPE_WIFI && activeNetwork.getType() != ConnectivityManager.TYPE_MOBILE)){
+            Toast.makeText(appContext, R.string.no_connection, Toast.LENGTH_LONG).show();
             return false;
         }
         return  true;

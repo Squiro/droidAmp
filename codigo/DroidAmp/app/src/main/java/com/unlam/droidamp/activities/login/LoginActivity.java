@@ -16,11 +16,12 @@ import android.widget.TextView;
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.activities.main.MainActivity;
 import com.unlam.droidamp.auth.Auth;
-import com.unlam.droidamp.auth.Encryption;
+import com.unlam.droidamp.utilities.Encryption;
 import com.unlam.droidamp.activities.login.fragments.NetworkLoginFragment;
 import com.unlam.droidamp.interfaces.LoginCallback;
 import com.unlam.droidamp.network.BroadcastConnectivity;
-import com.unlam.droidamp.network.NetworkHandler;
+import com.unlam.droidamp.utilities.InputValidatorHelper;
+import com.unlam.droidamp.utilities.TextValidator;
 
 
 public class LoginActivity extends AppCompatActivity implements LoginCallback<String> {
@@ -64,10 +65,16 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
         txtEmail = findViewById(R.id.txtEmail);
         txtPassword = findViewById(R.id.txtPassword);
         txtRegister = findViewById(R.id.txtRegister);
-        txtError = findViewById(R.id.txtError);
         btnLogin = findViewById(R.id.btnLogin);
+        txtError = findViewById(R.id.txtError);
+
+        // -------- LISTENERS (hey, listen!) --------
+
         // We set an on click listener for the login button
         btnLogin.setOnClickListener(btnLoginListener);
+        txtRegister.setOnClickListener(txtRegisterListener);
+
+        //setValidationListeners();
 
         // -------- NETWORK LOGIN --------
         // We instantiate the network login fragment that will handle the login action from the user in background
@@ -87,8 +94,7 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
         // This method will be executed once the button is clicked
         public void onClick(View v)
         {
-            if (broadcastConnectivity.isConnected())
-                login();
+            login();
         }
     };
 
@@ -109,23 +115,25 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
     }
 
     private void login() {
-        if (!logginIn && networkLoginFragment != null) {
-            // Execute the async login.
-            networkLoginFragment.startLogin(txtEmail.getText().toString(), txtPassword.getText().toString());
-            logginIn = true;
+        if (validateInputs())
+        {
+            if (!logginIn && networkLoginFragment != null) {
+                // Execute the async login.
+                networkLoginFragment.startLogin(txtEmail.getText().toString(), txtPassword.getText().toString());
+                logginIn = true;
+            }
         }
     }
 
     @Override
     public void updateFromLogin(String result) {
+        Log.i("Log", "UpdateFromLogin");
         Log.i("Log", result);
     }
 
     @Override
-    public NetworkInfo getActiveNetworkInfo() {
-        ConnectivityManager connectivityManager = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
-        return networkInfo;
+    public BroadcastConnectivity getBroadcastConnectivity() {
+        return this.broadcastConnectivity;
     }
 
     @Override
@@ -173,5 +181,43 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
     {
         Intent mainActivityIntent = new Intent(this, MainActivity.class);
         startActivity(mainActivityIntent);
+        this.finish();
+    }
+
+    private void setValidationListeners()
+    {
+        // Email
+        txtEmail.addTextChangedListener(new TextValidator(txtEmail)
+        {
+            @Override
+            public void validate(TextView textView, String text)
+            {
+                if (!InputValidatorHelper.isValidEmail(txtEmail.getText().toString()))
+                {
+                    txtError.setText(R.string.invalid_email);
+                }
+            }
+        });
+    }
+
+    public boolean validateInputs()
+    {
+        boolean valida = true;
+
+        txtError.setText("");
+
+        if (!InputValidatorHelper.isValidEmail(txtEmail.getText().toString()))
+        {
+            txtError.setText(R.string.invalid_email);
+            valida = false;
+        }
+
+        if (!InputValidatorHelper.isLengthyEnough(txtPassword.getText().toString(), 8))
+        {
+            txtError.setText(R.string.invalid_password);
+            valida = false;
+        }
+
+        return valida;
     }
 }

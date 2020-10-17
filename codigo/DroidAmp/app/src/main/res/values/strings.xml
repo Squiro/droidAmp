@@ -1,15 +1,19 @@
 <resources>
     <string name="app_name">DroidAmp</string>
-    <string name="title_activity_login">Login</string>
+
+    <string name="title_activity_login">Iniciar Sesión</string>
     <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="login">Iniciar sesión</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
+    <string name="prompt_password">Contraseña</string>
+
+
+    <string name="invalid_password">La contraseña tiene que tener al menos 8 caracteres.</string>
+    <string name="invalid_email">El email ingresado no es válido.</string>
+    <string name="login_failed">"El inicio de sesión falló: "</string>
+
     <string name="register"><u>¿Todavía no estás registrado?</u></string>
-    <string name="registrarse"><u>Registrarse</u></string>
+    <string name="title_activity_register"><u>Registrarse</u></string>
+
+    <string name="no_connection"><u>No hay conexión a internet.</u></string>
 
 
     <string name="welcome">"¡Hola! ¿Sabías que tu porcentaje de batería ahora mismo es de...?"</string>
