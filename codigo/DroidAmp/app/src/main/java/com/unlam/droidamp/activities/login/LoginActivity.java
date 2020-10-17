@@ -34,6 +34,7 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
     // Network related properties
     private NetworkLoginFragment networkLoginFragment;
     private boolean logginIn;
+    private BroadcastConnectivity broadcastConnectivity;
 
     Auth auth;
 
@@ -42,7 +43,7 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        BroadcastConnectivity broadcastConnectivity = new BroadcastConnectivity(this);
+        broadcastConnectivity = new BroadcastConnectivity(this);
         this.registerReceiver(broadcastConnectivity, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         // Generate encription key first time run
@@ -74,13 +75,20 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
         this.logginIn = false;
     }
 
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.unregisterReceiver(broadcastConnectivity);
+    }
+
     // Listener for login button
     private View.OnClickListener btnLoginListener = new View.OnClickListener()
     {
         // This method will be executed once the button is clicked
         public void onClick(View v)
         {
-            login();
+            if (broadcastConnectivity.isConnected())
+                login();
         }
     };
 

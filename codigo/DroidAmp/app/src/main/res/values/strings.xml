@@ -9,6 +9,7 @@
     <string name="invalid_password">Password must be >5 characters</string>
     <string name="login_failed">"Login failed"</string>
     <string name="register"><u>¿Todavía no estás registrado?</u></string>
+    <string name="registrarse"><u>Registrarse</u></string>
 
 
     <string name="welcome">"¡Hola! ¿Sabías que tu porcentaje de batería ahora mismo es de...?"</string>

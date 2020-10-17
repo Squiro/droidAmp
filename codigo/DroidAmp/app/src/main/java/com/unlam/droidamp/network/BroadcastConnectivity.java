@@ -23,15 +23,17 @@ public class BroadcastConnectivity extends BroadcastReceiver {
         String reason = intent.getStringExtra(ConnectivityManager.EXTRA_REASON);
         // boolean isFailover = intent.getBooleanExtra(ConnectivityManager.EXTRA_IS_FAILOVER, false);
         cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-        checkConnectivity();
+        isConnected();
     }
 
-    public void checkConnectivity()
+    public boolean isConnected()
     {
         activeNetwork = cm.getActiveNetworkInfo();
         if(activeNetwork == null || !activeNetwork.isConnectedOrConnecting()){
             Toast.makeText(appContext, "No hay conexión a internet.", Toast.LENGTH_LONG).show();
+            return false;
         }
+        return  true;
     }
 };
 
