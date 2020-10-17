@@ -6,6 +6,9 @@ import android.content.SharedPreferences;
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.utilities.Encryption;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.sql.Timestamp;
 
 public class Auth {
@@ -46,10 +49,7 @@ public class Auth {
         long milliseconds2 = currentTime.getTime();
 
         long diff = milliseconds2 - milliseconds1;
-        //long diffSeconds = diff / 1000;
         long diffMinutes = diff / (60 * 1000);
-        //long diffHours = diff / (60 * 60 * 1000);
-        //long diffDays = diff / (24 * 60 * 60 * 1000);
 
         return diffMinutes;
     }
@@ -75,5 +75,14 @@ public class Auth {
         editor.apply();
     }
 
+    public void storeTokens(JSONObject responseJson) throws JSONException {
+        // Extract auth token from response
+        String authToken = responseJson.get("token").toString();
+        // Exact refresh token from response
+        String refreshToken = responseJson.get("token_refresh").toString();
+
+        saveTokens(authToken, refreshToken);
+        saveRefreshTimestamp();
+    }
 
 }

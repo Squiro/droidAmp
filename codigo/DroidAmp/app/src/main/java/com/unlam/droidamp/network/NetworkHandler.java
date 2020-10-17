@@ -5,12 +5,18 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.util.Log;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
 
 public class NetworkHandler {
 
@@ -20,6 +26,58 @@ public class NetworkHandler {
     public static final String REQUEST_TYPE_POST = "POST";
     public static final String REQUEST_TYPE_GET = "GET";
     public static final String REQUEST_TYPE_PUT = "PUT";
+
+    /**
+     * Given a URL, sets up a connection and gets the HTTP response body from the server.
+     * If the network request is successful, it returns the response body in String form. Otherwise,
+     * it returns null.
+     */
+    public static String handleConnection(URL url, String requestType, JSONObject data) throws IOException
+    {
+        InputStream stream = null;
+        DataOutputStream connectionOutputstream = null;
+        HttpURLConnection connection = null;
+        String result = null;
+
+        try {
+            connection = NetworkHandler.getRequest(url, requestType);
+
+            // We get the outputstream from the connection
+            connectionOutputstream = new DataOutputStream(connection.getOutputStream());
+
+            // Write json object to output stream
+            connectionOutputstream.writeBytes(data.toString());
+
+            connectionOutputstream.flush();
+            connectionOutputstream.close();
+
+            // Open communications link (network traffic occurs here).
+            connection.connect();
+
+            int responseCode = connection.getResponseCode();
+
+            if (responseCode != HttpsURLConnection.HTTP_OK) {
+                return null;
+            }
+            // Retrieve the response body as an InputStream.
+            stream = connection.getInputStream();
+
+            if (stream != null) {
+                // Converts Stream to String with max length of 500.
+                result = NetworkHandler.readStream(stream, 500);
+            }
+        }
+        finally {
+            // Close Stream and disconnect HTTPS connection.
+            if (stream != null) {
+                stream.close();
+            }
+            if (connection != null) {
+                connection.disconnect();
+            }
+        }
+        return result;
+    }
 
     public static HttpURLConnection getRequest(URL url, String requestType)
     {

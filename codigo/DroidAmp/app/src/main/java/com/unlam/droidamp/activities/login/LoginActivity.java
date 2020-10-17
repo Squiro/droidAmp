@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.activities.main.MainActivity;
+import com.unlam.droidamp.activities.register.RegisterActivity;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.utilities.Encryption;
 import com.unlam.droidamp.activities.login.fragments.NetworkLoginFragment;
@@ -37,7 +38,7 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
     private boolean logginIn;
     private BroadcastConnectivity broadcastConnectivity;
 
-    Auth auth;
+    private Auth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -110,7 +111,7 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
 
     private void startRegisterActivity()
     {
-        Intent registerActivityIntent = new Intent(this, MainActivity.class);
+        Intent registerActivityIntent = new Intent(this, RegisterActivity.class);
         startActivity(registerActivityIntent);
     }
 

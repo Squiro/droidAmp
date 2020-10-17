@@ -1,8 +1,6 @@
 package com.unlam.droidamp.interfaces;
 
 import android.content.Intent;
-import android.net.NetworkInfo;
-
 import com.unlam.droidamp.network.BroadcastConnectivity;
 
 public interface LoginCallback<T> {
