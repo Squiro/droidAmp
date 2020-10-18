@@ -10,9 +10,11 @@ import com.unlam.droidamp.R;
 import com.unlam.droidamp.activities.login.fragments.NetworkLoginFragment;
 import com.unlam.droidamp.activities.register.fragments.RegisterFragment;
 import com.unlam.droidamp.auth.Auth;
+import com.unlam.droidamp.interfaces.RequestCallback;
 import com.unlam.droidamp.models.User;
+import com.unlam.droidamp.network.BroadcastConnectivity;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AppCompatActivity implements RequestCallback<String> {
 
     RegisterFragment registerFragment;
     Button btnRegister;
@@ -36,7 +38,7 @@ public class RegisterActivity extends AppCompatActivity {
 
         // -------- NETWORK FRAGMENT --------
         // We instantiate the network fragment that will handle the register action from the user in background
-        registerFragment = (RegisterFragment) RegisterFragment.getInstance(getSupportFragmentManager(), "http://so-unlam.net.ar/api/api/login");
+        registerFragment = RegisterFragment.getInstance(RegisterFragment.class, getSupportFragmentManager(), "http://so-unlam.net.ar/api/api/register");
         this.registerInProgress = false;
     }
 
@@ -61,4 +63,18 @@ public class RegisterActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void updateFromRequest(String result) {
+        
+    }
+
+    @Override
+    public BroadcastConnectivity getBroadcastConnectivity() {
+        return null;
+    }
+
+    @Override
+    public void finishRequest() {
+
+    }
 }

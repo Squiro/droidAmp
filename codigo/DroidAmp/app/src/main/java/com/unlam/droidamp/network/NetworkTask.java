@@ -1,8 +1,6 @@
 package com.unlam.droidamp.network;
 
 import android.os.AsyncTask;
-
-import com.unlam.droidamp.activities.register.asynctasks.RegisterTask;
 import com.unlam.droidamp.interfaces.RequestCallback;
 
 public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> {
