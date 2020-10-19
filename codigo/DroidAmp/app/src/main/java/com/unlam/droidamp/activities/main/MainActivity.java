@@ -5,11 +5,13 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unlam.droidamp.R;
+import com.unlam.droidamp.interfaces.BtnListener;
 
 import android.database.Cursor;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.View;
 
 import java.util.ArrayList;
 
@@ -22,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     // Audio files
     private ArrayList<MusicFile> musicFiles;
 
-    private static String[] myDataset = new String []{"Hola", "2", "3"};
+    // private static String[] myDataset = new String []{"Hola", "2", "3"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,20 +47,28 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setLayoutManager(layoutManager);
 
         // specify an adapter (see also next example)
-        mAdapter = new MediaAdapter(myDataset);
+        mAdapter = new MediaAdapter(musicFiles, new BtnListener() {
+            @Override
+            public void onClick(View v, int position) {
+                Integer pos = position;
+                Log.i("Log", pos.toString());
+            }
+        });
         recyclerView.setAdapter(mAdapter);
     }
 
     public void getMusicInfo()
     {
         try {
-
-            Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, new String[]{MediaStore.Audio.Media.DISPLAY_NAME}, null, null, null);
+            String[] projection = new String[]{MediaStore.Audio.Media._ID,  MediaStore.Audio.Media.TITLE,
+                    MediaStore.Audio.Media.ARTIST, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM_KEY};
+            Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
 
             if (cursor != null)
             {
                 while(cursor.moveToNext())
                 {
+
                     //String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
 
                     long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));

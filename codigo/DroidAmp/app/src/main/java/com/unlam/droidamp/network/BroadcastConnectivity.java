@@ -14,6 +14,7 @@ public class BroadcastConnectivity extends BroadcastReceiver {
     Context appContext;
     ConnectivityManager cm;
     NetworkInfo activeNetwork;
+
     public BroadcastConnectivity (Context context)
     {
         this.appContext = context;

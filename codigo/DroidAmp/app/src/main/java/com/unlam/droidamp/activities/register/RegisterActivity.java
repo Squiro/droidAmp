@@ -2,7 +2,10 @@ package com.unlam.droidamp.activities.register;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.IntentFilter;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 
@@ -21,12 +24,15 @@ public class RegisterActivity extends AppCompatActivity implements RequestCallba
     boolean registerInProgress;
 
     private Auth auth;
+    private BroadcastConnectivity broadcastConnectivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
 
+        this.broadcastConnectivity = new BroadcastConnectivity(this);
+        this.registerReceiver(broadcastConnectivity, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         this.auth = new Auth(this);
 
@@ -40,6 +46,12 @@ public class RegisterActivity extends AppCompatActivity implements RequestCallba
         // We instantiate the network fragment that will handle the register action from the user in background
         registerFragment = RegisterFragment.getInstance(RegisterFragment.class, getSupportFragmentManager(), "http://so-unlam.net.ar/api/api/register");
         this.registerInProgress = false;
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.unregisterReceiver(broadcastConnectivity);
     }
 
     // Listener for login button
@@ -62,19 +74,18 @@ public class RegisterActivity extends AppCompatActivity implements RequestCallba
         }
     }
 
-
     @Override
     public void updateFromRequest(String result) {
-        
+
     }
 
     @Override
     public BroadcastConnectivity getBroadcastConnectivity() {
-        return null;
+        return this.broadcastConnectivity;
     }
 
     @Override
     public void finishRequest() {
-
+        Log.i("Log", "Request finished");
     }
 }
