@@ -7,20 +7,27 @@ import android.util.Log;
 public class MusicPlayer {
 
     private MediaPlayer mediaPlayer;
+    private boolean isPlaying;
 
     public MusicPlayer()
     {
         this.mediaPlayer = new MediaPlayer();
+        isPlaying = false;
     }
 
     public void start(String path)
     {
         try
         {
+            if(isPlaying)
+            {
+                this.reset();
+            }
             //mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(path);
             mediaPlayer.prepare();
             mediaPlayer.start();
+            isPlaying = true;
         }
         catch (Exception e)
         {
@@ -31,17 +38,33 @@ public class MusicPlayer {
     public void resume()
     {
         mediaPlayer.start();
+        isPlaying = true;
     }
 
     public void pause()
     {
         mediaPlayer.pause();
+        isPlaying = false;
     }
 
     public void stop()
     {
         mediaPlayer.stop();
-        mediaPlayer.release();
+        isPlaying = false;
+        //mediaPlayer.release();
+    }
+
+    public void reset()
+    {
+        mediaPlayer.reset();
+    }
+
+    public void play()
+    {
+        if (isPlaying)
+            pause();
+        else
+            resume();
     }
 
 }
