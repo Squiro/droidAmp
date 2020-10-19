@@ -8,6 +8,7 @@ import com.unlam.droidamp.R;
 import com.unlam.droidamp.interfaces.BtnListener;
 
 import android.database.Cursor;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -23,19 +24,23 @@ public class MainActivity extends AppCompatActivity {
 
     // Audio files
     private ArrayList<MusicFile> musicFiles;
-
-    // private static String[] myDataset = new String []{"Hola", "2", "3"};
+    private MusicPlayer musicPlayer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // ----- OTHER -----
+        musicPlayer = new MusicPlayer();
+
+
+        // ----- RECYCLER VIEW -----
+
+        // Get files from android storage
         musicFiles = new ArrayList();
         getMusicInfo();
-        Log.i("Log", musicFiles.toString());
-        // ----- RECYCLER VIEW -----
+
+        // Create the recyclew view
         recyclerView = findViewById(R.id.rvMusicFiles);
 
         // use this setting to improve performance if you know that changes
@@ -48,10 +53,13 @@ public class MainActivity extends AppCompatActivity {
 
         // specify an adapter (see also next example)
         mAdapter = new MediaAdapter(musicFiles, new BtnListener() {
+            // OnClick handler for the music files
             @Override
             public void onClick(View v, int position) {
                 Integer pos = position;
-                Log.i("Log", pos.toString());
+                MusicFile file = musicFiles.get(position);
+                //Uri uri = Uri.parse("file:///"+file.getPath());
+                musicPlayer.start(file.getPath());
             }
         });
         recyclerView.setAdapter(mAdapter);
@@ -87,8 +95,5 @@ public class MainActivity extends AppCompatActivity {
         {
             Log.i("Exception", e.toString());
         }
-
     }
-
-
 }
