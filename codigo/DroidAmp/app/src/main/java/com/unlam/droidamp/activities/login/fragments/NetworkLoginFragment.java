@@ -86,6 +86,4 @@ public class NetworkLoginFragment extends Fragment {
             loginTask.cancel(true);
         }
     }
-
-
 }

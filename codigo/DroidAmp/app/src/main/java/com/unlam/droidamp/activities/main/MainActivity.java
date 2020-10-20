@@ -5,6 +5,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unlam.droidamp.R;
+import com.unlam.droidamp.activities.login.fragments.NetworkLoginFragment;
+import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
 import com.unlam.droidamp.interfaces.BtnListener;
 
 import android.database.Cursor;
@@ -12,12 +14,10 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -29,7 +29,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     // Audio reproduction
     private ArrayList<MusicFile> musicFiles;
-    private MusicPlayer musicPlayer;
+    private MusicPlayerFragment musicPlayerFragment;
 
     // Sensors
     private SensorManager mSensorManager;
@@ -37,7 +37,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private Sensor mProximity;
 
     // Constants
-    private final int PROXIMITY_DISTANCE = 4;
+    private static final int PROXIMITY_DISTANCE = 4;
+    // Shake detection
+    private static final float SHAKE_THRESHOLD = 12.5f; // m/S**2
+    private static final int MIN_TIME_BETWEEN_SHAKES_MILLISECS = 1000;
+    private long mLastShakeTime;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +54,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
 
         // Start the music player class
-        musicPlayer = new MusicPlayer();
+        //musicPlayer = new MusicPlayer();
+        musicPlayerFragment = MusicPlayerFragment.getInstance(getSupportFragmentManager());
 
         // ----- RECYCLER VIEW -----
 
@@ -74,10 +79,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             // OnClick handler for the music files
             @Override
             public void onClick(View v, int position) {
-                Integer pos = position;
-                MusicFile file = musicFiles.get(position);
-                //Uri uri = Uri.parse("file:///"+file.getPath());
-                musicPlayer.start(file.getPath());
+                //musicFiles.get(position).getPath();
+                // musicPlayer.start(musicFiles.get(position).getPath());
+                musicPlayerFragment.start(musicFiles.get(position).getPath());
             }
         });
         recyclerView.setAdapter(mAdapter);
@@ -133,6 +137,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
             handleProximitySensor(event.values[0]);
         }
+
+        if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
+            handleAccelerometerSensor(event);
+        }
+
     }
 
     @Override
@@ -140,14 +149,47 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     }
 
+    public void handleAccelerometerSensor(SensorEvent event)
+    {
+        detectShake(event);
+        detectRoll(event);
+    }
+
+    public void detectShake(SensorEvent event)
+    {
+        long curTime = System.currentTimeMillis();
+
+        if ((curTime - mLastShakeTime) > MIN_TIME_BETWEEN_SHAKES_MILLISECS) {
+
+            float x = event.values[0];
+            float y = event.values[1];
+            float z = event.values[2];
+
+            double acceleration = Math.sqrt(Math.pow(x, 2) +
+                    Math.pow(y, 2) +
+                    Math.pow(z, 2)) - SensorManager.GRAVITY_EARTH;
+            //Log.d("Log", "Acceleration is " + acceleration + "m/s^2");
+
+            if (acceleration > SHAKE_THRESHOLD) {
+                mLastShakeTime = curTime;
+                //Log.d("Log", "Shake detected");
+                //musicPlayer.mute();
+                musicPlayerFragment.mute();
+            }
+        }
+    }
+
+    public void detectRoll(SensorEvent event)
+    {
+
+    }
+
     public void handleProximitySensor(float value)
     {
         if (value >= -PROXIMITY_DISTANCE && value <= PROXIMITY_DISTANCE) {
             // Detected near
-            musicPlayer.play();
-        } else {
-            //far
-            Toast.makeText(getApplicationContext(), "far", Toast.LENGTH_SHORT).show();
+            //musicPlayer.play();
+            musicPlayerFragment.play();
         }
     }
 }
