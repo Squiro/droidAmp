@@ -25,6 +25,7 @@ public class NetworkHandler {
     public static final String REQUEST_TYPE_POST = "POST";
     public static final String REQUEST_TYPE_GET = "GET";
     public static final String REQUEST_TYPE_PUT = "PUT";
+    public static final String API_ENDPOINT = "http://so-unlam.net.ar/api/api/";
 
     /**
      * Given a URL, sets up a connection and gets the HTTP response body from the server.
@@ -41,24 +42,22 @@ public class NetworkHandler {
             connection = NetworkHandler.getRequest(url, requestType);
 
             configureConnection(connection, token);
-            Log.i("Log", "network 1");
+
             // Write the JSONObject to the connection
             if (payload != null)
                 writePayload(connection, payload);
-            Log.i("Log", "network 2");
+            Log.i("Log", "After payload write");
 
             // Open communications link (network traffic occurs here).
             connection.connect();
 
             int responseCode = connection.getResponseCode();
-
+            Log.i("Log", "Connection response");
             Log.i("Log", Integer.toString(responseCode));
 
             if (responseCode != HttpsURLConnection.HTTP_OK) {
                 return null;
             }
-
-            Log.i("Log", "network");
 
             // Retrieve the response body as an InputStream.
             stream = connection.getInputStream();
@@ -77,6 +76,7 @@ public class NetworkHandler {
                 connection.disconnect();
             }
         }
+        Log.i("Log", "Network return");
         return result;
     }
 

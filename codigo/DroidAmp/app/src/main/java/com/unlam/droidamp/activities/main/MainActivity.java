@@ -5,6 +5,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unlam.droidamp.R;
+import com.unlam.droidamp.activities.main.classes.MediaAdapter;
+import com.unlam.droidamp.activities.main.classes.MusicFile;
 import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
 import com.unlam.droidamp.interfaces.BtnListener;
 

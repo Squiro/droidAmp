@@ -1,10 +1,7 @@
 package com.unlam.droidamp.activities.login.asynctasks;
 
-import android.content.Intent;
 import android.util.Log;
-
 import com.unlam.droidamp.auth.Auth;
-
 import com.unlam.droidamp.interfaces.RequestCallback;
 import com.unlam.droidamp.network.NetworkHandler;
 import com.unlam.droidamp.network.NetworkTask;

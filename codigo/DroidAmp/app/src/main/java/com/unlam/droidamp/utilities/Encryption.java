@@ -82,7 +82,7 @@ public class Encryption {
             byte[] encrypted = c.doFinal(rawData.getBytes(CHARSET));
 
             // Create a new byte buffer where we will store the encrypted data, with the IV at the beginning
-            ByteBuffer byteBuffer = ByteBuffer.allocate(1 + iv.length + encrypted.length);
+            ByteBuffer byteBuffer = ByteBuffer.allocate(iv.length + encrypted.length);
             byteBuffer.put(iv);
             byteBuffer.put(encrypted);
             return Base64.encodeToString(byteBuffer.array(), Base64.NO_WRAP);

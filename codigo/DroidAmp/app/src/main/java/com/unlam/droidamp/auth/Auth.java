@@ -2,6 +2,7 @@ package com.unlam.droidamp.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.utilities.Encryption;
@@ -9,6 +10,7 @@ import com.unlam.droidamp.utilities.Encryption;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.nio.charset.StandardCharsets;
 import java.sql.Timestamp;
 
 public class Auth {
@@ -36,7 +38,7 @@ public class Auth {
     public String getRefreshToken() throws NullPointerException
     {
         String refreshToken = sharedPreferences.getString(PARAM_REFRESH_TOKEN, null);
-        return enc.decrypt(this.context, refreshToken.getBytes());
+        return enc.decrypt(this.context, refreshToken.getBytes(StandardCharsets.UTF_8));
     }
 
     public String getToken() throws NullPointerException

@@ -43,22 +43,12 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        broadcastConnectivity = new BroadcastConnectivity(this);
-        this.registerReceiver(broadcastConnectivity, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-
         // Generate encryption key first time run
         Encryption enc = new Encryption();
         enc.generateKey();
 
         // Instantiate auth class
         this.auth = new Auth(this);
-
-        // -------- NETWORK FRAGMENT --------
-        this.logginIn = false;
-        // Instantiate auth fragment
-        authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager());
-        // Check the status of the tokens, try to update them
-        checkTokens();
 
         // -------- UI ELEMENTS --------
 
@@ -77,18 +67,13 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
 
         //setValidationListeners();
 
-    }
+        // -------- NETWORK FRAGMENT --------
+        this.logginIn = false;
+        // Instantiate auth fragment
+        authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager());
 
-    public void checkTokens()
-    {
-        if (!auth.checkIfTokenExpired())
-        {
-            startMainActivity();
-        }
-        else
-        {
-            authFragment.startRefreshToken(auth);
-        }
+        broadcastConnectivity = new BroadcastConnectivity(this);
+        this.registerReceiver(broadcastConnectivity, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     @Override
@@ -152,7 +137,6 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
         if (authFragment != null) {
             authFragment.cancelTask();
         }
-
         startMainActivity();
     }
 

@@ -1,21 +1,25 @@
-package com.unlam.droidamp.auth;
+package com.unlam.droidamp.activities.main.asynctask;
 
-import android.util.Log;
-
+import com.unlam.droidamp.activities.main.classes.Event;
+import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.interfaces.RequestCallback;
 import com.unlam.droidamp.network.NetworkHandler;
 import com.unlam.droidamp.network.NetworkTask;
+
 import org.json.JSONObject;
+
 import java.io.IOException;
 import java.net.URL;
 
-public class TokenTask extends NetworkTask {
+public class EventTask extends NetworkTask {
 
     private Auth auth;
+    private Event event;
 
-    public TokenTask(RequestCallback<String> callback, Auth auth) {
+    public EventTask(RequestCallback<String> callback, Event event, Auth auth) {
         super(callback);
         this.auth = auth;
+        this.event = event;
     }
 
     /**
@@ -29,11 +33,12 @@ public class TokenTask extends NetworkTask {
             try {
                 URL url = new URL(urlString);
 
-                String resultString = refreshToken(url);
+                String resultString = sendEvent(url);
 
                 if (resultString != null) {
                     // Create json object from response string
                     JSONObject responseJson = new JSONObject(resultString);
+
                     auth.storeTokens(responseJson);
 
                     result = new Result(resultString);
@@ -42,14 +47,11 @@ public class TokenTask extends NetworkTask {
                 result = new Result(e);
             }
         }
-
-        Log.i("Log", result.resultValue);
         return result;
     }
 
-    private String refreshToken(URL url) throws IOException {
+    private String sendEvent(URL url) throws IOException {
         String refreshToken = auth.getRefreshToken();
         return NetworkHandler.handleConnection(url, NetworkHandler.REQUEST_TYPE_PUT, null, refreshToken);
     }
-
 }
