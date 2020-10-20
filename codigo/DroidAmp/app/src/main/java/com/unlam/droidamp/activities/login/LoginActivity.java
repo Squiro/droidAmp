@@ -1,11 +1,9 @@
 package com.unlam.droidamp.activities.login;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,15 +15,15 @@ import com.unlam.droidamp.R;
 import com.unlam.droidamp.activities.main.MainActivity;
 import com.unlam.droidamp.activities.register.RegisterActivity;
 import com.unlam.droidamp.auth.Auth;
+import com.unlam.droidamp.auth.AuthFragment;
+import com.unlam.droidamp.interfaces.RequestCallback;
 import com.unlam.droidamp.utilities.Encryption;
-import com.unlam.droidamp.activities.login.fragments.NetworkLoginFragment;
-import com.unlam.droidamp.interfaces.LoginCallback;
 import com.unlam.droidamp.network.BroadcastConnectivity;
 import com.unlam.droidamp.utilities.InputValidatorHelper;
 import com.unlam.droidamp.utilities.TextValidator;
 
 
-public class LoginActivity extends AppCompatActivity implements LoginCallback<String> {
+public class LoginActivity extends AppCompatActivity implements RequestCallback<String> {
     // UI elements
     private EditText txtEmail;
     private EditText txtPassword;
@@ -34,7 +32,7 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
     private Button btnLogin;
 
     // Network related properties
-    private NetworkLoginFragment networkLoginFragment;
+    private AuthFragment authFragment;
     private boolean logginIn;
     private BroadcastConnectivity broadcastConnectivity;
 
@@ -48,18 +46,20 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
         broadcastConnectivity = new BroadcastConnectivity(this);
         this.registerReceiver(broadcastConnectivity, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
-        // Generate encription key first time run
+        // Generate encryption key first time run
         Encryption enc = new Encryption();
         enc.generateKey();
 
-        // Do this before all the heavy work. No need to do the rest if we are going to switch
-        // activities
+        // Instantiate auth class
         this.auth = new Auth(this);
 
-        if (!auth.checkIfTokenExpired())
-        {
-            startMainActivity();
-        }
+        // -------- NETWORK FRAGMENT --------
+        this.logginIn = false;
+        // Instantiate auth fragment
+        authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager());
+        // Check the status of the tokens, try to update them
+        checkTokens();
+
         // -------- UI ELEMENTS --------
 
         // We "fetch" the UI elements here, so it's easier to reference them later
@@ -77,10 +77,18 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
 
         //setValidationListeners();
 
-        // -------- NETWORK LOGIN --------
-        // We instantiate the network login fragment that will handle the login action from the user in background
-        networkLoginFragment = NetworkLoginFragment.getInstance(getSupportFragmentManager(), "http://so-unlam.net.ar/api/api/login");
-        this.logginIn = false;
+    }
+
+    public void checkTokens()
+    {
+        if (!auth.checkIfTokenExpired())
+        {
+            startMainActivity();
+        }
+        else
+        {
+            authFragment.startRefreshToken(auth);
+        }
     }
 
     @Override
@@ -118,17 +126,17 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
     private void login() {
         if (validateInputs())
         {
-            if (!logginIn && networkLoginFragment != null) {
+            if (!logginIn && authFragment != null) {
                 // Execute the async login.
-                networkLoginFragment.startLogin(txtEmail.getText().toString(), txtPassword.getText().toString());
+                authFragment.startLogin(txtEmail.getText().toString(), txtPassword.getText().toString(), auth);
                 logginIn = true;
             }
         }
     }
 
     @Override
-    public void updateFromLogin(String result) {
-        Log.i("Log", "UpdateFromLogin");
+    public void updateFromRequest(String result) {
+        Log.i("Log", "UpdateFromRequest");
         Log.i("Log", result);
     }
 
@@ -138,44 +146,14 @@ public class LoginActivity extends AppCompatActivity implements LoginCallback<St
     }
 
     @Override
-    public void onProgressUpdate(int progressCode, int percentComplete) {
-        switch(progressCode) {
-            // You can add UI behavior for progress updates here.
-            case Progress.ERROR:
-
-                break;
-            case Progress.CONNECT_SUCCESS:
-
-                break;
-            case Progress.GET_INPUT_STREAM_SUCCESS:
-
-                break;
-            case Progress.PROCESS_INPUT_STREAM_IN_PROGRESS:
-
-                break;
-            case Progress.PROCESS_INPUT_STREAM_SUCCESS:
-
-                break;
-        }
-    }
-
-    @Override
-    public void finishLogin(Intent intent) {
+    public void finishRequest() {
         logginIn = false;
 
-        if (networkLoginFragment != null) {
-            networkLoginFragment.cancelLogin();
+        if (authFragment != null) {
+            authFragment.cancelTask();
         }
 
-        if (intent != null) {
-            String authToken = intent.getStringExtra(Auth.PARAM_AUTH_TOKEN);
-            String refreshToken = intent.getStringExtra(Auth.PARAM_REFRESH_TOKEN);
-
-            auth.saveTokens(authToken, refreshToken);
-            auth.saveRefreshTimestamp();
-
-            startMainActivity();
-        }
+        startMainActivity();
     }
 
     public void startMainActivity()

@@ -1,25 +1,18 @@
-package com.unlam.droidamp.activities.register.asynctasks;
+package com.unlam.droidamp.auth;
 
-
-import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.interfaces.RequestCallback;
-import com.unlam.droidamp.models.User;
-
 import com.unlam.droidamp.network.NetworkHandler;
 import com.unlam.droidamp.network.NetworkTask;
-
-import org.json.JSONException;
 import org.json.JSONObject;
 import java.io.IOException;
 import java.net.URL;
 
-public class RegisterTask extends NetworkTask {
-    private User user;
+public class TokenTask extends NetworkTask {
+
     private Auth auth;
 
-    public RegisterTask(RequestCallback<String> callback, User user, Auth auth) {
+    public TokenTask(RequestCallback<String> callback, Auth auth) {
         super(callback);
-        this.user = user;
         this.auth = auth;
     }
 
@@ -34,7 +27,7 @@ public class RegisterTask extends NetworkTask {
             try {
                 URL url = new URL(urlString);
 
-                String resultString = register(url);
+                String resultString = refreshToken(url);
 
                 if (resultString != null) {
                     // Create json object from response string
@@ -51,9 +44,9 @@ public class RegisterTask extends NetworkTask {
         return result;
     }
 
-    private String register(URL url) throws IOException, JSONException {
-        JSONObject data = user.toJSONObject();
-        data.put("env", "TEST");
-        return NetworkHandler.handleConnection(url, NetworkHandler.REQUEST_TYPE_POST, data, null);
+    private String refreshToken(URL url) throws IOException {
+        String refreshToken = auth.getRefreshToken();
+        return NetworkHandler.handleConnection(url, NetworkHandler.REQUEST_TYPE_PUT, null, refreshToken);
     }
+
 }

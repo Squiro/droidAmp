@@ -15,7 +15,9 @@ public class Auth {
 
     private Context context;
     private SharedPreferences sharedPreferences;
-    private  SharedPreferences.Editor editor;
+    private SharedPreferences.Editor editor;
+    // Instantiate new encryption object
+    private Encryption enc;
 
     // Static fields
     public static final long TOKEN_EXPIRE_TIME_MINUTES = 30;
@@ -28,6 +30,19 @@ public class Auth {
         this.context = context;
         sharedPreferences = context.getSharedPreferences(context.getString(R.string.sharedPreferencesFile), Context.MODE_PRIVATE);
         editor = sharedPreferences.edit();
+        this.enc = new Encryption();
+    }
+
+    public String getRefreshToken() throws NullPointerException
+    {
+        String refreshToken = sharedPreferences.getString(PARAM_REFRESH_TOKEN, null);
+        return enc.decrypt(this.context, refreshToken.getBytes());
+    }
+
+    public String getToken() throws NullPointerException
+    {
+        String token = sharedPreferences.getString(PARAM_AUTH_TOKEN, null);
+        return enc.decrypt(this.context, token.getBytes());
     }
 
     public Boolean checkIfTokenExpired()
@@ -56,8 +71,6 @@ public class Auth {
 
     public void saveTokens(String authToken, String refreshToken)
     {
-        // Instantiate new encryption object
-        Encryption enc = new Encryption();
         // Encrypt both tokens
         String encrypted_auth = enc.encrypt(context, authToken);
         String encrypted_refresh = enc.encrypt(context, refreshToken);

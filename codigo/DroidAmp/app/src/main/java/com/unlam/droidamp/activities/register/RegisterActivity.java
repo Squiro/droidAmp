@@ -10,16 +10,15 @@ import android.view.View;
 import android.widget.Button;
 
 import com.unlam.droidamp.R;
-import com.unlam.droidamp.activities.login.fragments.NetworkLoginFragment;
-import com.unlam.droidamp.activities.register.fragments.RegisterFragment;
 import com.unlam.droidamp.auth.Auth;
+import com.unlam.droidamp.auth.AuthFragment;
 import com.unlam.droidamp.interfaces.RequestCallback;
 import com.unlam.droidamp.models.User;
 import com.unlam.droidamp.network.BroadcastConnectivity;
 
 public class RegisterActivity extends AppCompatActivity implements RequestCallback<String> {
 
-    RegisterFragment registerFragment;
+    AuthFragment authFragment;
     Button btnRegister;
     boolean registerInProgress;
 
@@ -44,7 +43,7 @@ public class RegisterActivity extends AppCompatActivity implements RequestCallba
 
         // -------- NETWORK FRAGMENT --------
         // We instantiate the network fragment that will handle the register action from the user in background
-        registerFragment = RegisterFragment.getInstance(RegisterFragment.class, getSupportFragmentManager(), "http://so-unlam.net.ar/api/api/register");
+        authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager());
         this.registerInProgress = false;
     }
 
@@ -66,10 +65,10 @@ public class RegisterActivity extends AppCompatActivity implements RequestCallba
 
     public void register()
     {
-        if (!registerInProgress && registerFragment != null) {
+        if (!registerInProgress && authFragment != null) {
             User user = new User("email", "pass");
             // Execute the async login.
-            registerFragment.startRegister(user, auth);
+            authFragment.startRegister(user, auth);
             registerInProgress = true;
         }
     }

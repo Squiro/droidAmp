@@ -5,7 +5,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unlam.droidamp.R;
-import com.unlam.droidamp.activities.login.fragments.NetworkLoginFragment;
 import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
 import com.unlam.droidamp.interfaces.BtnListener;
 
@@ -74,13 +73,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
 
-        // specify an adapter (see also next example)
+        // specify an adapter
         mAdapter = new MediaAdapter(musicFiles, new BtnListener() {
             // OnClick handler for the music files
             @Override
             public void onClick(View v, int position) {
-                //musicFiles.get(position).getPath();
-                // musicPlayer.start(musicFiles.get(position).getPath());
                 musicPlayerFragment.start(musicFiles.get(position).getPath());
             }
         });
@@ -173,7 +170,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             if (acceleration > SHAKE_THRESHOLD) {
                 mLastShakeTime = curTime;
                 //Log.d("Log", "Shake detected");
-                //musicPlayer.mute();
                 musicPlayerFragment.mute();
             }
         }
@@ -188,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     {
         if (value >= -PROXIMITY_DISTANCE && value <= PROXIMITY_DISTANCE) {
             // Detected near
-            //musicPlayer.play();
             musicPlayerFragment.play();
         }
     }

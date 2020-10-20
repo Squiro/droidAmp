@@ -1,11 +1,9 @@
 package com.unlam.droidamp.network;
 
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.util.Log;
 
-import org.json.JSONException;
+import androidx.annotation.Nullable;
+
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
@@ -15,6 +13,7 @@ import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
 
 import javax.net.ssl.HttpsURLConnection;
 
@@ -32,33 +31,35 @@ public class NetworkHandler {
      * If the network request is successful, it returns the response body in String form. Otherwise,
      * it returns null.
      */
-    public static String handleConnection(URL url, String requestType, JSONObject data) throws IOException
+    public static String handleConnection(URL url, String requestType, @Nullable JSONObject payload, @Nullable String token) throws IOException
     {
         InputStream stream = null;
-        DataOutputStream connectionOutputstream = null;
         HttpURLConnection connection = null;
         String result = null;
 
         try {
             connection = NetworkHandler.getRequest(url, requestType);
 
-            // We get the outputstream from the connection
-            connectionOutputstream = new DataOutputStream(connection.getOutputStream());
-
-            // Write json object to output stream
-            connectionOutputstream.writeBytes(data.toString());
-
-            connectionOutputstream.flush();
-            connectionOutputstream.close();
+            configureConnection(connection, token);
+            Log.i("Log", "network 1");
+            // Write the JSONObject to the connection
+            if (payload != null)
+                writePayload(connection, payload);
+            Log.i("Log", "network 2");
 
             // Open communications link (network traffic occurs here).
             connection.connect();
 
             int responseCode = connection.getResponseCode();
 
+            Log.i("Log", Integer.toString(responseCode));
+
             if (responseCode != HttpsURLConnection.HTTP_OK) {
                 return null;
             }
+
+            Log.i("Log", "network");
+
             // Retrieve the response body as an InputStream.
             stream = connection.getInputStream();
 
@@ -79,12 +80,22 @@ public class NetworkHandler {
         return result;
     }
 
+    public static void writePayload(HttpURLConnection connection, JSONObject payload) throws IOException {
+        // We get the outputstream from the connection
+        DataOutputStream connectionOutputstream = new DataOutputStream(connection.getOutputStream());
+
+        // Write json object to output stream
+        connectionOutputstream.writeBytes(payload.toString());
+
+        connectionOutputstream.flush();
+        connectionOutputstream.close();
+    }
+
     public static HttpURLConnection getRequest(URL url, String requestType)
     {
         HttpURLConnection connection = null;
         try {
             connection = (HttpURLConnection) url.openConnection();
-            configureConnection(connection);
             // For this use case, set HTTP method to POST.
             connection.setRequestMethod(requestType);
         } catch (Exception e)
@@ -92,6 +103,13 @@ public class NetworkHandler {
             Log.i("Exception", e.toString());
         }
         return connection;
+    }
+
+    private static void configureConnection(HttpURLConnection connection, @Nullable String token)
+    {
+        configureConnection(connection);
+        if (token != null)
+            connection.setRequestProperty("Authorization", "Bearer " + token);
     }
 
     private static void configureConnection(HttpURLConnection connection)
@@ -117,9 +135,8 @@ public class NetworkHandler {
     /**
      * Converts the contents of an InputStream to a String.
      */
-    public static String readStream(InputStream stream, int maxReadSize)
-            throws IOException, UnsupportedEncodingException {
-        InputStreamReader reader = new InputStreamReader(stream, "UTF-8");
+    public static String readStream(InputStream stream, int maxReadSize) throws IOException {
+        InputStreamReader reader = new InputStreamReader(stream, StandardCharsets.UTF_8);
         char[] rawBuffer = new char[maxReadSize];
         int readSize;
         StringBuffer buffer = new StringBuffer();

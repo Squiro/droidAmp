@@ -12,16 +12,13 @@ import com.unlam.droidamp.interfaces.RequestCallback;
 public class NetworkFragment extends Fragment {
 
     public static final String TAG = "NetworkFragment";
-    private static final String URL_KEY = "UrlKey";
-
     protected RequestCallback<String> callback;
-    protected String urlString;
 
     /**
      * Static initializer for NetworkFragment that sets the URL of the host it will be downloading
      * from.
      */
-    public static <T extends NetworkFragment> T getInstance (Class<T> mClass, FragmentManager fragmentManager, String url) {
+    public static <T extends NetworkFragment> T getInstance (Class<T> mClass, FragmentManager fragmentManager) {
         try {
             // Recover NetworkFragment in case we are re-creating the Activity due to a config change.
             // This is necessary because NetworkFragment might have a task that began running before
@@ -30,9 +27,6 @@ public class NetworkFragment extends Fragment {
             T networkFragment = (T) fragmentManager.findFragmentByTag(NetworkFragment.TAG);
             if (networkFragment == null) {
                 networkFragment = mClass.newInstance();
-                Bundle args = new Bundle();
-                args.putString(URL_KEY, url);
-                networkFragment.setArguments(args);
                 fragmentManager.beginTransaction().add(networkFragment, TAG).commit();
             }
             return networkFragment;
@@ -49,8 +43,6 @@ public class NetworkFragment extends Fragment {
         super.onCreate(savedInstanceState);
         // Retain this Fragment across configuration changes in the host Activity.
         setRetainInstance(true);
-
-        urlString = getArguments().getString(URL_KEY);
     }
 
     @Override
