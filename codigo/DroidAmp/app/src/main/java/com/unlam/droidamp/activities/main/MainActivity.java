@@ -5,16 +5,23 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unlam.droidamp.R;
+import com.unlam.droidamp.auth.Auth;
+import com.unlam.droidamp.interfaces.RequestCallback;
+import com.unlam.droidamp.models.Event;
 import com.unlam.droidamp.activities.main.classes.MediaAdapter;
 import com.unlam.droidamp.activities.main.classes.MusicFile;
 import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
+import com.unlam.droidamp.activities.main.fragments.NetworkEventFragment;
 import com.unlam.droidamp.interfaces.BtnListener;
+import com.unlam.droidamp.network.BroadcastConnectivity;
 
+import android.content.IntentFilter;
 import android.database.Cursor;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
@@ -22,11 +29,16 @@ import android.view.View;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener {
+public class MainActivity extends AppCompatActivity implements SensorEventListener, RequestCallback<String> {
     // UI Elements
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
+
+    // Network fragment
+    private NetworkEventFragment networkEventFragment;
+    private Auth auth;
+    private BroadcastConnectivity broadcastConnectivity;
 
     // Audio reproduction
     private ArrayList<MusicFile> musicFiles;
@@ -49,15 +61,31 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        this.auth = new Auth(this);
+
+        getSensors();
+        instantiateFragments();
+        configureRecyclerView();
+        registerBroadcastConnectivity();
+    }
+
+    public void getSensors()
+    {
         // ----- SENSORS -----
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+    }
 
-        // Start the music player class
-        //musicPlayer = new MusicPlayer();
+    public void instantiateFragments()
+    {
+        // ----- FRAGMENTS -----
         musicPlayerFragment = MusicPlayerFragment.getInstance(getSupportFragmentManager());
+        networkEventFragment = NetworkEventFragment.getInstance(NetworkEventFragment.class, getSupportFragmentManager());
+    }
 
+    public void configureRecyclerView()
+    {
         // ----- RECYCLER VIEW -----
 
         // Get files from android storage
@@ -86,6 +114,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         recyclerView.setAdapter(mAdapter);
     }
 
+    public void registerBroadcastConnectivity()
+    {
+        broadcastConnectivity = new BroadcastConnectivity(this);
+        this.registerReceiver(broadcastConnectivity, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
+    }
+
     @Override
     protected void onResume() {
         super.onResume();
@@ -98,6 +132,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onPause();
         mSensorManager.unregisterListener(this, mAccelerometer);
         mSensorManager.unregisterListener(this, mProximity);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        this.unregisterReceiver(broadcastConnectivity);
     }
 
     public void getMusicInfo()
@@ -187,6 +227,28 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (value >= -PROXIMITY_DISTANCE && value <= PROXIMITY_DISTANCE) {
             // Detected near
             musicPlayerFragment.play();
+            sendEvent(new Event(Event.TYPE_SENSOR, "Proximity sensor detected near"));
         }
+    }
+
+    public void sendEvent(Event event)
+    {
+        Log.i("Log", "send event");
+        networkEventFragment.startEventTask(event, this.auth);
+    }
+
+    @Override
+    public void updateFromRequest(String result) {
+
+    }
+
+    @Override
+    public BroadcastConnectivity getBroadcastConnectivity() {
+        return broadcastConnectivity;
+    }
+
+    @Override
+    public void finishRequest() {
+
     }
 }

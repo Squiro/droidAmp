@@ -19,8 +19,9 @@ import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.auth.AuthFragment;
 import com.unlam.droidamp.interfaces.RequestCallback;
 import com.unlam.droidamp.network.BroadcastConnectivity;
+import com.unlam.droidamp.network.NetworkTask;
 
-public class BatteryActivity extends AppCompatActivity implements RequestCallback<String> {
+public class BatteryActivity extends AppCompatActivity implements RequestCallback<NetworkTask.Result> {
 
     TextView batteryPercentage;
     TextView batteryState;
@@ -118,9 +119,18 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
     }
 
     @Override
-    public void updateFromRequest(String result) {
+    public void updateFromRequest(NetworkTask.Result result) {
         Log.i("Log", "Update From Request");
-        Log.i("Log", result);
+        Log.i("Log", Boolean.toString(result.success));
+
+        if (result.success)
+        {
+            startActivity(MainActivity.class);
+        }
+        else
+        {
+            startActivity(LoginActivity.class);
+        }
     }
 
     @Override
@@ -130,10 +140,8 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
 
     @Override
     public void finishRequest() {
-        Log.i("Log", "finishRequest");
         if (authFragment != null) {
             authFragment.cancelTask();
         }
-        startActivity(MainActivity.class);
     }
 }

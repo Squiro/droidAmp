@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
+import android.net.Network;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -17,13 +18,14 @@ import com.unlam.droidamp.activities.register.RegisterActivity;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.auth.AuthFragment;
 import com.unlam.droidamp.interfaces.RequestCallback;
+import com.unlam.droidamp.network.NetworkTask;
 import com.unlam.droidamp.utilities.Encryption;
 import com.unlam.droidamp.network.BroadcastConnectivity;
 import com.unlam.droidamp.utilities.InputValidatorHelper;
 import com.unlam.droidamp.utilities.TextValidator;
 
 
-public class LoginActivity extends AppCompatActivity implements RequestCallback<String> {
+public class LoginActivity extends AppCompatActivity implements RequestCallback<NetworkTask.Result> {
     // UI elements
     private EditText txtEmail;
     private EditText txtPassword;
@@ -118,11 +120,19 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
             }
         }
     }
-
     @Override
-    public void updateFromRequest(String result) {
+    public void updateFromRequest(NetworkTask.Result result) {
         Log.i("Log", "UpdateFromRequest");
-        Log.i("Log", result);
+
+        if (result.success)
+        {
+            startMainActivity();
+        }
+        else
+        {
+            txtError.setText(result.exception.getMessage());
+            Log.i("Log", "Not successful");
+        }
     }
 
     @Override
@@ -137,7 +147,6 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
         if (authFragment != null) {
             authFragment.cancelTask();
         }
-        startMainActivity();
     }
 
     public void startMainActivity()

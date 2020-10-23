@@ -44,7 +44,7 @@ public class Auth {
     public String getToken() throws NullPointerException
     {
         String token = sharedPreferences.getString(PARAM_AUTH_TOKEN, null);
-        return enc.decrypt(this.context, token.getBytes());
+        return enc.decrypt(this.context, token.getBytes(StandardCharsets.UTF_8));
     }
 
     public Boolean checkIfTokenExpired()

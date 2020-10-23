@@ -13,7 +13,7 @@ import com.unlam.droidamp.interfaces.RequestCallback;
 public class NetworkFragment extends Fragment {
 
     public static final String TAG = "NetworkFragment";
-    protected RequestCallback<String> callback;
+    protected RequestCallback<NetworkTask.Result> callback;
 
     /**
      * Static initializer for NetworkFragment that sets the URL of the host it will be downloading
@@ -49,9 +49,8 @@ public class NetworkFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        Log.i("Log", "OnAttach");
         // Host Activity will handle callbacks from task.
-        callback = (RequestCallback<String>) context;
+        callback = (RequestCallback<NetworkTask.Result>) context;
     }
 
     @Override

@@ -1,7 +1,7 @@
 package com.unlam.droidamp.activities.main.fragments;
 
 import com.unlam.droidamp.activities.main.asynctask.EventTask;
-import com.unlam.droidamp.activities.main.classes.Event;
+import com.unlam.droidamp.models.Event;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.network.NetworkFragment;
 import com.unlam.droidamp.network.NetworkHandler;

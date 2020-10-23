@@ -32,7 +32,7 @@ public class NetworkHandler {
      * If the network request is successful, it returns the response body in String form. Otherwise,
      * it returns null.
      */
-    public static String handleConnection(URL url, String requestType, @Nullable JSONObject payload, @Nullable String token) throws IOException
+    public static String handleConnection(URL url, String requestType, @Nullable JSONObject payload, @Nullable String token) throws Exception
     {
         InputStream stream = null;
         HttpURLConnection connection = null;
@@ -46,7 +46,6 @@ public class NetworkHandler {
             // Write the JSONObject to the connection
             if (payload != null)
                 writePayload(connection, payload);
-            Log.i("Log", "After payload write");
 
             // Open communications link (network traffic occurs here).
             connection.connect();
@@ -55,12 +54,16 @@ public class NetworkHandler {
             Log.i("Log", "Connection response");
             Log.i("Log", Integer.toString(responseCode));
 
-            if (responseCode != HttpsURLConnection.HTTP_OK) {
-                return null;
+            if (responseCode == HttpsURLConnection.HTTP_OK || responseCode == HttpsURLConnection.HTTP_CREATED)
+            {
+                // Retrieve the response body as an InputStream.
+                stream = connection.getInputStream();
+            } else
+            {
+                // Retrieve the error stream
+                stream = connection.getErrorStream();
+                throw new Exception(new String("Error en respueta del servidor, código: " + responseCode));
             }
-
-            // Retrieve the response body as an InputStream.
-            stream = connection.getInputStream();
 
             if (stream != null) {
                 // Converts Stream to String with max length of 500.
@@ -76,7 +79,6 @@ public class NetworkHandler {
                 connection.disconnect();
             }
         }
-        Log.i("Log", "Network return");
         return result;
     }
 
