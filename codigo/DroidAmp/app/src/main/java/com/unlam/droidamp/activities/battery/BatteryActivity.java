@@ -125,7 +125,7 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
     @Override
     public void updateFromRequest(NetworkTask.Result result) {
         Log.i("Log", "Update From Request");
-        Log.i("Log", Boolean.toString(result.success));
+
 
         if (result.success)
         {
@@ -133,6 +133,7 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
         }
         else
         {
+            Log.i("Log", result.exception.getMessage());
             startActivity(LoginActivity.class);
         }
         progressBar.setVisibility(View.INVISIBLE);

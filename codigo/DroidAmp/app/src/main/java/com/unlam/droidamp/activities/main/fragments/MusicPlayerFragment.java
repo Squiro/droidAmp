@@ -1,19 +1,16 @@
 package com.unlam.droidamp.activities.main.fragments;
 
-import android.content.Context;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 public class MusicPlayerFragment extends Fragment {
 
-    public static final String TAG = "MusicPlayerFragment";
-    private static final String POS_KEY = "Position";
+    private static final String TAG = "MusicPlayerFragment";
     private static MediaPlayer mediaPlayer;
     private static boolean isPlaying;
     private static boolean isMuted;
