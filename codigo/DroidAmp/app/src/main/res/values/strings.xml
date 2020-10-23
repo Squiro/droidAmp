@@ -8,6 +8,7 @@
 
     <string name="invalid_password">La contraseña tiene que tener al menos 8 caracteres.</string>
     <string name="invalid_email">El email ingresado no es válido.</string>
+    <string name="invalid_email_or_pass">Email o contraseña incorrectos.</string>
     <string name="login_failed">"El inicio de sesión falló: "</string>
 
     <string name="register"><u>¿Todavía no estás registrado?</u></string>

@@ -48,10 +48,7 @@ public class MusicPlayerFragment extends Fragment {
     {
         try
         {
-            if(isPlaying)
-            {
-                this.reset();
-            }
+            this.reset();
             mediaPlayer.setDataSource(path);
             mediaPlayer.prepare();
             mediaPlayer.start();
@@ -78,8 +75,8 @@ public class MusicPlayerFragment extends Fragment {
     public void stop()
     {
         mediaPlayer.stop();
-        isPlaying = false;
         //mediaPlayer.release();
+        isPlaying = false;
     }
 
     public void reset()

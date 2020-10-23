@@ -26,7 +26,6 @@ public class EventTask extends NetworkTask {
     @Override
     public String request(URL url) throws Exception {
         String token = auth.getToken();
-        Log.i("Log", token);
         JSONObject payload = event.toJSONObject();
         payload.put("env", "TEST");
 

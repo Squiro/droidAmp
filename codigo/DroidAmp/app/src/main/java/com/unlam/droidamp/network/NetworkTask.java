@@ -71,7 +71,7 @@ public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> 
                     result = new Result(resultString, true);
                 }
             } catch(Exception e) {
-                result = new Result(e, false);
+                    result = new Result(e, false);
             }
         }
         return result;
@@ -85,7 +85,7 @@ public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> 
     }
 
     /**
-     * Updates the LoginCallback with the result.
+     * Updates the RequestCallback with the result.
      */
     @Override
     protected void onPostExecute(NetworkTask.Result result) {

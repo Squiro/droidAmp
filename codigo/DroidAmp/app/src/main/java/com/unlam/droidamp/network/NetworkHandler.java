@@ -32,8 +32,7 @@ public class NetworkHandler {
      * If the network request is successful, it returns the response body in String form. Otherwise,
      * it returns null.
      */
-    public static String handleConnection(URL url, String requestType, @Nullable JSONObject payload, @Nullable String token) throws Exception
-    {
+    public static String handleConnection(URL url, String requestType, @Nullable JSONObject payload, @Nullable String token) throws Exception {
         InputStream stream = null;
         HttpURLConnection connection = null;
         String result = null;
@@ -62,7 +61,7 @@ public class NetworkHandler {
             {
                 // Retrieve the error stream
                 stream = connection.getErrorStream();
-                throw new Exception(new String("Error en respueta del servidor, código: " + responseCode));
+                throw new Exception(Integer.toString(responseCode));
             }
 
             if (stream != null) {

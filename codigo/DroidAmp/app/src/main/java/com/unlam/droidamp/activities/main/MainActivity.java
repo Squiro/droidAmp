@@ -14,6 +14,7 @@ import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
 import com.unlam.droidamp.activities.main.fragments.NetworkEventFragment;
 import com.unlam.droidamp.interfaces.BtnListener;
 import com.unlam.droidamp.network.BroadcastConnectivity;
+import com.unlam.droidamp.network.NetworkTask;
 
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -26,11 +27,13 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener, RequestCallback<String> {
+public class MainActivity extends AppCompatActivity implements SensorEventListener, RequestCallback<NetworkTask.Result> {
     // UI Elements
+    private TextView txtAcelerometro;
     private RecyclerView recyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
@@ -43,6 +46,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     // Audio reproduction
     private ArrayList<MusicFile> musicFiles;
     private MusicPlayerFragment musicPlayerFragment;
+    private int currentPosition;
 
     // Sensors
     private SensorManager mSensorManager;
@@ -86,6 +90,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void configureRecyclerView()
     {
+        // ----- UI -----
+        txtAcelerometro = findViewById(R.id.txtAcelerometro);
+
         // ----- RECYCLER VIEW -----
 
         // Get files from android storage
@@ -108,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             // OnClick handler for the music files
             @Override
             public void onClick(View v, int position) {
-                musicPlayerFragment.start(musicFiles.get(position).getPath());
+                playMusicFile(position);
             }
         });
         recyclerView.setAdapter(mAdapter);
@@ -171,6 +178,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         }
     }
 
+    public void playMusicFile(int position)
+    {
+        this.currentPosition = position;
+        musicPlayerFragment.start(musicFiles.get(this.currentPosition).getPath());
+
+    }
+
     @Override
     public void onSensorChanged(SensorEvent event) {
         if (event.sensor.getType() == Sensor.TYPE_PROXIMITY) {
@@ -180,7 +194,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (event.sensor.getType() == Sensor.TYPE_ACCELEROMETER) {
             handleAccelerometerSensor(event);
         }
-
     }
 
     @Override
@@ -207,12 +220,15 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             double acceleration = Math.sqrt(Math.pow(x, 2) +
                     Math.pow(y, 2) +
                     Math.pow(z, 2)) - SensorManager.GRAVITY_EARTH;
+            txtAcelerometro.setText("Aceleración actual: " + acceleration + "m/s^2");
             //Log.d("Log", "Acceleration is " + acceleration + "m/s^2");
 
             if (acceleration > SHAKE_THRESHOLD) {
                 mLastShakeTime = curTime;
                 //Log.d("Log", "Shake detected");
-                musicPlayerFragment.mute();
+                sendEvent(new Event(Event.TYPE_SENSOR, "Accelerometer shake detected"));
+                //musicPlayerFragment.mute();
+                playMusicFile(this.currentPosition+1);
             }
         }
     }
@@ -233,12 +249,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void sendEvent(Event event)
     {
-        Log.i("Log", "send event");
         networkEventFragment.startEventTask(event, this.auth);
     }
 
     @Override
-    public void updateFromRequest(String result) {
+    public void updateFromRequest(NetworkTask.Result result) {
 
     }
 

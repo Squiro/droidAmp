@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.unlam.droidamp.R;
@@ -27,6 +28,7 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
     TextView batteryState;
     Button btnOkGenial;
     Intent batteryStatus;
+    ProgressBar progressBar;
 
     private Auth auth;
     private AuthFragment authFragment;
@@ -40,6 +42,7 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
         batteryPercentage = findViewById(R.id.txtBatteryPercent);
         batteryState = findViewById(R.id.txtBatteryState);
         btnOkGenial = findViewById(R.id.btnOkGenial);
+        progressBar = findViewById(R.id.pgBarBattery);
 
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         batteryStatus = this.registerReceiver(null, ifilter);
@@ -93,6 +96,7 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
         // This method will be executed once the button is clicked
         public void onClick(View v)
         {
+            progressBar.setVisibility(View.VISIBLE);
             checkTokens();
         }
     };
@@ -131,6 +135,7 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
         {
             startActivity(LoginActivity.class);
         }
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override

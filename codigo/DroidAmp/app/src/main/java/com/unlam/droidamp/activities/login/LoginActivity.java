@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.unlam.droidamp.R;
@@ -32,6 +33,7 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
     private TextView txtRegister;
     private TextView txtError;
     private Button btnLogin;
+    private ProgressBar progressBar;
 
     // Network related properties
     private AuthFragment authFragment;
@@ -60,6 +62,7 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
         txtRegister = findViewById(R.id.txtRegister);
         btnLogin = findViewById(R.id.btnLogin);
         txtError = findViewById(R.id.txtError);
+        progressBar = findViewById(R.id.pgBarLogin);
 
         // -------- LISTENERS (hey, listen!) --------
 
@@ -115,6 +118,7 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
         {
             if (!logginIn && authFragment != null) {
                 // Execute the async login.
+                progressBar.setVisibility(View.VISIBLE);
                 authFragment.startLogin(txtEmail.getText().toString(), txtPassword.getText().toString(), auth);
                 logginIn = true;
             }
@@ -130,9 +134,21 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
         }
         else
         {
-            txtError.setText(result.exception.getMessage());
+            switch (Integer.parseInt(result.exception.getMessage()))
+            {
+                case ResponseCode.BAD_REQUEST:
+                    txtError.setText(R.string.invalid_email_or_pass);
+                    break;
+
+                default:
+                    txtError.setText(result.exception.getMessage());
+                    break;
+
+            }
+            //txtError.setText(result.exception.getMessage());
             Log.i("Log", "Not successful");
         }
+        progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
