@@ -9,8 +9,6 @@ import com.unlam.droidamp.models.Event;
 public class ProximitySensor extends DroidAmpSensor {
     // Constants
     private static final int PROXIMITY_DISTANCE = 4;
-
-
     public ProximitySensor(Context context, Auth auth, int sensorType, SharedPreferences sharedPreferences)
     {
         super(context, auth, sensorType, sharedPreferences);
@@ -24,7 +22,8 @@ public class ProximitySensor extends DroidAmpSensor {
         if (value >= -PROXIMITY_DISTANCE && value <= PROXIMITY_DISTANCE) {
             // Detected near
             this.musicPlayerFragment.play();
-            sendEvent(new Event(Event.TYPE_SENSOR, "Proximity sensor detected near", System.currentTimeMillis()));
+            sendEvent(new Event(Event.TYPE_SENSOR, "Proximity sensor detected near"));
         }
+        saveEventInSharedPref("Proximity sensor value: " + value);
     }
 }

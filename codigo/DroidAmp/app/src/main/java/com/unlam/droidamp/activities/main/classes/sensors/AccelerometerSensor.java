@@ -11,8 +11,6 @@ import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.models.Event;
 
 public class AccelerometerSensor extends DroidAmpSensor {
-
-    private TextView txtAcelerometro;
     // Constants
     private static final float SHAKE_THRESHOLD = 12.5f; // m/S**2
     private static final int MIN_TIME_BETWEEN_SHAKES_MILLISECS = 1000;
@@ -21,7 +19,6 @@ public class AccelerometerSensor extends DroidAmpSensor {
     public AccelerometerSensor(Context context, Auth auth, int sensorType, SharedPreferences sharedPreferences)
     {
         super(context, auth, sensorType, sharedPreferences);
-        txtAcelerometro = this.mainActivity.findViewById(R.id.txtAcelerometro);
         this.sensorKey = DroidAmpSensor.ACCELEROMETER_KEY;
     }
 
@@ -45,15 +42,12 @@ public class AccelerometerSensor extends DroidAmpSensor {
                     Math.pow(y, 2) +
                     Math.pow(z, 2)) - SensorManager.GRAVITY_EARTH;
 
-            txtAcelerometro.setText("Aceleración actual: " + acceleration + "m/s^2");
-
             if (acceleration > SHAKE_THRESHOLD) {
                 mLastShakeTime = curTime;
-                //Log.d("Log", "Shake detected");
-                sendEvent(new Event(Event.TYPE_SENSOR, "Accelerometer shake detected", System.currentTimeMillis()));
-                //musicPlayerFragment.mute();
+                sendEvent(new Event(Event.TYPE_SENSOR, "Accelerometer shake detected"));
                 mainActivity.playNext();
             }
+            saveEventInSharedPref("Accelerometer sensor value: " + acceleration + "m/s^2");
         }
     }
 

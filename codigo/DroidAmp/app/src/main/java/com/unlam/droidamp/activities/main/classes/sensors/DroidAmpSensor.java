@@ -42,9 +42,9 @@ public class DroidAmpSensor {
 
     }
 
-    public void saveEventInSharedPref(Event event)
+    public void saveEventInSharedPref(String eventMessage)
     {
-        this.editor.putString(sensorKey, event.toString());
+        this.editor.putString(sensorKey, eventMessage);
         editor.apply();
     }
 
@@ -55,7 +55,6 @@ public class DroidAmpSensor {
 
     public void sendEvent(Event event)
     {
-        saveEventInSharedPref(event);
         networkEventFragment.startEventTask(event, this.auth);
     }
 

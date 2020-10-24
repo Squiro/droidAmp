@@ -19,13 +19,11 @@ public class Event {
 
     private String type_events;
     private String description;
-    private long currentTime;
 
-    public Event(String type_events, String description, long currentTime)
+    public Event(String type_events, String description)
     {
         this.type_events = type_events;
         this.description = description;
-        this.currentTime = currentTime;
     }
 
     public JSONObject toJSONObject() throws JSONException {
@@ -37,15 +35,5 @@ public class Event {
             jsonObject.put("description", this.description);
 
         return  jsonObject;
-    }
-
-    @NonNull
-    @Override
-    public String toString() {
-        return new String(this.type_events + ": " + this.description + " at " +
-                String.format(Locale.ENGLISH, "%02d min, %02d sec",
-                TimeUnit.MILLISECONDS.toMinutes(currentTime),
-                TimeUnit.MILLISECONDS.toSeconds(currentTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentTime)))
-        );
     }
 }

@@ -185,10 +185,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void getEventList()
     {
         eventList = new ArrayList<>();
-
         for (DroidAmpSensor sensor: sensorList)
         {
-            Log.i("Log", sensor.getSensorEventFromSharedPref());
             eventList.add(sensor.getSensorEventFromSharedPref());
         }
         eventAdapter = new EventAdapter(eventList);
