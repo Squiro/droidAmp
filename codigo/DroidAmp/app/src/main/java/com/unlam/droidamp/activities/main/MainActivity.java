@@ -9,7 +9,9 @@ import com.unlam.droidamp.activities.main.classes.EventAdapter;
 import com.unlam.droidamp.activities.main.classes.sensors.AccelerometerSensor;
 import com.unlam.droidamp.activities.main.classes.sensors.ProximitySensor;
 import com.unlam.droidamp.activities.main.classes.sensors.DroidAmpSensor;
+import com.unlam.droidamp.activities.main.fragments.MusicResolverFragment;
 import com.unlam.droidamp.auth.Auth;
+import com.unlam.droidamp.interfaces.MusicResolverCallback;
 import com.unlam.droidamp.interfaces.RequestCallback;
 import com.unlam.droidamp.activities.main.classes.MediaAdapter;
 import com.unlam.droidamp.activities.main.classes.MusicFile;
@@ -29,27 +31,29 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.provider.MediaStore;
-import android.util.Log;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener, RequestCallback<NetworkTask.Result> {
+public class MainActivity extends AppCompatActivity implements SensorEventListener, RequestCallback<NetworkTask.Result>, MusicResolverCallback<ArrayList<MusicFile>> {
     // UI Elements
-    private RecyclerView recyclerView;
+    private ProgressBar pgBarMain;
+    private RecyclerView rvMusicFiles;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager layoutManager;
     private RecyclerView eventRecylcler;
     private ArrayList<String> eventList;
 
     // Network fragment
+    private  NetworkEventFragment networkEventFragment;
     private Auth auth;
     private BroadcastConnectivity broadcastConnectivity;
 
     // Audio reproduction
     private ArrayList<MusicFile> musicFiles;
     private MusicPlayerFragment musicPlayerFragment;
+    private MusicResolverFragment musicResolverFragment;
     private int currentPosition;
 
     // Sensors
@@ -69,10 +73,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         this.auth = new Auth(this);
 
+        this.pgBarMain = findViewById(R.id.pgBarMain);
+        this.pgBarMain.setVisibility(View.VISIBLE);
+
         this.sharedPreferences = getSharedPreferences(getString(R.string.sharedPreferencesFile), Context.MODE_PRIVATE);
         this.editor = sharedPreferences.edit();
 
-        musicPlayerFragment = MusicPlayerFragment.getInstance(getSupportFragmentManager());
+
+        instantiateFragments();
         configureRecyclerView();
         registerBroadcastConnectivity();
         getSensors();
@@ -89,6 +97,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         this.sensorList = new ArrayList<>();
         this.sensorList.add(new ProximitySensor(this, this.auth, Sensor.TYPE_PROXIMITY));
         this.sensorList.add(new AccelerometerSensor(this, this.auth, Sensor.TYPE_ACCELEROMETER));
+    }
+
+    public void instantiateFragments()
+    {
+        musicResolverFragment = MusicResolverFragment.getInstance(getSupportFragmentManager());
+        musicPlayerFragment = MusicPlayerFragment.getInstance(getSupportFragmentManager());
+        networkEventFragment = NetworkEventFragment.getInstance(NetworkEventFragment.class, getSupportFragmentManager());
     }
 
     public void configureRecyclerView()
@@ -114,18 +129,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         // Get files from android storage
         musicFiles = new ArrayList<>();
-        getMusicInfo();
+        //getMusicInfo();
 
         // Create the recycler view
-        recyclerView = findViewById(R.id.rvMusicFiles);
+        rvMusicFiles = findViewById(R.id.rvMusicFiles);
+        this.rvMusicFiles.setVisibility(View.INVISIBLE);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
-        recyclerView.setHasFixedSize(true);
-
+        rvMusicFiles.setHasFixedSize(true);
         // use a linear layout manager
         layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        rvMusicFiles.setLayoutManager(layoutManager);
 
         // specify an adapter
         mAdapter = new MediaAdapter(musicFiles, new BtnListener() {
@@ -135,7 +150,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
                 playMusicFile(position);
             }
         });
-        recyclerView.setAdapter(mAdapter);
+
+        rvMusicFiles.setAdapter(mAdapter);
     }
 
     public void registerBroadcastConnectivity()
@@ -166,7 +182,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void getMusicInfo()
     {
-        try {
+
+        /*try {
             String[] projection = new String[]{MediaStore.Audio.Media._ID,  MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM_KEY};
             Cursor cursor = getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
 
@@ -188,7 +205,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         } catch (Exception e)
         {
             Log.i("Exception", e.toString());
-        }
+        }*/
     }
 
     public void playMusicFile(int position)
@@ -229,6 +246,25 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     @Override
     public void finishRequest() {
+        if (networkEventFragment != null) {
+            networkEventFragment.cancelTask();
+        }
+    }
+
+    public void updateFromMusicResolver(ArrayList<MusicFile> result)
+    {
+        this.pgBarMain.setVisibility(View.INVISIBLE);
+        this.rvMusicFiles.setVisibility(View.VISIBLE);
+        this.musicFiles =  result;
+        mAdapter = new MediaAdapter(musicFiles, new BtnListener() {
+            // OnClick handler for the music files
+            @Override
+            public void onClick(View v, int position) {
+                playMusicFile(position);
+            }
+        });
+        rvMusicFiles.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
 
     }
 

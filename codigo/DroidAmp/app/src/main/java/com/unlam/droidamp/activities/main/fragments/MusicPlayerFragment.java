@@ -16,10 +16,6 @@ public class MusicPlayerFragment extends Fragment {
     private static boolean isMuted;
 
     public static MusicPlayerFragment getInstance(FragmentManager fragmentManager) {
-        // Recover NetworkFragment in case we are re-creating the Activity due to a config change.
-        // This is necessary because NetworkFragment might have a task that began running before
-        // the config change occurred and has not finished yet.
-        // The NetworkFragment is recoverable because it calls setRetainInstance(true).
         MusicPlayerFragment networkFragment = (MusicPlayerFragment) fragmentManager.findFragmentByTag(MusicPlayerFragment.TAG);
         if (networkFragment == null) {
             networkFragment = new MusicPlayerFragment();

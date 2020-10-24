@@ -1,7 +1,5 @@
 package com.unlam.droidamp.activities.main.asynctask;
 
-import android.util.Log;
-
 import com.unlam.droidamp.models.Event;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.interfaces.RequestCallback;
