@@ -1,6 +1,7 @@
 package com.unlam.droidamp.activities.main.classes.sensors;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
 import android.widget.TextView;
@@ -17,10 +18,11 @@ public class AccelerometerSensor extends DroidAmpSensor {
     private static final int MIN_TIME_BETWEEN_SHAKES_MILLISECS = 1000;
     private long mLastShakeTime;
 
-    public AccelerometerSensor(Context context, Auth auth, int sensorType)
+    public AccelerometerSensor(Context context, Auth auth, int sensorType, SharedPreferences sharedPreferences)
     {
-        super(context, auth, sensorType);
+        super(context, auth, sensorType, sharedPreferences);
         txtAcelerometro = this.mainActivity.findViewById(R.id.txtAcelerometro);
+        this.sensorKey = DroidAmpSensor.ACCELEROMETER_KEY;
     }
 
     @Override
@@ -48,7 +50,7 @@ public class AccelerometerSensor extends DroidAmpSensor {
             if (acceleration > SHAKE_THRESHOLD) {
                 mLastShakeTime = curTime;
                 //Log.d("Log", "Shake detected");
-                sendEvent(new Event(Event.TYPE_SENSOR, "Accelerometer shake detected"));
+                sendEvent(new Event(Event.TYPE_SENSOR, "Accelerometer shake detected", System.currentTimeMillis()));
                 //musicPlayerFragment.mute();
                 mainActivity.playNext();
             }

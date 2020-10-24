@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.unlam.droidamp.R;
 import java.util.ArrayList;
 
-public class EventAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> {
+public class EventAdapter extends RecyclerView.Adapter<EventAdapter.ViewHolder> {
     private ArrayList<String> mDataset;
 
     // Provide a suitable constructor (depends on the kind of dataset)
@@ -25,23 +25,21 @@ public class EventAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
 
         public ViewHolder(View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.txtTitle);
+            textView = itemView.findViewById(R.id.txtEvent);
         }
     }
 
     // Create new views (invoked by the layout manager)
     @Override
-    public MediaAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public EventAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
-        //TextView v = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item, parent, false);
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.recycler_item, parent, false);
-        MediaAdapter.ViewHolder vh = new MediaAdapter.ViewHolder(v);
-        return vh;
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.event_item, parent, false);
+        return new EventAdapter.ViewHolder(v);
     }
 
     // Replace the contents of a view (invoked by the layout manager)
     @Override
-    public void onBindViewHolder(MediaAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(EventAdapter.ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
         holder.textView.setText(mDataset.get(position));

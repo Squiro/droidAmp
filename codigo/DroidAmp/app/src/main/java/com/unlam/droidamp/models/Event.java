@@ -1,7 +1,12 @@
 package com.unlam.droidamp.models;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.Locale;
+import java.util.concurrent.TimeUnit;
 
 public class Event {
 
@@ -14,11 +19,13 @@ public class Event {
 
     private String type_events;
     private String description;
+    private long currentTime;
 
-    public Event(String type_events, String description)
+    public Event(String type_events, String description, long currentTime)
     {
         this.type_events = type_events;
         this.description = description;
+        this.currentTime = currentTime;
     }
 
     public JSONObject toJSONObject() throws JSONException {
@@ -32,4 +39,13 @@ public class Event {
         return  jsonObject;
     }
 
+    @NonNull
+    @Override
+    public String toString() {
+        return new String(this.type_events + ": " + this.description + " at " +
+                String.format(Locale.ENGLISH, "%02d min, %02d sec",
+                TimeUnit.MILLISECONDS.toMinutes(currentTime),
+                TimeUnit.MILLISECONDS.toSeconds(currentTime) - TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(currentTime)))
+        );
+    }
 }

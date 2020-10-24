@@ -65,9 +65,8 @@ public class Auth {
         long milliseconds2 = currentTime.getTime();
 
         long diff = milliseconds2 - milliseconds1;
-        long diffMinutes = diff / (60 * 1000);
-
-        return diffMinutes;
+        // Diff in minutes
+        return diff / (60 * 1000);
     }
 
     public void saveTokens(String authToken, String refreshToken)

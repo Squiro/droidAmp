@@ -134,14 +134,14 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
         }
         else
         {
-            switch (Integer.parseInt(result.exception.getMessage()))
+            switch (Integer.parseInt(result.exception.toString()))
             {
                 case ResponseCode.BAD_REQUEST:
                     txtError.setText(R.string.invalid_email_or_pass);
                     break;
 
                 default:
-                    txtError.setText(result.exception.getMessage());
+                    txtError.setText(result.exception.toString());
                     break;
 
             }
