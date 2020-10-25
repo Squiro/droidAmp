@@ -15,7 +15,7 @@ import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.interfaces.MusicResolverCallback;
 import com.unlam.droidamp.interfaces.RequestCallback;
 import com.unlam.droidamp.activities.main.classes.MediaAdapter;
-import com.unlam.droidamp.activities.main.classes.MusicFile;
+import com.unlam.droidamp.models.MusicFile;
 import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
 import com.unlam.droidamp.activities.main.fragments.NetworkEventFragment;
 import com.unlam.droidamp.interfaces.BtnListener;
@@ -219,7 +219,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
         rvMusicFiles.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
-
     }
 
     @Override
@@ -241,6 +240,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void finishRequest() {
         if (networkEventFragment != null) {
             networkEventFragment.cancelTask();
+        }
+
+        if (musicResolverFragment != null)
+        {
+            musicResolverFragment.cancelTask();
         }
     }
 }

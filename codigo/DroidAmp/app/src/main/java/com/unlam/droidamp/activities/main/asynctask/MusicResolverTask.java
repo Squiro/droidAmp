@@ -6,7 +6,7 @@ import android.os.AsyncTask;
 import android.provider.MediaStore;
 import android.util.Log;
 
-import com.unlam.droidamp.activities.main.classes.MusicFile;
+import com.unlam.droidamp.models.MusicFile;
 import com.unlam.droidamp.interfaces.MusicResolverCallback;
 import java.util.ArrayList;
 
@@ -32,27 +32,31 @@ public class MusicResolverTask extends AsyncTask<Void, Integer, ArrayList<MusicF
             try {
                 String[] projection = new String[]{MediaStore.Audio.Media._ID,  MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM_KEY};
                 Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
+                traverseCursor(result, cursor);
+                cursor = context.getContentResolver().query(MediaStore.Audio.Media.INTERNAL_CONTENT_URI, projection, null, null, null);
+                traverseCursor(result, cursor);
 
-                if (cursor != null)
-                {
-                    while(cursor.moveToNext())
-                    {
-                        long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
-                        String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                        // int albumId = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
-                        String data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-                        String albumkey = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_KEY));
-
-                        result.add(new MusicFile(id, title, data, albumkey));
-                    }
-
-                    cursor.close();
-                }
             } catch(Exception e) {
                 Log.i("Exception", e.toString());
             }
         }
         return result;
+    }
+
+    private void traverseCursor(ArrayList<MusicFile> result, Cursor cursor)
+    {
+        if (cursor != null) {
+            while (cursor.moveToNext()) {
+                long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+                //int albumId = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
+                String data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+                String albumkey = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_KEY));
+
+                result.add(new MusicFile(id, title, data, albumkey));
+            }
+            cursor.close();
+        }
     }
 
     /**

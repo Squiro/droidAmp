@@ -1,5 +1,6 @@
-package com.unlam.droidamp.activities.main.classes;
+package com.unlam.droidamp.activities.album;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,17 +11,17 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.interfaces.BtnListener;
-import com.unlam.droidamp.models.MusicFile;
+import com.unlam.droidamp.models.Album;
 
 import java.util.ArrayList;
 
-public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder>  {
+public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder>  {
 
-    private ArrayList<MusicFile> mDataset;
+    private ArrayList<Album> mDataset;
     private BtnListener btnListener;
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MediaAdapter(ArrayList<MusicFile> myDataset, BtnListener btnListener) {
+    public AlbumAdapter(ArrayList<Album> myDataset, BtnListener btnListener) {
         this.mDataset = myDataset;
         this.btnListener = btnListener;
     }
@@ -30,14 +31,16 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView textView;
+        public TextView txtAlbum;
+        public TextView txtArtist;
         public Button btnPlay;
         public BtnListener btnListener;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.txtTitle);
-            btnPlay = itemView.findViewById(R.id.btnPlay);
+            txtAlbum = itemView.findViewById(R.id.txtTitle);
+            txtArtist = itemView.findViewById(R.id.txtAlbumArtist);
+            btnPlay = itemView.findViewById(R.id.btnPlayAlbum);
 
             btnPlay.setOnClickListener(new View.OnClickListener(){
                 @Override
@@ -50,10 +53,10 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
 
     // Create new views (invoked by the layout manager)
     @Override
-    public MediaAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+    public AlbumAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         //TextView v = (TextView) LayoutInflater.from(parent.getContext()).inflate(R.layout.song_item, parent, false);
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.song_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.album_item, parent, false);
         ViewHolder vh = new ViewHolder(v);
         vh.btnListener = this.btnListener;
         return vh;
@@ -64,7 +67,10 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.textView.setText(mDataset.get(position).getTitle());
+        Log.i("Log", "Size of data_ " + mDataset.size());
+        Log.i("Log", "POS " + position);
+        holder.txtAlbum.setText(mDataset.get(position).getAlbum());
+        holder.txtArtist.setText(mDataset.get(position).getArtist());
 
     }
 

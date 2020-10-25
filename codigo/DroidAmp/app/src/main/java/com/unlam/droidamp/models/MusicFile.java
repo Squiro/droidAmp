@@ -1,4 +1,4 @@
-package com.unlam.droidamp.activities.main.classes;
+package com.unlam.droidamp.models;
 
 public class MusicFile {
 

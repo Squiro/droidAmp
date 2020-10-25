@@ -14,6 +14,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.unlam.droidamp.R;
+import com.unlam.droidamp.activities.album.AlbumActivity;
 import com.unlam.droidamp.activities.login.LoginActivity;
 import com.unlam.droidamp.activities.main.MainActivity;
 import com.unlam.droidamp.auth.Auth;
@@ -113,7 +114,8 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
         // If token isn't expired start the mainActivity
         if (!auth.checkIfTokenExpired())
         {
-            startActivity(MainActivity.class);
+            //startActivity(MainActivity.class);
+            startActivity(AlbumActivity.class);
         }
         else
         {
