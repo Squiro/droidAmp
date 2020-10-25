@@ -242,8 +242,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             networkEventFragment.cancelTask();
         }
 
-        if (musicResolverFragment != null)
-        {
+        if (musicResolverFragment != null) {
             musicResolverFragment.cancelTask();
         }
     }

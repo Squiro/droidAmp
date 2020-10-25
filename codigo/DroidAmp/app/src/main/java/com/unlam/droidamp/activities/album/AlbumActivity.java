@@ -74,7 +74,7 @@ public class AlbumActivity extends AppCompatActivity implements MusicResolverCal
 
     public void playAlbum(int position)
     {
-
+        
     }
 
     @Override
@@ -82,7 +82,7 @@ public class AlbumActivity extends AppCompatActivity implements MusicResolverCal
         this.pgBarAlbums.setVisibility(View.INVISIBLE);
 
         Log.i("Log", "Result: " + result.size());
-        this.rvAlbums.setVisibility(View.VISIBLE);
+        //this.rvAlbums.setVisibility(View.VISIBLE);
         this.albumList =  result;
         mAlbumAdapter = new AlbumAdapter(albumList, new BtnListener() {
             // OnClick handler for the music files
@@ -102,6 +102,8 @@ public class AlbumActivity extends AppCompatActivity implements MusicResolverCal
 
     @Override
     public void finishRequest() {
-
+        if (albumResolverFragment != null) {
+            albumResolverFragment.cancelTask();
+        }
     }
 }

@@ -38,7 +38,7 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
 
         public ViewHolder(View itemView) {
             super(itemView);
-            txtAlbum = itemView.findViewById(R.id.txtTitle);
+            txtAlbum = itemView.findViewById(R.id.txtAlbumTitle);
             txtArtist = itemView.findViewById(R.id.txtAlbumArtist);
             btnPlay = itemView.findViewById(R.id.btnPlayAlbum);
 
@@ -67,8 +67,6 @@ public class AlbumAdapter extends RecyclerView.Adapter<AlbumAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        Log.i("Log", "Size of data_ " + mDataset.size());
-        Log.i("Log", "POS " + position);
         holder.txtAlbum.setText(mDataset.get(position).getAlbum());
         holder.txtArtist.setText(mDataset.get(position).getArtist());
 

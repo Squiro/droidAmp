@@ -25,12 +25,12 @@ public class AlbumResolverFragment extends Fragment {
      * from.
      */
     public static AlbumResolverFragment getInstance(FragmentManager fragmentManager) {
-        AlbumResolverFragment networkFragment = (AlbumResolverFragment) fragmentManager.findFragmentByTag(AlbumResolverFragment.TAG);
-        if (networkFragment == null) {
-            networkFragment = new AlbumResolverFragment();
-            fragmentManager.beginTransaction().add(networkFragment, TAG).commit();
+        AlbumResolverFragment albumFragment = (AlbumResolverFragment) fragmentManager.findFragmentByTag(AlbumResolverFragment.TAG);
+        if (albumFragment == null) {
+            albumFragment = new AlbumResolverFragment();
+            fragmentManager.beginTransaction().add(albumFragment, TAG).commit();
         }
-        return networkFragment;
+        return albumFragment;
     }
 
     @Override
