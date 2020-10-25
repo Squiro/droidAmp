@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.widget.ProgressBar;
 
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.activities.album.fragments.AlbumResolverFragment;
+import com.unlam.droidamp.activities.main.MainActivity;
 import com.unlam.droidamp.interfaces.BtnListener;
 import com.unlam.droidamp.interfaces.MusicResolverCallback;
 import com.unlam.droidamp.models.Album;
@@ -30,6 +32,7 @@ public class AlbumActivity extends AppCompatActivity implements MusicResolverCal
 
     private ArrayList<Album> albumList;
     private BroadcastConnectivity broadcastConnectivity;
+    public static final String ALBUM_KEY = "album";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,10 +74,13 @@ public class AlbumActivity extends AppCompatActivity implements MusicResolverCal
         this.unregisterReceiver(broadcastConnectivity);
     }
 
-
     public void playAlbum(int position)
     {
-        
+        Intent activity = new Intent(this, MainActivity.class);
+        activity.putExtra(ALBUM_KEY, albumList.get(position).getAlbum());
+        startActivity(activity);
+        this.finish();
+
     }
 
     @Override

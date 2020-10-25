@@ -8,6 +8,7 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.unlam.droidamp.activities.album.AlbumActivity;
 import com.unlam.droidamp.activities.album.asynctasks.AlbumResolverTask;
 import com.unlam.droidamp.models.Album;
 import com.unlam.droidamp.interfaces.MusicResolverCallback;
@@ -19,6 +20,7 @@ public class AlbumResolverFragment extends Fragment {
     private static final String TAG = "AlbumResolverFragment";
     protected MusicResolverCallback<ArrayList<Album>> callback;
     private AlbumResolverTask albumResolverTask;
+    private String album;
 
     /**
      * Static initializer for NetworkFragment that sets the URL of the host it will be downloading

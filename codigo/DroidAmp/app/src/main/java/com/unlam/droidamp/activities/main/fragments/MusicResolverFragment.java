@@ -2,11 +2,13 @@ package com.unlam.droidamp.activities.main.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.unlam.droidamp.activities.album.AlbumActivity;
 import com.unlam.droidamp.activities.main.asynctask.MusicResolverTask;
 import com.unlam.droidamp.models.MusicFile;
 import com.unlam.droidamp.interfaces.MusicResolverCallback;
@@ -18,18 +20,23 @@ public class MusicResolverFragment extends Fragment {
     private static final String TAG = "MusicResolverFragment";
     protected MusicResolverCallback<ArrayList<MusicFile>> callback;
     private MusicResolverTask musicResolverTask;
+    private String album;
 
     /**
      * Static initializer for NetworkFragment that sets the URL of the host it will be downloading
      * from.
      */
-    public static MusicResolverFragment getInstance(FragmentManager fragmentManager) {
-        MusicResolverFragment networkFragment = (MusicResolverFragment) fragmentManager.findFragmentByTag(MusicResolverFragment.TAG);
-        if (networkFragment == null) {
-            networkFragment = new MusicResolverFragment();
-            fragmentManager.beginTransaction().add(networkFragment, TAG).commit();
+    public static MusicResolverFragment getInstance(FragmentManager fragmentManager, String album) {
+        Log.i("Log", "ALBUM:" + album);
+        MusicResolverFragment musicResolverFragment = (MusicResolverFragment) fragmentManager.findFragmentByTag(MusicResolverFragment.TAG);
+        if (musicResolverFragment == null) {
+            musicResolverFragment = new MusicResolverFragment();
+            Bundle args = new Bundle();
+            args.putString(AlbumActivity.ALBUM_KEY, album);
+            musicResolverFragment.setArguments(args);
+            fragmentManager.beginTransaction().add(musicResolverFragment, TAG).commit();
         }
-        return networkFragment;
+        return musicResolverFragment;
     }
 
     @Override
@@ -44,6 +51,7 @@ public class MusicResolverFragment extends Fragment {
         super.onAttach(context);
         // Host Activity will handle callbacks from task.
         callback = (MusicResolverCallback<ArrayList<MusicFile>>) context;
+        this.album = getArguments().getString(AlbumActivity.ALBUM_KEY);
         startMusicResolverTask(context);
     }
 
@@ -67,7 +75,8 @@ public class MusicResolverFragment extends Fragment {
      */
     public void startMusicResolverTask(Context context) {
         cancelTask();
-        musicResolverTask = new MusicResolverTask(this.callback, context);
+        Log.i("Log", this.album);
+        musicResolverTask = new MusicResolverTask(this.callback, context, this.album);
         musicResolverTask.execute();
     }
 

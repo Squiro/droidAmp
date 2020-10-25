@@ -21,14 +21,14 @@ public class MusicPlayerFragment extends Fragment {
     private static int currVolume;
 
     public static MusicPlayerFragment getInstance(FragmentManager fragmentManager) {
-        MusicPlayerFragment networkFragment = (MusicPlayerFragment) fragmentManager.findFragmentByTag(MusicPlayerFragment.TAG);
-        if (networkFragment == null) {
-            networkFragment = new MusicPlayerFragment();
+        MusicPlayerFragment musicPlayerFragment = (MusicPlayerFragment) fragmentManager.findFragmentByTag(MusicPlayerFragment.TAG);
+        if (musicPlayerFragment == null) {
+            musicPlayerFragment = new MusicPlayerFragment();
             mediaPlayer = new MediaPlayer();
             isPlaying = false;
-            fragmentManager.beginTransaction().add(networkFragment, TAG).commit();
+            fragmentManager.beginTransaction().add(musicPlayerFragment, TAG).commit();
         }
-        return networkFragment;
+        return musicPlayerFragment;
     }
 
     @Override

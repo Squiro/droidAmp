@@ -103,15 +103,9 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
         // This method will be executed once the button is clicked
         public void onClick(View v)
         {
-            startRegisterActivity();
+            startActivity(RegisterActivity.class);
         }
     };
-
-    private void startRegisterActivity()
-    {
-        Intent registerActivityIntent = new Intent(this, RegisterActivity.class);
-        startActivity(registerActivityIntent);
-    }
 
     private void login() {
         if (validateInputs())
@@ -130,7 +124,7 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
 
         if (result.success)
         {
-            startMainActivity();
+            startActivity(MainActivity.class);
         }
         else
         {
@@ -167,10 +161,10 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
         }
     }
 
-    public void startMainActivity()
+    private <T> void startActivity(Class<T> clazz)
     {
-        Intent mainActivityIntent = new Intent(this, MainActivity.class);
-        startActivity(mainActivityIntent);
+        Intent activity = new Intent(this, clazz);
+        startActivity(activity);
         this.finish();
     }
 

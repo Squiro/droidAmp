@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unlam.droidamp.R;
+import com.unlam.droidamp.activities.album.AlbumActivity;
 import com.unlam.droidamp.activities.main.classes.EventAdapter;
 import com.unlam.droidamp.activities.main.classes.sensors.AccelerometerSensor;
 import com.unlam.droidamp.activities.main.classes.sensors.LightSensor;
@@ -31,6 +32,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -51,6 +53,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private BroadcastConnectivity broadcastConnectivity;
 
     // Audio reproduction
+    private String album;
     private ArrayList<MusicFile> musicFiles;
     private MusicPlayerFragment musicPlayerFragment;
     private MusicResolverFragment musicResolverFragment;
@@ -69,6 +72,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
 
         this.auth = new Auth(this);
+
+        this.album = getIntent().getExtras().getString(AlbumActivity.ALBUM_KEY);
+        Log.i("Log", this.album);
 
         this.pgBarMain = findViewById(R.id.pgBarMain);
         this.pgBarMain.setVisibility(View.VISIBLE);
@@ -96,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void instantiateFragments()
     {
-        musicResolverFragment = MusicResolverFragment.getInstance(getSupportFragmentManager());
+        musicResolverFragment = MusicResolverFragment.getInstance(getSupportFragmentManager(), this.album);
         musicPlayerFragment = MusicPlayerFragment.getInstance(getSupportFragmentManager());
         networkEventFragment = NetworkEventFragment.getInstance(NetworkEventFragment.class, getSupportFragmentManager());
     }
