@@ -4,15 +4,17 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
+
+import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.models.Event;
 
 public class ProximitySensor extends DroidAmpSensor {
     // Constants
     private static final int PROXIMITY_DISTANCE = 4;
-    public ProximitySensor(Context context, Auth auth, SharedPreferences sharedPreferences)
+    public ProximitySensor(Context context, Auth auth, SharedPreferences sharedPreferences, MusicPlayerFragment musicPlayerFragment)
     {
-        super(context, auth, Sensor.TYPE_PROXIMITY, sharedPreferences);
+        super(context, auth, Sensor.TYPE_PROXIMITY, sharedPreferences, musicPlayerFragment);
         this.sensorKey = DroidAmpSensor.PROXIMITY_KEY;
     }
 

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 
+import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.models.Event;
 
@@ -15,9 +16,9 @@ public class LightSensor extends DroidAmpSensor {
     private static final int MIN_TIME_BETWEEN_DETECTION_MILLISECS = 2000;
     private long mLastLightChangeTime;
 
-    public LightSensor(Context context, Auth auth, SharedPreferences sharedPreferences)
+    public LightSensor(Context context, Auth auth, SharedPreferences sharedPreferences, MusicPlayerFragment musicPlayerFragment)
     {
-        super(context, auth, Sensor.TYPE_LIGHT, sharedPreferences);
+        super(context, auth, Sensor.TYPE_LIGHT, sharedPreferences, musicPlayerFragment);
         this.sensorKey = DroidAmpSensor.LIGHT_KEY;
     }
 

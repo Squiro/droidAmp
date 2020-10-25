@@ -72,10 +72,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setContentView(R.layout.activity_main);
 
         this.auth = new Auth(this);
-
         this.album = getIntent().getExtras().getString(AlbumActivity.ALBUM_KEY);
-        Log.i("Log", this.album);
-
         this.pgBarMain = findViewById(R.id.pgBarMain);
         this.pgBarMain.setVisibility(View.VISIBLE);
         instantiateFragments();
@@ -95,9 +92,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         // Add our sensors classes to the array list
         this.sensorList = new ArrayList<>();
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPreferencesFile), Context.MODE_PRIVATE);
-        this.sensorList.add(new ProximitySensor(this, this.auth, sharedPreferences));
-        this.sensorList.add(new AccelerometerSensor(this, this.auth, sharedPreferences));
-        this.sensorList.add(new LightSensor(this, this.auth, sharedPreferences));
+        this.sensorList.add(new ProximitySensor(this, this.auth, sharedPreferences, musicPlayerFragment));
+        this.sensorList.add(new AccelerometerSensor(this, this.auth, sharedPreferences, musicPlayerFragment));
+        this.sensorList.add(new LightSensor(this, this.auth, sharedPreferences, musicPlayerFragment));
     }
 
     public void instantiateFragments()

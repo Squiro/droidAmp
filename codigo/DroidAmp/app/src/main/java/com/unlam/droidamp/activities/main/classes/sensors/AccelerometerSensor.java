@@ -5,6 +5,8 @@ import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+
+import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.models.Event;
 
@@ -16,9 +18,9 @@ public class AccelerometerSensor extends DroidAmpSensor {
     private static final int MIN_TIME_BETWEEN_SHAKES_MILLISECS = 1000;
     private long mLastShakeTime;
 
-    public AccelerometerSensor(Context context, Auth auth, SharedPreferences sharedPreferences)
+    public AccelerometerSensor(Context context, Auth auth, SharedPreferences sharedPreferences, MusicPlayerFragment musicPlayerFragment)
     {
-        super(context, auth, Sensor.TYPE_ACCELEROMETER, sharedPreferences);
+        super(context, auth, Sensor.TYPE_ACCELEROMETER, sharedPreferences, musicPlayerFragment);
         this.sensorKey = DroidAmpSensor.ACCELEROMETER_KEY;
     }
 

@@ -41,12 +41,6 @@ public class MusicResolverTask extends AsyncTask<Void, Integer, ArrayList<MusicF
                 traverseCursor(result, cursor);
                 cursor = context.getContentResolver().query(MediaStore.Audio.Media.INTERNAL_CONTENT_URI, projection, where, whereVal, null);
                 traverseCursor(result, cursor);
-                /*String[] projection = new String[]{MediaStore.Audio.Media._ID,  MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM_KEY};
-                Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, null, null, null);
-                traverseCursor(result, cursor);
-                cursor = context.getContentResolver().query(MediaStore.Audio.Media.INTERNAL_CONTENT_URI, projection, null, null, null);
-                traverseCursor(result, cursor);*/
-
             } catch(Exception e) {
                 Log.i("Exception", e.toString());
             }

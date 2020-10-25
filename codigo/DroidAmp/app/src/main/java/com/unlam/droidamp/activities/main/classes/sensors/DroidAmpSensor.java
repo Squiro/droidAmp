@@ -27,11 +27,11 @@ public class DroidAmpSensor {
     protected static final String PROXIMITY_KEY = "PROXIMITY_SENSOR";
     protected static final String LIGHT_KEY = "LIGHT_SENSOR";
 
-    public DroidAmpSensor(Context context, Auth auth, int sensorType, SharedPreferences sharedPreferences)
+    public DroidAmpSensor(Context context, Auth auth, int sensorType, SharedPreferences sharedPreferences, MusicPlayerFragment musicPlayerFragment)
     {
         this.auth = auth;
         this.mainActivity =  (MainActivity) context;
-        this.musicPlayerFragment = MusicPlayerFragment.getInstance(mainActivity.getSupportFragmentManager());
+        this.musicPlayerFragment = musicPlayerFragment;//MusicPlayerFragment.getInstance(mainActivity.getSupportFragmentManager());
         this.networkEventFragment = NetworkEventFragment.getInstance(NetworkEventFragment.class, mainActivity.getSupportFragmentManager());
         this.sensorType = sensorType;
         this.sharedPreferences = sharedPreferences;

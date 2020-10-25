@@ -9,8 +9,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
-import com.unlam.droidamp.R;
-
 public class MusicPlayerFragment extends Fragment {
 
     private static final String TAG = "MusicPlayerFragment";
@@ -39,9 +37,11 @@ public class MusicPlayerFragment extends Fragment {
     }
 
     @Override
-    public void onResume() {
-        super.onResume();
+    public void onDestroy() {
+        super.onDestroy();
+        this.stop();
     }
+
     public void start(String path)
     {
         try
@@ -73,7 +73,7 @@ public class MusicPlayerFragment extends Fragment {
     public void stop()
     {
         mediaPlayer.stop();
-        //mediaPlayer.release();
+        mediaPlayer.release();
         isPlaying = false;
     }
 
