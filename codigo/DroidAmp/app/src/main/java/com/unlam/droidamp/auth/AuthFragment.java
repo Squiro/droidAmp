@@ -24,9 +24,9 @@ public class AuthFragment extends NetworkFragment {
     /**
      * Start non-blocking execution of LoginTask.
      */
-    public void startLogin(String email, String password, Auth auth) {
+    public void startLogin(User user, Auth auth) {
         cancelTask();
-        loginTask = new LoginTask(this.callback, email, password, auth);
+        loginTask = new LoginTask(this.callback, user, auth);
         loginTask.execute(NetworkHandler.API_ENDPOINT + "login");
     }
 
@@ -42,7 +42,6 @@ public class AuthFragment extends NetworkFragment {
     public void startRefreshToken(Auth auth)
     {
         cancelTask();
-        Log.i("Log", this.callback.toString());
         tokenTask = new TokenTask(this.callback, auth);
         tokenTask.execute(NetworkHandler.API_ENDPOINT + "refresh");
     }

@@ -1,6 +1,8 @@
 package com.unlam.droidamp.network;
 
 import android.os.AsyncTask;
+import android.util.Log;
+
 import com.unlam.droidamp.interfaces.RequestCallback;
 
 import org.json.JSONObject;
@@ -43,8 +45,10 @@ public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> 
         if (callback != null)
         {
             BroadcastConnectivity broadcastConnectivity = callback.getBroadcastConnectivity();
+
             if (broadcastConnectivity == null || !broadcastConnectivity.isConnected())
             {
+                Log.i("Log", " broad");
                 // If no connectivity, cancel task and update Callback with null data.
                 //callback.updateFromRequest("No hay conexión a internet.");
                 cancel(true);
@@ -108,6 +112,8 @@ public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> 
      */
     @Override
     protected void onCancelled(NetworkTask.Result result) {
+
+        Log.i("Log", "Task cancelled");
         callback.finishRequest();
     }
 

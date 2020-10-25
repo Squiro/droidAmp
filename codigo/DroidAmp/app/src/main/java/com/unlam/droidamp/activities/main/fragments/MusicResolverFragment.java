@@ -75,7 +75,6 @@ public class MusicResolverFragment extends Fragment {
      */
     public void startMusicResolverTask(Context context) {
         cancelTask();
-        Log.i("Log", this.album);
         musicResolverTask = new MusicResolverTask(this.callback, context, this.album);
         musicResolverTask.execute();
     }

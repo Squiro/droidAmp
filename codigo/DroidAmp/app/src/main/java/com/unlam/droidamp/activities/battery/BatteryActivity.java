@@ -16,7 +16,6 @@ import android.widget.TextView;
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.activities.album.AlbumActivity;
 import com.unlam.droidamp.activities.login.LoginActivity;
-import com.unlam.droidamp.activities.main.MainActivity;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.auth.AuthFragment;
 import com.unlam.droidamp.interfaces.RequestCallback;
@@ -67,7 +66,7 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
         // Instantiate auth fragment
         authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager());
 
-        broadcastConnectivity = new BroadcastConnectivity(this);
+        this.broadcastConnectivity = new BroadcastConnectivity(this);
         this.registerReceiver(broadcastConnectivity, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
@@ -114,7 +113,6 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
         // If token isn't expired start the mainActivity
         if (!auth.checkIfTokenExpired())
         {
-            //startActivity(MainActivity.class);
             startActivity(AlbumActivity.class);
         }
         else
@@ -128,7 +126,7 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
     public void updateFromRequest(NetworkTask.Result result) {
         if (result.success)
         {
-            startActivity(MainActivity.class);
+            startActivity(AlbumActivity.class);
         }
         else
         {
@@ -140,7 +138,7 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
 
     @Override
     public BroadcastConnectivity getBroadcastConnectivity() {
-        return broadcastConnectivity;
+        return this.broadcastConnectivity;
     }
 
     @Override

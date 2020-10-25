@@ -20,7 +20,6 @@ public class AlbumResolverFragment extends Fragment {
     private static final String TAG = "AlbumResolverFragment";
     protected MusicResolverCallback<ArrayList<Album>> callback;
     private AlbumResolverTask albumResolverTask;
-    private String album;
 
     /**
      * Static initializer for NetworkFragment that sets the URL of the host it will be downloading

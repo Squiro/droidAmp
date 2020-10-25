@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.auth.Auth;
@@ -15,13 +16,24 @@ import com.unlam.droidamp.auth.AuthFragment;
 import com.unlam.droidamp.interfaces.RequestCallback;
 import com.unlam.droidamp.models.User;
 import com.unlam.droidamp.network.BroadcastConnectivity;
+import com.unlam.droidamp.network.NetworkTask;
+import com.unlam.droidamp.utilities.InputValidatorHelper;
 
-public class RegisterActivity extends AppCompatActivity implements RequestCallback<String> {
+public class RegisterActivity extends AppCompatActivity implements RequestCallback<NetworkTask.Result> {
 
-    AuthFragment authFragment;
-    Button btnRegister;
-    boolean registerInProgress;
+    private TextView txtError;
+    private TextView txtNombre;
+    private TextView txtApellido;
+    private TextView txtEmail;
+    private TextView txtPassword;
+    private TextView txtDNI;
+    private TextView txtComision;
+    private Button btnRegister;
 
+
+    private AuthFragment authFragment;
+
+    private boolean registerInProgress;
     private Auth auth;
     private BroadcastConnectivity broadcastConnectivity;
 
@@ -36,6 +48,13 @@ public class RegisterActivity extends AppCompatActivity implements RequestCallba
         this.auth = new Auth(this);
 
         // -------- UI ELEMENTS --------
+        txtNombre = findViewById(R.id.txtNombre);
+        txtApellido = findViewById(R.id.txtApellido);
+        txtEmail = findViewById(R.id.txtEmail);
+        txtPassword = findViewById(R.id.txtPassword);
+        txtDNI = findViewById(R.id.txtDni);
+        txtComision = findViewById(R.id.txtComision);
+        txtError = findViewById(R.id.txtError);
         btnRegister = findViewById(R.id.btnRegister);
 
         // -------- LISTENERS --------
@@ -66,16 +85,28 @@ public class RegisterActivity extends AppCompatActivity implements RequestCallba
     public void register()
     {
         if (!registerInProgress && authFragment != null) {
-            User user = new User("email", "pass");
-            // Execute the async login.
-            authFragment.startRegister(user, auth);
-            registerInProgress = true;
+            if (validateInputs())
+            {
+                User user = new User(txtNombre.getText().toString(), txtApellido.getText().toString(), Integer.parseInt(txtDNI.getText().toString()),
+                        txtEmail.getText().toString(), txtPassword.getText().toString(), Integer.parseInt(txtComision.getText().toString()));
+                // Execute the async login.
+                authFragment.startRegister(user, auth);
+                registerInProgress = true;
+            }
         }
     }
 
     @Override
-    public void updateFromRequest(String result) {
+    public void updateFromRequest(NetworkTask.Result result) {
+        if (result.success)
+        {
 
+            Log.i("Log", result.resultValue);
+        }
+        else
+        {
+            Log.i("Log", result.exception.toString());
+        }
     }
 
     @Override
@@ -85,6 +116,52 @@ public class RegisterActivity extends AppCompatActivity implements RequestCallba
 
     @Override
     public void finishRequest() {
+        if (authFragment != null)
+        {
+            authFragment.cancelTask();
+        }
         Log.i("Log", "Request finished");
+    }
+
+    public boolean validateInputs()
+    {
+        txtError.setText("");
+
+        if (!InputValidatorHelper.isValidEmail(txtEmail.getText().toString()))
+        {
+            txtError.setText(R.string.invalid_email);
+            return false;
+        }
+
+        if (!InputValidatorHelper.isLengthyEnough(txtPassword.getText().toString(), 8))
+        {
+            txtError.setText(R.string.invalid_password);
+            return false;
+        }
+
+        if (!InputValidatorHelper.isNumeric(txtDNI.getText().toString())) {
+            txtError.setText(R.string.invalid_dni);
+            return false;
+        }
+
+        if (!InputValidatorHelper.isNumeric(txtComision.getText().toString())) {
+            txtError.setText(R.string.invalid_commission);
+            return false;
+        }
+
+        if (InputValidatorHelper.isNullOrEmpty(txtApellido.getText().toString()))
+        {
+            Log.i("Log", txtApellido.getText().toString());
+            txtError.setText(R.string.invalid_surname);
+            return false;
+        }
+
+        if (InputValidatorHelper.isNullOrEmpty(txtNombre.getText().toString()))
+        {
+            txtError.setText(R.string.invalid_name);
+            return false;
+        }
+
+        return true;
     }
 }

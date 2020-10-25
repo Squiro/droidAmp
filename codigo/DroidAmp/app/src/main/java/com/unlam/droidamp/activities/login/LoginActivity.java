@@ -14,11 +14,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.unlam.droidamp.R;
+import com.unlam.droidamp.activities.album.AlbumActivity;
 import com.unlam.droidamp.activities.main.MainActivity;
 import com.unlam.droidamp.activities.register.RegisterActivity;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.auth.AuthFragment;
 import com.unlam.droidamp.interfaces.RequestCallback;
+import com.unlam.droidamp.models.User;
 import com.unlam.droidamp.network.NetworkTask;
 import com.unlam.droidamp.utilities.Encryption;
 import com.unlam.droidamp.network.BroadcastConnectivity;
@@ -103,7 +105,7 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
         // This method will be executed once the button is clicked
         public void onClick(View v)
         {
-            startActivity(RegisterActivity.class);
+            startActivity(RegisterActivity.class, false);
         }
     };
 
@@ -113,7 +115,8 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
             if (!logginIn && authFragment != null) {
                 // Execute the async login.
                 progressBar.setVisibility(View.VISIBLE);
-                authFragment.startLogin(txtEmail.getText().toString(), txtPassword.getText().toString(), auth);
+                User user = new User(txtEmail.getText().toString(), txtPassword.getText().toString());
+                authFragment.startLogin(user, auth);
                 logginIn = true;
             }
         }
@@ -124,7 +127,7 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
 
         if (result.success)
         {
-            startActivity(MainActivity.class);
+            startActivity(AlbumActivity.class, true);
         }
         else
         {
@@ -161,11 +164,12 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
         }
     }
 
-    private <T> void startActivity(Class<T> clazz)
+    private <T> void startActivity(Class<T> clazz, boolean finishCurrent)
     {
         Intent activity = new Intent(this, clazz);
         startActivity(activity);
-        this.finish();
+        if (finishCurrent)
+            this.finish();
     }
 
     private void setValidationListeners()

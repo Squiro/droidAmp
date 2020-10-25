@@ -104,7 +104,6 @@ public class Encryption {
             // Get the encrypted data
             byte[] encrypted = new byte[byteBuffer.remaining()];
             byteBuffer.get(encrypted);
-
             // Decrypt data
             c = Cipher.getInstance(AES_MODE);
             c.init(Cipher.DECRYPT_MODE, getSecretKey(context), new GCMParameterSpec(TAG_LENGTH_BIT, iv));

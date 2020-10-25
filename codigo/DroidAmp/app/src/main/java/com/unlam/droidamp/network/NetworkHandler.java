@@ -109,8 +109,10 @@ public class NetworkHandler {
     private static void configureConnection(HttpURLConnection connection, @Nullable String token)
     {
         configureConnection(connection);
-        if (token != null)
+        if (token != null) {
             connection.setRequestProperty("Authorization", "Bearer " + token);
+        }
+
     }
 
     private static void configureConnection(HttpURLConnection connection)

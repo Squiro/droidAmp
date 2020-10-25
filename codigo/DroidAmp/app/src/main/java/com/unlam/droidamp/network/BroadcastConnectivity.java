@@ -28,17 +28,13 @@ public class BroadcastConnectivity extends BroadcastReceiver {
 
     public boolean isConnected()
     {
-        if (cm == null)
-        {
-            activeNetwork = cm.getActiveNetworkInfo();
-            if(activeNetwork == null || !activeNetwork.isConnectedOrConnecting() || (activeNetwork.getType() != ConnectivityManager.TYPE_WIFI && activeNetwork.getType() != ConnectivityManager.TYPE_MOBILE)){
-                Toast.makeText(appContext, R.string.no_connection, Toast.LENGTH_LONG).show();
-                return false;
-            }
-            return  true;
+        activeNetwork = cm.getActiveNetworkInfo();
+        if(activeNetwork == null || !activeNetwork.isConnectedOrConnecting() || (activeNetwork.getType() != ConnectivityManager.TYPE_WIFI && activeNetwork.getType() != ConnectivityManager.TYPE_MOBILE)){
+            Toast.makeText(appContext, R.string.no_connection, Toast.LENGTH_LONG).show();
+            return false;
         }
+        return  true;
 
-        return false;
     }
-};
+}
 

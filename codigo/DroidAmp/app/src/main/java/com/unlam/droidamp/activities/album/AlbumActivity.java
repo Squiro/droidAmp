@@ -79,16 +79,13 @@ public class AlbumActivity extends AppCompatActivity implements MusicResolverCal
         Intent activity = new Intent(this, MainActivity.class);
         activity.putExtra(ALBUM_KEY, albumList.get(position).getAlbum());
         startActivity(activity);
-        this.finish();
+        //this.finish();
 
     }
 
     @Override
     public void updateFromMusicResolver(ArrayList<Album> result) {
         this.pgBarAlbums.setVisibility(View.INVISIBLE);
-
-        Log.i("Log", "Result: " + result.size());
-        //this.rvAlbums.setVisibility(View.VISIBLE);
         this.albumList =  result;
         mAlbumAdapter = new AlbumAdapter(albumList, new BtnListener() {
             // OnClick handler for the music files

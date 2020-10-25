@@ -37,13 +37,13 @@ public class Auth {
 
     public String getRefreshToken() throws NullPointerException
     {
-        String refreshToken = sharedPreferences.getString(PARAM_REFRESH_TOKEN, null);
+        String refreshToken = sharedPreferences.getString(PARAM_REFRESH_TOKEN, "");
         return enc.decrypt(this.context, refreshToken.getBytes(StandardCharsets.UTF_8));
     }
 
     public String getToken() throws NullPointerException
     {
-        String token = sharedPreferences.getString(PARAM_AUTH_TOKEN, null);
+        String token = sharedPreferences.getString(PARAM_AUTH_TOKEN, "");
         return enc.decrypt(this.context, token.getBytes(StandardCharsets.UTF_8));
     }
 

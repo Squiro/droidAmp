@@ -5,7 +5,10 @@
     <string name="prompt_email">Email</string>
     <string name="prompt_password">Contraseña</string>
 
-
+    <string name="invalid_name">El nombre es obligatorio.</string>
+    <string name="invalid_surname">El apellido es obligatorio.</string>
+    <string name="invalid_commission">La comisión ingresada no es válida.</string>
+    <string name="invalid_dni">El DNI ingresado no es válido.</string>
     <string name="invalid_password">La contraseña tiene que tener al menos 8 caracteres.</string>
     <string name="invalid_email">El email ingresado no es válido.</string>
     <string name="invalid_email_or_pass">Email o contraseña incorrectos.</string>

@@ -35,7 +35,6 @@ public class MusicResolverTask extends AsyncTask<Void, Integer, ArrayList<MusicF
 
                 String where = MediaStore.Audio.Media.ALBUM + "=?";
                 String whereVal[] = {album};
-                Log.i("Log", album);
 
                 String[] projection = new String[]{MediaStore.Audio.Media._ID,  MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM_KEY};
                 Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, where, whereVal, null);
@@ -52,8 +51,6 @@ public class MusicResolverTask extends AsyncTask<Void, Integer, ArrayList<MusicF
                 Log.i("Exception", e.toString());
             }
         }
-
-        Log.i("Log", "Result size: " + result.size());
         return result;
     }
 
