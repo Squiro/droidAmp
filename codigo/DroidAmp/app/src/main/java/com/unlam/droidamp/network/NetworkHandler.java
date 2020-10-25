@@ -60,6 +60,7 @@ public class NetworkHandler {
             {
                 // Retrieve the error stream
                 stream = connection.getErrorStream();
+                Log.i("Log", NetworkHandler.readStream(stream, 500));
                 throw new Exception(Integer.toString(responseCode));
             }
 

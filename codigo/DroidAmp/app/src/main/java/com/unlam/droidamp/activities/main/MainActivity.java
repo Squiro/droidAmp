@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.activities.main.classes.EventAdapter;
 import com.unlam.droidamp.activities.main.classes.sensors.AccelerometerSensor;
+import com.unlam.droidamp.activities.main.classes.sensors.LightSensor;
 import com.unlam.droidamp.activities.main.classes.sensors.ProximitySensor;
 import com.unlam.droidamp.activities.main.classes.sensors.DroidAmpSensor;
 import com.unlam.droidamp.activities.main.fragments.MusicResolverFragment;
@@ -30,7 +31,6 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -60,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private SensorManager mSensorManager;
     private Sensor mAccelerometer;
     private Sensor mProximity;
+    private Sensor mLight;
     private ArrayList<DroidAmpSensor> sensorList;
 
     @Override
@@ -83,12 +84,14 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager = (SensorManager)getSystemService(SENSOR_SERVICE);
         mAccelerometer = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
         mProximity = mSensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY);
+        mLight = mSensorManager.getDefaultSensor(Sensor.TYPE_LIGHT);;
 
         // Add our sensors classes to the array list
         this.sensorList = new ArrayList<>();
         SharedPreferences sharedPreferences = getSharedPreferences(getString(R.string.sharedPreferencesFile), Context.MODE_PRIVATE);
-        this.sensorList.add(new ProximitySensor(this, this.auth, Sensor.TYPE_PROXIMITY, sharedPreferences));
-        this.sensorList.add(new AccelerometerSensor(this, this.auth, Sensor.TYPE_ACCELEROMETER, sharedPreferences));
+        this.sensorList.add(new ProximitySensor(this, this.auth, sharedPreferences));
+        this.sensorList.add(new AccelerometerSensor(this, this.auth, sharedPreferences));
+        this.sensorList.add(new LightSensor(this, this.auth, sharedPreferences));
     }
 
     public void instantiateFragments()
@@ -145,6 +148,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onResume();
         mSensorManager.registerListener(this, mAccelerometer, SensorManager.SENSOR_DELAY_NORMAL);
         mSensorManager.registerListener(this, mProximity, SensorManager.SENSOR_DELAY_NORMAL);
+        mSensorManager.registerListener(this, mLight, SensorManager.SENSOR_DELAY_NORMAL);
     }
 
     @Override
@@ -152,6 +156,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onPause();
         mSensorManager.unregisterListener(this, mAccelerometer);
         mSensorManager.unregisterListener(this, mProximity);
+        mSensorManager.unregisterListener(this, mLight);
     }
 
     @Override
@@ -169,6 +174,12 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void playNext()
     {
         this.playMusicFile(this.currentPosition+1);
+    }
+
+    public void playPrev()
+    {
+        if (this.currentPosition > 0)
+            this.playMusicFile(this.currentPosition-1);
     }
 
     @Override

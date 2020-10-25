@@ -2,6 +2,7 @@ package com.unlam.droidamp.activities.main.classes.sensors;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.models.Event;
@@ -9,9 +10,9 @@ import com.unlam.droidamp.models.Event;
 public class ProximitySensor extends DroidAmpSensor {
     // Constants
     private static final int PROXIMITY_DISTANCE = 4;
-    public ProximitySensor(Context context, Auth auth, int sensorType, SharedPreferences sharedPreferences)
+    public ProximitySensor(Context context, Auth auth, SharedPreferences sharedPreferences)
     {
-        super(context, auth, sensorType, sharedPreferences);
+        super(context, auth, Sensor.TYPE_PROXIMITY, sharedPreferences);
         this.sensorKey = DroidAmpSensor.PROXIMITY_KEY;
     }
 

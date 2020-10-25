@@ -21,9 +21,7 @@ public class BroadcastConnectivity extends BroadcastReceiver {
     }
 
     public void onReceive(Context context, Intent intent) {
-        // boolean noConnectivity = intent.getBooleanExtra(ConnectivityManager.EXTRA_NO_CONNECTIVITY, false);
-        String reason = intent.getStringExtra(ConnectivityManager.EXTRA_REASON);
-        // boolean isFailover = intent.getBooleanExtra(ConnectivityManager.EXTRA_IS_FAILOVER, false);
+        // String reason = intent.getStringExtra(ConnectivityManager.EXTRA_REASON);
         cm = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         isConnected();
     }

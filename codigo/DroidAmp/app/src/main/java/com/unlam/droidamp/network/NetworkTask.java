@@ -43,7 +43,7 @@ public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> 
         if (callback != null)
         {
             BroadcastConnectivity broadcastConnectivity = callback.getBroadcastConnectivity();
-            if (!broadcastConnectivity.isConnected())
+            if (broadcastConnectivity == null || !broadcastConnectivity.isConnected())
             {
                 // If no connectivity, cancel task and update Callback with null data.
                 //callback.updateFromRequest("No hay conexión a internet.");

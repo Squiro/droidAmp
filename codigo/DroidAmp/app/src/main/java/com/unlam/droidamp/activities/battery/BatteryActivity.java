@@ -124,9 +124,6 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
 
     @Override
     public void updateFromRequest(NetworkTask.Result result) {
-        Log.i("Log", "Update From Request");
-
-
         if (result.success)
         {
             startActivity(MainActivity.class);

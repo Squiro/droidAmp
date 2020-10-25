@@ -3,10 +3,13 @@ package com.unlam.droidamp.activities.main.fragments;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import com.unlam.droidamp.R;
 
 public class MusicPlayerFragment extends Fragment {
 
@@ -14,6 +17,8 @@ public class MusicPlayerFragment extends Fragment {
     private static MediaPlayer mediaPlayer;
     private static boolean isPlaying;
     private static boolean isMuted;
+    private static final int maxVolume = 100;
+    private static int currVolume;
 
     public static MusicPlayerFragment getInstance(FragmentManager fragmentManager) {
         MusicPlayerFragment networkFragment = (MusicPlayerFragment) fragmentManager.findFragmentByTag(MusicPlayerFragment.TAG);
@@ -93,5 +98,15 @@ public class MusicPlayerFragment extends Fragment {
             mediaPlayer.setVolume(0, 0);
 
         isMuted = !isMuted;
+    }
+
+    public void changeVolume()
+    {
+        if (currVolume >= maxVolume)
+            currVolume = 0;
+        currVolume += 5;
+        Toast.makeText(this.getContext(), "Volumen actual: " + (maxVolume-currVolume), Toast.LENGTH_LONG).show();
+        float log1= (float) (Math.log(maxVolume-currVolume)/Math.log(maxVolume));
+        mediaPlayer.setVolume(log1, log1);
     }
 }

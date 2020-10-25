@@ -22,9 +22,10 @@ public class DroidAmpSensor {
     private SharedPreferences sharedPreferences;
     private SharedPreferences.Editor editor;
 
-
+    // Constants
     protected static final String ACCELEROMETER_KEY = "ACCELEROMETER_SENSOR";
     protected static final String PROXIMITY_KEY = "PROXIMITY_SENSOR";
+    protected static final String LIGHT_KEY = "LIGHT_SENSOR";
 
     public DroidAmpSensor(Context context, Auth auth, int sensorType, SharedPreferences sharedPreferences)
     {

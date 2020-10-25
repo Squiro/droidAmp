@@ -2,6 +2,7 @@ package com.unlam.droidamp.auth;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.utilities.Encryption;
@@ -93,6 +94,7 @@ public class Auth {
         String authToken = responseJson.get("token").toString();
         // Exact refresh token from response
         String refreshToken = responseJson.get("token_refresh").toString();
+        Log.i("Log", refreshToken);
 
         saveTokens(authToken, refreshToken);
         saveRefreshTimestamp();
