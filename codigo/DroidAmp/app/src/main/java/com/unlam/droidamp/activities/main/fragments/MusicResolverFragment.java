@@ -30,7 +30,7 @@ public class MusicResolverFragment extends Fragment {
         if (musicResolverFragment == null) {
             musicResolverFragment = new MusicResolverFragment();
             Bundle args = new Bundle();
-            args.putString(AlbumActivity.ALBUM_KEY, album);
+            args.putString(AlbumActivity.ALBUM_ID_KEY, album);
             musicResolverFragment.setArguments(args);
             fragmentManager.beginTransaction().add(musicResolverFragment, TAG).commit();
         }
@@ -49,7 +49,7 @@ public class MusicResolverFragment extends Fragment {
         super.onAttach(context);
         // Host Activity will handle callbacks from task.
         callback = (MusicResolverCallback<ArrayList<MusicFile>>) context;
-        this.album = getArguments().getString(AlbumActivity.ALBUM_KEY);
+        this.album = getArguments().getString(AlbumActivity.ALBUM_ID_KEY);
         startMusicResolverTask(context);
     }
 

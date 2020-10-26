@@ -31,7 +31,7 @@ public class AlbumResolverTask extends AsyncTask<Void, Integer, ArrayList<Album>
 
         if (!isCancelled()) {
             try {
-                String[] projection = new String[]{MediaStore.Audio.Albums._ID,  MediaStore.Audio.Albums.ALBUM, MediaStore.Audio.Albums.ARTIST};
+                String[] projection = new String[]{MediaStore.Audio.Albums.ALBUM_ID,  MediaStore.Audio.Albums.ALBUM, MediaStore.Audio.Albums.ARTIST};
                 Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, projection, null, null, null);
                 traverseCursor(result, cursor);
                 cursor = context.getContentResolver().query(MediaStore.Audio.Albums.INTERNAL_CONTENT_URI, projection, null, null, null);
@@ -48,7 +48,7 @@ public class AlbumResolverTask extends AsyncTask<Void, Integer, ArrayList<Album>
     {
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Albums._ID));
+                String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ID));
                 String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM));
                 String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST));
 

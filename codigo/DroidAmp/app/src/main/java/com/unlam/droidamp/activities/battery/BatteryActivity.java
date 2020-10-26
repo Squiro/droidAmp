@@ -43,6 +43,8 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
         batteryState = findViewById(R.id.txtBatteryState);
         btnOkGenial = findViewById(R.id.btnOkGenial);
         progressBar = findViewById(R.id.pgBarBattery);
+        // We set an on click listener for the button
+        btnOkGenial.setOnClickListener(btnOkGenialListener);
 
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         batteryStatus = this.registerReceiver(null, ifilter);
@@ -55,9 +57,6 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
             batteryState.setText("se está descargando.");
 
         batteryPercentage.setText(getBatteryPct().toString() + "%");
-
-        // We set an on click listener for the button
-        btnOkGenial.setOnClickListener(btnOkGenialListener);
 
         // ----- AUTH -----
         // Instantiate auth class

@@ -3,10 +3,10 @@ package com.unlam.droidamp.models;
 public class Album {
 
     private String album;
-    private long id;
+    private String id;
     private String artist;
 
-    public long getId() {
+    public String getId() {
         return id;
     }
 
@@ -18,7 +18,7 @@ public class Album {
         return artist;
     }
 
-    public Album(long id, String album, String artist)
+    public Album(String id, String album, String artist)
     {
         this.id = id;
         this.album = album;

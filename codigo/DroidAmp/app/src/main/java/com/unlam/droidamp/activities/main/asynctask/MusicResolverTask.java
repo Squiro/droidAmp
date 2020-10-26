@@ -14,13 +14,13 @@ public class MusicResolverTask extends AsyncTask<Void, Integer, ArrayList<MusicF
 
     private MusicResolverCallback<ArrayList<MusicFile>> callback;
     private Context context;
-    private String album;
+    private String albumID;
 
-    public MusicResolverTask(MusicResolverCallback<ArrayList<MusicFile>> callback, Context context, String album)
+    public MusicResolverTask(MusicResolverCallback<ArrayList<MusicFile>> callback, Context context, String albumID)
     {
         this.callback = callback;
         this.context = context;
-        this.album = album;
+        this.albumID = albumID;
     }
 
     /**
@@ -32,10 +32,10 @@ public class MusicResolverTask extends AsyncTask<Void, Integer, ArrayList<MusicF
 
         if (!isCancelled()) {
             try {
-                String where = MediaStore.Audio.Media.ALBUM + "=?";
-                String whereVal[] = {album};
-
-                String[] projection = new String[]{MediaStore.Audio.Media._ID,  MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.ALBUM_KEY};
+                String where = MediaStore.Audio.Media.ALBUM_ID + "=?";
+                String[] whereVal = {albumID};
+                Log.i("Log", albumID);
+                String[] projection = new String[]{MediaStore.Audio.Media._ID,  MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.TRACK, MediaStore.Audio.Media.ALBUM_ID };
                 Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, where, whereVal, null);
                 traverseCursor(result, cursor);
                 cursor = context.getContentResolver().query(MediaStore.Audio.Media.INTERNAL_CONTENT_URI, projection, where, whereVal, null);
@@ -44,6 +44,7 @@ public class MusicResolverTask extends AsyncTask<Void, Integer, ArrayList<MusicF
                 Log.i("Exception", e.toString());
             }
         }
+        Log.i("Log", "Size " + result.size());
         return result;
     }
 
@@ -53,11 +54,11 @@ public class MusicResolverTask extends AsyncTask<Void, Integer, ArrayList<MusicF
             while (cursor.moveToNext()) {
                 long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
                 String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                //int albumId = cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID);
                 String data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-                String albumkey = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_KEY));
+                // String albumID = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
+                int track = cursor.getInt((cursor.getColumnIndex((MediaStore.Audio.Media.TRACK))));
 
-                result.add(new MusicFile(id, title, data, albumkey));
+                result.add(new MusicFile(id, title, data, track));
             }
             cursor.close();
         }

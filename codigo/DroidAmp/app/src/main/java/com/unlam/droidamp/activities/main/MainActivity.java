@@ -34,6 +34,8 @@ import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -51,6 +53,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TextView txtNowPlaying;
     private TextView txtAlbum;
     private TextView txtArtist;
+    private ImageButton btnPlay;
+    private ImageButton btnNext;
+    private ImageButton btnPrev;
     private String album;
     private String artist;
 
@@ -77,12 +82,13 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        this.currentPosition = 0;
         this.auth = new Auth(this);
-        this.album = getIntent().getExtras().getString(AlbumActivity.ALBUM_KEY);
+        this.album = getIntent().getExtras().getString(AlbumActivity.ALBUM_ID_KEY);
         this.artist = getIntent().getExtras().getString(AlbumActivity.ARTIST_KEY);
 
-        Log.i("Log", album);
         fetchUI();
+        setListeners();
         instantiateFragments();
         setUpRecyclerViews();
         registerBroadcastConnectivity();
@@ -99,6 +105,9 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         this.txtNowPlaying = findViewById(R.id.txtNowPlaying);
         this.txtAlbum = findViewById(R.id.txtAlbum);
         this.txtArtist = findViewById(R.id.txtArtist);
+        this.btnNext = findViewById(R.id.btnNext);
+        this.btnPlay = findViewById(R.id.btnPlay);
+        this.btnPrev = findViewById(R.id.btnPrev);
     }
 
     public void getSensors()
@@ -197,27 +206,16 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void playNext()
     {
-        if (this.currentPosition > musicFiles.size())
+        if (this.currentPosition >= this.musicFiles.size()-1)
             this.currentPosition = -1;
         this.playMusicFile(this.currentPosition+1);
     }
 
     public void playPrev()
     {
-        if (this.currentPosition < 0)
+        if (this.currentPosition <= 0)
             this.currentPosition = this.musicFiles.size();
         this.playMusicFile(this.currentPosition-1);
-    }
-
-    @Override
-    public void onSensorChanged(SensorEvent event) {
-        int type = event.sensor.getType();
-        for (DroidAmpSensor sensor: sensorList)
-        {
-            if (sensor.getSensorType() == type)
-                sensor.handleSensorEvent(event);
-        }
-        getEventList();
     }
 
     public void getEventList()
@@ -251,6 +249,17 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
+    public void onSensorChanged(SensorEvent event) {
+        int type = event.sensor.getType();
+        for (DroidAmpSensor sensor: sensorList)
+        {
+            if (sensor.getSensorType() == type)
+                sensor.handleSensorEvent(event);
+        }
+        getEventList();
+    }
+
+    @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
     }
@@ -275,4 +284,38 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
             musicResolverFragment.cancelTask();
         }
     }
+
+    public void setListeners()
+    {
+        btnPlay.setOnClickListener(btnPlayListener);
+        btnNext.setOnClickListener(btnNextListener);
+        btnPrev.setOnClickListener(btnPrevListener);
+    }
+
+    private View.OnClickListener btnPlayListener = new View.OnClickListener()
+    {
+        // This method will be executed once the button is clicked
+        public void onClick(View v)
+        {
+            musicPlayerFragment.play();
+        }
+    };
+
+    private View.OnClickListener btnNextListener = new View.OnClickListener()
+    {
+        // This method will be executed once the button is clicked
+        public void onClick(View v)
+        {
+            playNext();
+        }
+    };
+
+    private View.OnClickListener btnPrevListener = new View.OnClickListener()
+    {
+        // This method will be executed once the button is clicked
+        public void onClick(View v)
+        {
+            playPrev();
+        }
+    };
 }
