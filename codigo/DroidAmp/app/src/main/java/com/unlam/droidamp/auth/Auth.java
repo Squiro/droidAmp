@@ -49,15 +49,19 @@ public class Auth {
 
     public Boolean checkIfTokenExpired()
     {
-        String refreshTimeStamp = sharedPreferences.getString(PARAM_REFRESH_TIMESTAMP, null);
+        try
+        {
+            String refreshTimeStamp = sharedPreferences.getString(PARAM_REFRESH_TIMESTAMP, "");
 
-        Timestamp oldTime = Timestamp.valueOf(refreshTimeStamp);
-        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-
-        if (compareTwoTimeStamps(currentTime, oldTime) >= TOKEN_EXPIRE_TIME_MINUTES)
-            return true;
-
-        return  false;
+            Timestamp oldTime = Timestamp.valueOf(refreshTimeStamp);
+            Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+            return compareTwoTimeStamps(currentTime, oldTime) >= TOKEN_EXPIRE_TIME_MINUTES;
+        }
+        catch (Exception e)
+        {
+            //Catch format exceptions or things like that
+            return false;
+        }
     }
 
     public static long compareTwoTimeStamps(Timestamp currentTime, Timestamp oldTime)
