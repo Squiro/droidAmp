@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/background"
+    android:background="@color/default_background"
     tools:context=".activities.main.MainActivity">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -43,20 +43,11 @@
             tools:itemCount="2" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <ProgressBar
-        android:id="@+id/pgBarMain"
-        style="?android:attr/progressBarStyle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rvMusicFiles"
         android:layout_width="0dp"
         android:layout_height="0dp"
+        android:background="@color/background"
         android:scrollbars="vertical"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@+id/playerButtonsLayout"
@@ -79,7 +70,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
-            android:text="ASD"
             android:textColor="@color/normalText"
             android:textSize="24sp"
             app:layout_constraintEnd_toEndOf="parent"
@@ -159,4 +149,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/btnPlay" />
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ProgressBar
+        android:id="@+id/pgBarMain"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@+id/playerButtonsLayout"
+        app:layout_constraintEnd_toEndOf="@+id/rvMusicFiles"
+        app:layout_constraintStart_toStartOf="@+id/rvMusicFiles"
+        app:layout_constraintTop_toTopOf="@+id/eventDataLayout" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

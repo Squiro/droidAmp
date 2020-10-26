@@ -10,6 +10,7 @@
         android:layout_height="wrap_content"
         android:text="White"
         android:textAlignment="center"
+        android:textColor="@color/normalText"
         android:textSize="18sp" />
 
     <TextView
@@ -17,7 +18,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="The Beatles"
-        android:textAlignment="center" />
+        android:textAlignment="center"
+        android:textColor="@color/normalText" />
 
     <Button
         android:id="@+id/btnPlayAlbum"

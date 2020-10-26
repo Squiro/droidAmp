@@ -34,8 +34,7 @@ public class MusicResolverTask extends AsyncTask<Void, Integer, ArrayList<MusicF
             try {
                 String where = MediaStore.Audio.Media.ALBUM_ID + "=?";
                 String[] whereVal = {albumID};
-                Log.i("Log", albumID);
-                String[] projection = new String[]{MediaStore.Audio.Media._ID,  MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.TRACK, MediaStore.Audio.Media.ALBUM_ID };
+                String[] projection = new String[]{MediaStore.Audio.Media._ID,  MediaStore.Audio.Media.TITLE, MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.TRACK, MediaStore.Audio.Media.IS_MUSIC };
                 Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection, where, whereVal, null);
                 traverseCursor(result, cursor);
                 cursor = context.getContentResolver().query(MediaStore.Audio.Media.INTERNAL_CONTENT_URI, projection, where, whereVal, null);
@@ -44,7 +43,6 @@ public class MusicResolverTask extends AsyncTask<Void, Integer, ArrayList<MusicF
                 Log.i("Exception", e.toString());
             }
         }
-        Log.i("Log", "Size " + result.size());
         return result;
     }
 
@@ -52,13 +50,16 @@ public class MusicResolverTask extends AsyncTask<Void, Integer, ArrayList<MusicF
     {
         if (cursor != null) {
             while (cursor.moveToNext()) {
-                long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
-                String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
-                String data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-                // String albumID = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ALBUM_ID));
-                int track = cursor.getInt((cursor.getColumnIndex((MediaStore.Audio.Media.TRACK))));
 
-                result.add(new MusicFile(id, title, data, track));
+                if (Integer.parseInt(cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.IS_MUSIC))) != 0)
+                {
+                    long id = cursor.getLong(cursor.getColumnIndex(MediaStore.Audio.Media._ID));
+                    String title = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.TITLE));
+                    String data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
+                    int track = cursor.getInt((cursor.getColumnIndex((MediaStore.Audio.Media.TRACK))));
+
+                    result.add(new MusicFile(id, title, data, track));
+                }
             }
             cursor.close();
         }

@@ -32,6 +32,7 @@ public class AlbumActivity extends AppCompatActivity implements MusicResolverCal
 
     private ArrayList<Album> albumList;
     private BroadcastConnectivity broadcastConnectivity;
+    public static final String ALBUM_KEY = "album";
     public static final String ALBUM_ID_KEY = "album_id";
     public static final String ARTIST_KEY = "artist";
 
@@ -79,10 +80,10 @@ public class AlbumActivity extends AppCompatActivity implements MusicResolverCal
     {
         Intent activity = new Intent(this, MainActivity.class);
         activity.putExtra(ALBUM_ID_KEY, albumList.get(position).getId());
+        activity.putExtra(ALBUM_KEY, albumList.get(position).getAlbum());
         activity.putExtra(ARTIST_KEY, albumList.get(position).getArtist());
         startActivity(activity);
         //this.finish();
-
     }
 
     @Override

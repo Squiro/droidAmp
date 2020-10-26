@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private ImageButton btnNext;
     private ImageButton btnPrev;
     private String album;
+    private String albumID;
     private String artist;
 
     // Network fragment
@@ -84,7 +85,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         this.currentPosition = 0;
         this.auth = new Auth(this);
-        this.album = getIntent().getExtras().getString(AlbumActivity.ALBUM_ID_KEY);
+        this.albumID = getIntent().getExtras().getString(AlbumActivity.ALBUM_ID_KEY);
+        this.album = getIntent().getExtras().getString(AlbumActivity.ALBUM_KEY);
         this.artist = getIntent().getExtras().getString(AlbumActivity.ARTIST_KEY);
 
         fetchUI();
@@ -128,7 +130,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void instantiateFragments()
     {
-        musicResolverFragment = MusicResolverFragment.getInstance(getSupportFragmentManager(), this.album);
+        musicResolverFragment = MusicResolverFragment.getInstance(getSupportFragmentManager(), this.albumID);
         musicPlayerFragment = MusicPlayerFragment.getInstance(getSupportFragmentManager());
         networkEventFragment = NetworkEventFragment.getInstance(NetworkEventFragment.class, getSupportFragmentManager());
     }
@@ -233,9 +235,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void updateFromMusicResolver(ArrayList<MusicFile> result)
     {
         this.musicFiles =  result;
-        // Hide the progress bar
-        this.pgBarMain.setVisibility(View.INVISIBLE);
-
         mAdapter = new MediaAdapter(musicFiles, new BtnListener() {
             // OnClick handler for the music files
             @Override
@@ -245,6 +244,8 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
         rvMusicFiles.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
+        // Hide the progress bar
+        this.pgBarMain.setVisibility(View.INVISIBLE);
 
     }
 

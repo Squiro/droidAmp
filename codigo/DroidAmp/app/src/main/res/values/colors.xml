@@ -4,6 +4,18 @@
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
     <color name="normalText">#FF4AD646</color>
+    <color name="default_background">#2C2C2C</color>
     <color name="background">#3C3B3B</color>
     <color name="foreground">#FF3D3D53</color>
+    <color name="highlight">#FF6565AA</color>
+
+    <style name="EditTextHint" parent="Widget.AppCompat.EditText">
+        <item name="colorAccent">@color/normalText</item>
+        <item name="android:textColorHint">@color/normalText</item>
+        <item name="colorControlNormal">@color/normalText</item>
+        <item name="colorControlActivated">@color/normalText</item>
+        <item name="colorControlHighlight">@color/normalText</item>
+        <item name="backgroundTint">@color/highlight</item>
+    </style>
+
 </resources>

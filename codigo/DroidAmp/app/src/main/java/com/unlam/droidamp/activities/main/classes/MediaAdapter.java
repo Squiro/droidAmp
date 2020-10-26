@@ -3,7 +3,6 @@ package com.unlam.droidamp.activities.main.classes;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -31,13 +30,15 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
     // you provide access to all the views for a data item in a view holder
     public static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
-        public TextView textView;
+        public TextView txtTitle;
+        public TextView txtTrackNumber;
         public ImageButton btnPlay;
         public BtnListener btnListener;
 
         public ViewHolder(View itemView) {
             super(itemView);
-            textView = itemView.findViewById(R.id.txtTitle);
+            txtTitle = itemView.findViewById(R.id.txtTitle);
+            txtTrackNumber = itemView.findViewById(R.id.txtTrack);
             btnPlay = itemView.findViewById(R.id.btnPlay);
 
             btnPlay.setOnClickListener(new View.OnClickListener(){
@@ -65,7 +66,8 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
         // - get element from your dataset at this position
         // - replace the contents of the view with that element
-        holder.textView.setText(mDataset.get(position).getTitle());
+        holder.txtTitle.setText(mDataset.get(position).getTitle());
+        holder.txtTrackNumber.setText(mDataset.get(position).getTrack().toString() + ".");
 
     }
 

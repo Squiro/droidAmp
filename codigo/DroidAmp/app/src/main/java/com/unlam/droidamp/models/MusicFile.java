@@ -6,7 +6,7 @@ public class MusicFile {
     private String title;
     private String data;
     private String albumID;
-    private int track;
+    private Integer track;
 
     public long getID() {return id;}
     public String getTitle() {return title;}
@@ -14,11 +14,11 @@ public class MusicFile {
     public String getAlbumID() {
         return albumID;
     }
-    public int getTrack() {
+    public Integer getTrack() {
         return track;
     }
 
-    public MusicFile(long id, String title, String data, int track)
+    public MusicFile(long id, String title, String data, Integer track)
     {
         this.id = id;
         this.title = title;
