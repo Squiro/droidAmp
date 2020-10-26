@@ -35,6 +35,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -47,13 +48,18 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private RecyclerView.Adapter eventAdapter;
     private ArrayList<String> eventList;
 
+    private TextView txtNowPlaying;
+    private TextView txtAlbum;
+    private TextView txtArtist;
+    private String album;
+    private String artist;
+
     // Network fragment
     private  NetworkEventFragment networkEventFragment;
     private Auth auth;
     private BroadcastConnectivity broadcastConnectivity;
 
     // Audio reproduction
-    private String album;
     private ArrayList<MusicFile> musicFiles;
     private MusicPlayerFragment musicPlayerFragment;
     private MusicResolverFragment musicResolverFragment;
@@ -73,12 +79,26 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         this.auth = new Auth(this);
         this.album = getIntent().getExtras().getString(AlbumActivity.ALBUM_KEY);
-        this.pgBarMain = findViewById(R.id.pgBarMain);
-        this.pgBarMain.setVisibility(View.VISIBLE);
+        this.artist = getIntent().getExtras().getString(AlbumActivity.ARTIST_KEY);
+
+        Log.i("Log", album);
+        fetchUI();
         instantiateFragments();
         setUpRecyclerViews();
         registerBroadcastConnectivity();
         getSensors();
+
+        txtAlbum.setText(this.album);
+        txtArtist.setText(this.artist);
+    }
+
+    public void fetchUI()
+    {
+        this.pgBarMain = findViewById(R.id.pgBarMain);
+        this.pgBarMain.setVisibility(View.VISIBLE);
+        this.txtNowPlaying = findViewById(R.id.txtNowPlaying);
+        this.txtAlbum = findViewById(R.id.txtAlbum);
+        this.txtArtist = findViewById(R.id.txtArtist);
     }
 
     public void getSensors()
@@ -121,7 +141,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
         // Create the recycler view
         rvMusicFiles = findViewById(R.id.rvMusicFiles);
-        this.rvMusicFiles.setVisibility(View.INVISIBLE);
 
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
@@ -171,18 +190,23 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void playMusicFile(int position)
     {
         this.currentPosition = position;
-        musicPlayerFragment.start(musicFiles.get(this.currentPosition).getPath());
+        MusicFile song = musicFiles.get(this.currentPosition);
+        txtNowPlaying.setText(song.getTitle());
+        musicPlayerFragment.start(song.getPath());
     }
 
     public void playNext()
     {
+        if (this.currentPosition > musicFiles.size())
+            this.currentPosition = -1;
         this.playMusicFile(this.currentPosition+1);
     }
 
     public void playPrev()
     {
-        if (this.currentPosition > 0)
-            this.playMusicFile(this.currentPosition-1);
+        if (this.currentPosition < 0)
+            this.currentPosition = this.musicFiles.size();
+        this.playMusicFile(this.currentPosition-1);
     }
 
     @Override
@@ -210,9 +234,10 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
 
     public void updateFromMusicResolver(ArrayList<MusicFile> result)
     {
-        this.pgBarMain.setVisibility(View.INVISIBLE);
-        this.rvMusicFiles.setVisibility(View.VISIBLE);
         this.musicFiles =  result;
+        // Hide the progress bar
+        this.pgBarMain.setVisibility(View.INVISIBLE);
+
         mAdapter = new MediaAdapter(musicFiles, new BtnListener() {
             // OnClick handler for the music files
             @Override
@@ -222,6 +247,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         });
         rvMusicFiles.setAdapter(mAdapter);
         mAdapter.notifyDataSetChanged();
+
     }
 
     @Override

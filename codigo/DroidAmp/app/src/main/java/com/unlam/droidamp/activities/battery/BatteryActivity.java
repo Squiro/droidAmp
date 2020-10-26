@@ -90,7 +90,6 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
         this.unregisterReceiver(broadcastConnectivity);
     }
 
-    // Listener for login button
     private View.OnClickListener btnOkGenialListener = new View.OnClickListener()
     {
         // This method will be executed once the button is clicked

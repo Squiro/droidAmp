@@ -8,6 +8,7 @@
         android:id="@+id/txtTitle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textColor="#4AD646"
         android:textSize="24sp" />
 
     <Button

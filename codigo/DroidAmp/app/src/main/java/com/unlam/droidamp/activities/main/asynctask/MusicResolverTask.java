@@ -32,7 +32,6 @@ public class MusicResolverTask extends AsyncTask<Void, Integer, ArrayList<MusicF
 
         if (!isCancelled()) {
             try {
-
                 String where = MediaStore.Audio.Media.ALBUM + "=?";
                 String whereVal[] = {album};
 
