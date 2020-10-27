@@ -12,16 +12,11 @@ import java.net.URL;
 
 public class LoginTask extends NetworkTask {
     private User user;
-    private String email;
-    private String password;
     private Auth auth;
 
     public LoginTask(RequestCallback<NetworkTask.Result> callback, User user, Auth auth) {
-        super(callback, TYPE_LOGIN_TASK);
+        super(callback, TYPE_LOGIN_TASK, auth);
         this.user = user;
-        this.email = email;
-
-        this.password = password;
         this.auth = auth;
     }
 

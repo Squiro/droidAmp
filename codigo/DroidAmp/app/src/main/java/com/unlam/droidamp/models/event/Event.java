@@ -17,7 +17,7 @@ public class Event {
     public static final String TYPE_BROADCAST = "Broadcast";
     public static final String TYPE_BACKGROUND = "Background";
     public static final String TYPE_SENSOR = "Sensor";
-    public static final String DESCRIPTION_BACKGROUND = "Started background exceution";
+    public static final String DESCRIPTION_BACKGROUND = "Background execution finished";
     public static final String DESCRIPTION_LOGIN = "User logged in";
     public static final String DESCRIPTION_REGISTER = "User registered";
     public static final String DESCRIPTION_BROADCAST = "Broadcast received";

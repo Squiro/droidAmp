@@ -111,7 +111,7 @@ public class LoginActivity extends BaseActivity {
         if (result.success)
         {
             startActivity(AlbumActivity.class, true);
-            this.networkEventFragment.startEventTask(new Event(Event.TYPE_LOGIN, "User logged in"), this.auth);
+            this.networkEventFragment.startEventTask(new Event(Event.TYPE_LOGIN, Event.DESCRIPTION_LOGIN), this.auth);
         }
         else
         {
@@ -139,7 +139,8 @@ public class LoginActivity extends BaseActivity {
         switch (taskType)
         {
             case NetworkTask.TYPE_LOGIN_TASK:
-
+                // Register execution of background event
+                networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), auth);
                 logginIn = false;
 
                 if (authFragment != null) {

@@ -40,8 +40,6 @@ public class AlbumActivity extends BaseActivity implements MusicResolverCallback
 
         pgBarAlbums = findViewById(R.id.pgBarAlbums);
         albumResolverFragment = AlbumResolverFragment.getInstance(getSupportFragmentManager());
-        // AlbumResolverFragment starts its background task onAttach, so... we better fire this event right now
-        this.networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), auth);
         setUpRecyclerView();
     }
 
@@ -75,6 +73,9 @@ public class AlbumActivity extends BaseActivity implements MusicResolverCallback
     @Override
     public void updateFromMusicResolver(ArrayList<Album> result) {
         Log.i("Log", "Album Resolver Finished");
+        // Post background event
+        this.networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), auth);
+
         this.pgBarAlbums.setVisibility(View.INVISIBLE);
         this.albumList =  result;
         mAlbumAdapter = new AlbumAdapter(albumList, new BtnListener() {

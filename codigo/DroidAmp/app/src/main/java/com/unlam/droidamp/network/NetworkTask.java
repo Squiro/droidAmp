@@ -1,8 +1,13 @@
 package com.unlam.droidamp.network;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
+import com.unlam.droidamp.auth.Auth;
+import com.unlam.droidamp.auth.TokenTask;
 import com.unlam.droidamp.interfaces.RequestCallback;
+import com.unlam.droidamp.models.event.Event;
+import com.unlam.droidamp.models.event.EventTask;
 
 import org.json.JSONObject;
 import java.net.URL;
@@ -11,6 +16,7 @@ public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> 
 
     protected RequestCallback<NetworkTask.Result> callback;
     protected int taskType;
+    protected Auth auth;
     public static final int TYPE_EVENT_TASK = 0;
     public static final int TYPE_LOGIN_TASK = 1;
     public static final int TYPE_REGISTER_TASK = 2;
@@ -18,10 +24,11 @@ public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> 
     public static final int TYPE_ALBUMRESOLVER_TASK = 4;
     public static final int TYPE_MUSICRESOLVER_TASK = 5;
 
-    public NetworkTask(RequestCallback<NetworkTask.Result> callback, int taskType)
+    public NetworkTask(RequestCallback<NetworkTask.Result> callback, int taskType, Auth auth)
     {
         this.callback = callback;
         this.taskType = taskType;
+        this.auth = auth;
     }
 
     /**
@@ -54,16 +61,21 @@ public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> 
     protected void onPreExecute() {
         if (callback != null)
         {
-            BroadcastConnectivity broadcastConnectivity = callback.getBroadcastConnectivity();
-
-            if (broadcastConnectivity == null || !broadcastConnectivity.isConnected())
-            {
-                // If no connectivity, cancel task and update Callback with null data.
-                //callback.updateFromRequest("No hay conexión a internet.");
-                cancel(true);
-            }
+            checkConnection();
         }
     }
+
+    protected void checkConnection()
+    {
+        BroadcastConnectivity broadcastConnectivity = callback.getBroadcastConnectivity();
+
+        if (broadcastConnectivity == null || !broadcastConnectivity.isConnected())
+        {
+            // If no connectivity, cancel task and update Callback with null data.
+            cancel(true);
+        }
+    }
+
      /**
      * Defines work to perform on the background thread.
      */
@@ -106,7 +118,6 @@ public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> 
         {
             if (result.exception != null)
             {
-                //callback.updateFromRequest(result.exception.getMessage());
                 callback.updateFromRequest(result);
             } else if (result.resultValue != null)
             {

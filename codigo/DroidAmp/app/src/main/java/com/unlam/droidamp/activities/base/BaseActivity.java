@@ -7,8 +7,13 @@ import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
 
 import com.unlam.droidamp.R;
+import com.unlam.droidamp.activities.album.AlbumActivity;
+import com.unlam.droidamp.activities.login.LoginActivity;
+import com.unlam.droidamp.auth.AuthFragment;
+import com.unlam.droidamp.models.event.Event;
 import com.unlam.droidamp.models.event.NetworkEventFragment;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.interfaces.RequestCallback;
@@ -27,7 +32,6 @@ public class BaseActivity extends AppCompatActivity implements RequestCallback<N
         setContentView(R.layout.activity_base);
 
         this.auth = new Auth(this);
-
         this.networkEventFragment = NetworkEventFragment.getInstance(NetworkEventFragment.class, getSupportFragmentManager());
         this.broadcastConnectivity = new BroadcastConnectivity(this);
         this.registerReceiver(broadcastConnectivity, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
@@ -46,6 +50,18 @@ public class BaseActivity extends AppCompatActivity implements RequestCallback<N
 
     @Override
     public void updateFromRequest(NetworkTask.Result result) {
+        Log.i("Log", "BASE ACTIVITY ------- UpdateFromRequest");
+
+        if (result.taskType == NetworkTask.TYPE_TOKEN_TASK)
+        {
+            if (result.success)
+            {
+                this.networkEventFragment.startEventTask(new Event(Event.TYPE_TOKEN, Event.DESCRIPTION_TOKEN), this.auth);
+            }
+            else {
+                startActivity(LoginActivity.class, true);
+            }
+        }
 
     }
 

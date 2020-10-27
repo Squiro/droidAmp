@@ -12,15 +12,12 @@ import com.unlam.droidamp.activities.main.classes.sensors.LightSensor;
 import com.unlam.droidamp.activities.main.classes.sensors.ProximitySensor;
 import com.unlam.droidamp.activities.main.classes.sensors.DroidAmpSensor;
 import com.unlam.droidamp.activities.main.fragments.MusicResolverFragment;
-import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.interfaces.MusicResolverCallback;
 import com.unlam.droidamp.activities.main.classes.MediaAdapter;
 import com.unlam.droidamp.models.MusicFile;
 import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
 import com.unlam.droidamp.models.event.Event;
-import com.unlam.droidamp.models.event.NetworkEventFragment;
 import com.unlam.droidamp.interfaces.BtnListener;
-import com.unlam.droidamp.network.NetworkTask;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -44,7 +41,7 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
     private ProgressBar pgBarMain;
     private RecyclerView rvMusicFiles;
     private RecyclerView.Adapter mAdapter;
-    private RecyclerView eventRecylcler;
+    private RecyclerView eventRecycler;
     private RecyclerView.Adapter eventAdapter;
     private ArrayList<String> eventList;
 
@@ -92,8 +89,6 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
         txtAlbum.setText(this.album);
         txtArtist.setText(this.artist);
         txtNowPlaying.setSelected(true);
-        // MusicResolver will fire onAttach... so we execute this here
-        this.networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), auth);
     }
 
     public void fetchUI()
@@ -135,11 +130,11 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
     {
         // ----- RECYCLER VIEW FOR EVENTS -----
         eventList = new ArrayList<>();
-        eventRecylcler = findViewById(R.id.rvEvents);
-        eventRecylcler.setHasFixedSize(true);
-        eventRecylcler.setLayoutManager(new LinearLayoutManager(this));
+        eventRecycler = findViewById(R.id.rvEvents);
+        eventRecycler.setHasFixedSize(true);
+        eventRecycler.setLayoutManager(new LinearLayoutManager(this));
         eventAdapter = new EventAdapter(eventList);
-        eventRecylcler.setAdapter(eventAdapter);
+        eventRecycler.setAdapter(eventAdapter);
 
         // ----- RECYCLER VIEW FOR MUSIC FILES -----
         musicFiles = new ArrayList<>();
@@ -235,13 +230,16 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
             eventList.add(sensor.getSensorEventFromSharedPref());
         }
         eventAdapter = new EventAdapter(eventList);
-        eventRecylcler.setAdapter(eventAdapter);
+        eventRecycler.setAdapter(eventAdapter);
         eventAdapter.notifyDataSetChanged();
     }
 
     public void updateFromMusicResolver(ArrayList<MusicFile> result)
     {
         Log.i("Log", "MAIN ACTIVITY ---- Music Resolver Finished");
+        // Post background event
+        this.networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), auth);
+
         this.musicFiles =  result;
         mAdapter = new MediaAdapter(musicFiles, new BtnListener() {
             // OnClick handler for the music files
@@ -254,6 +252,13 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
         mAdapter.notifyDataSetChanged();
         // Hide the progress bar
         this.pgBarMain.setVisibility(View.INVISIBLE);
+    }
+
+    @Override
+    public void finishRequest() {
+        if (musicResolverFragment != null) {
+            musicResolverFragment.cancelTask();
+        }
     }
 
     @Override
@@ -270,18 +275,6 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
     @Override
     public void onAccuracyChanged(Sensor sensor, int accuracy) {
 
-    }
-
-    @Override
-    public void updateFromRequest(NetworkTask.Result result) {
-
-    }
-
-    @Override
-    public void finishRequest() {
-        if (musicResolverFragment != null) {
-            musicResolverFragment.cancelTask();
-        }
     }
 
     public void setListeners()

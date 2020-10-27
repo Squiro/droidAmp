@@ -16,7 +16,7 @@ public class RegisterTask extends NetworkTask {
     private Auth auth;
 
     public RegisterTask(RequestCallback<NetworkTask.Result> callback, User user, Auth auth) {
-        super(callback, TYPE_REGISTER_TASK);
+        super(callback, TYPE_REGISTER_TASK, auth);
         this.user = user;
         this.auth = auth;
     }

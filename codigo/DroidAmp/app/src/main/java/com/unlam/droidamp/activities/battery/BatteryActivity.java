@@ -110,8 +110,9 @@ public class BatteryActivity extends BaseActivity {
 
     public void checkTokens()
     {
+        startActivity(AlbumActivity.class, true);
         // If token isn't expired start the mainActivity
-        if (!auth.checkIfTokenExpired())
+        /*if (!auth.checkIfTokenExpired())
         {
             startActivity(AlbumActivity.class, true);
         }
@@ -119,8 +120,7 @@ public class BatteryActivity extends BaseActivity {
         {
             // Otherwise, try to refresh them
             authFragment.startRefreshToken(auth);
-            this.networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), auth);
-        }
+        }*/
     }
 
     @Override
@@ -128,6 +128,7 @@ public class BatteryActivity extends BaseActivity {
         if (result.success)
         {
             startActivity(AlbumActivity.class, true);
+            this.networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), auth);
             this.networkEventFragment.startEventTask(new Event(Event.TYPE_TOKEN, Event.DESCRIPTION_TOKEN), auth);
         }
         else
