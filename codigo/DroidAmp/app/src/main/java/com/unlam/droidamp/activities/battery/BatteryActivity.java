@@ -1,17 +1,24 @@
 package com.unlam.droidamp.activities.battery;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.pm.PackageManager;
 import android.net.ConnectivityManager;
 import android.os.BatteryManager;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.activities.album.AlbumActivity;
@@ -22,17 +29,28 @@ import com.unlam.droidamp.interfaces.RequestCallback;
 import com.unlam.droidamp.network.BroadcastConnectivity;
 import com.unlam.droidamp.network.NetworkTask;
 
+import java.util.ArrayList;
+
 public class BatteryActivity extends AppCompatActivity implements RequestCallback<NetworkTask.Result> {
 
-    TextView batteryPercentage;
-    TextView batteryState;
-    Button btnOkGenial;
-    Intent batteryStatus;
-    ProgressBar progressBar;
+    private TextView batteryPercentage;
+    private TextView batteryState;
+    private Button btnOkGenial;
+    private Intent batteryStatus;
+    private ProgressBar progressBar;
 
     private Auth auth;
     private AuthFragment authFragment;
     private BroadcastConnectivity broadcastConnectivity;
+
+    public static final int MULTIPLE_PERMISSIONS = 10;
+
+    String[] permissions= new String[]{
+            Manifest.permission.READ_EXTERNAL_STORAGE,
+            Manifest.permission.INTERNET,
+            Manifest.permission.ACCESS_NETWORK_STATE,
+            Manifest.permission.ACCESS_WIFI_STATE
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,10 +95,8 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
     {
         int level = batteryStatus.getIntExtra(BatteryManager.EXTRA_LEVEL, -1);
         int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
-
-        float batteryPct = level * 100 / (float)scale;
-
-        return batteryPct;
+        // Return battery percentage
+        return level * 100 / (float)scale;
     }
 
     @Override
@@ -94,10 +110,17 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
         // This method will be executed once the button is clicked
         public void onClick(View v)
         {
-            progressBar.setVisibility(View.VISIBLE);
-            checkTokens();
+        if (checkPermissions())
+        {
+            afterPermissionCheck();;
+        }
         }
     };
+
+    private void afterPermissionCheck(){
+        progressBar.setVisibility(View.VISIBLE);
+        checkTokens();
+    }
 
     private <T> void startActivity(Class<T> clazz)
     {
@@ -143,6 +166,40 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
     public void finishRequest() {
         if (authFragment != null) {
             authFragment.cancelTask();
+        }
+    }
+
+    private  boolean checkPermissions() {
+        int result;
+        ArrayList<String> listPermissionsNeeded = new ArrayList<>();
+
+        //Se chequea si la version de Android es menor a la 6
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            return true;
+        }
+
+        for (String p : permissions) {
+            result = ContextCompat.checkSelfPermission(this, p);
+            if (result != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(p);
+            }
+        }
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this, listPermissionsNeeded.toArray(new String[listPermissionsNeeded.size()]), MULTIPLE_PERMISSIONS );
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == MULTIPLE_PERMISSIONS) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                afterPermissionCheck();
+            } else {
+                Toast.makeText(this, "DroidAmp necesita ciertos permisos para funcionar correctamente", Toast.LENGTH_LONG).show();
+                this.finish();
+            }
         }
     }
 }
