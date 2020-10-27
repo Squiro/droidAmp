@@ -17,6 +17,7 @@ import com.unlam.droidamp.interfaces.MusicResolverCallback;
 import com.unlam.droidamp.activities.main.classes.MediaAdapter;
 import com.unlam.droidamp.models.MusicFile;
 import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
+import com.unlam.droidamp.models.event.Event;
 import com.unlam.droidamp.models.event.NetworkEventFragment;
 import com.unlam.droidamp.interfaces.BtnListener;
 import com.unlam.droidamp.network.NetworkTask;
@@ -28,6 +29,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
@@ -57,10 +59,6 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
     private String albumID;
     private String artist;
 
-    // Network fragment
-    private  NetworkEventFragment networkEventFragment;
-    private Auth auth;
-
     // Audio reproduction
     private ArrayList<MusicFile> musicFiles;
     private MusicPlayerFragment musicPlayerFragment;
@@ -80,7 +78,6 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
         setContentView(R.layout.activity_main);
 
         this.currentPosition = 0;
-        this.auth = new Auth(this);
         this.albumID = getIntent().getExtras().getString(AlbumActivity.ALBUM_ID_KEY);
         this.album = getIntent().getExtras().getString(AlbumActivity.ALBUM_KEY);
         this.artist = getIntent().getExtras().getString(AlbumActivity.ARTIST_KEY);
@@ -91,8 +88,12 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
         setUpRecyclerViews();
         getSensors();
 
+        // UI setup and other stuff
         txtAlbum.setText(this.album);
         txtArtist.setText(this.artist);
+        txtNowPlaying.setSelected(true);
+        // MusicResolver will fire onAttach... so we execute this here
+        this.networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), auth);
     }
 
     public void fetchUI()
@@ -106,7 +107,6 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
         this.btnNext = findViewById(R.id.btnNext);
         this.btnPlay = findViewById(R.id.btnPlay);
         this.btnPrev = findViewById(R.id.btnPrev);
-        txtNowPlaying.setSelected(true);
     }
 
     public void getSensors()
@@ -129,15 +129,12 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
     {
         musicResolverFragment = MusicResolverFragment.getInstance(getSupportFragmentManager(), this.albumID);
         musicPlayerFragment = MusicPlayerFragment.getInstance(getSupportFragmentManager());
-        networkEventFragment = NetworkEventFragment.getInstance(NetworkEventFragment.class, getSupportFragmentManager());
     }
 
     public void setUpRecyclerViews()
     {
         // ----- RECYCLER VIEW FOR EVENTS -----
-        // Get stored events
         eventList = new ArrayList<>();
-
         eventRecylcler = findViewById(R.id.rvEvents);
         eventRecylcler.setHasFixedSize(true);
         eventRecylcler.setLayoutManager(new LinearLayoutManager(this));
@@ -146,10 +143,8 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
 
         // ----- RECYCLER VIEW FOR MUSIC FILES -----
         musicFiles = new ArrayList<>();
-
         // Create the recycler view
         rvMusicFiles = findViewById(R.id.rvMusicFiles);
-
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
         rvMusicFiles.setHasFixedSize(true);
@@ -246,6 +241,7 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
 
     public void updateFromMusicResolver(ArrayList<MusicFile> result)
     {
+        Log.i("Log", "MAIN ACTIVITY ---- Music Resolver Finished");
         this.musicFiles =  result;
         mAdapter = new MediaAdapter(musicFiles, new BtnListener() {
             // OnClick handler for the music files

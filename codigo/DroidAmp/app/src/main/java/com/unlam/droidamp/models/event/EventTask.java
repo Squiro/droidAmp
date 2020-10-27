@@ -25,7 +25,6 @@ public class EventTask extends NetworkTask {
         String token = auth.getToken();
         JSONObject payload = event.toJSONObject();
         payload.put("env", "TEST");
-
         return NetworkHandler.handleConnection(url, NetworkHandler.REQUEST_TYPE_POST, payload, token);
     }
 
@@ -36,21 +35,13 @@ public class EventTask extends NetworkTask {
 
     /**
      * Override onPostExecute from parent class.
-     * We won't really update the UI based on the result of an EventTask...
+     * We won't really update the UI based on the result of an EventTask... so we just finish the task
      */
-    /*@Override
+    @Override
     protected void onPostExecute(NetworkTask.Result result) {
-        if (result != null && callback != null)
+        if (result != null && this.callback != null)
         {
-            if (result.exception != null)
-            {
-                //callback.updateFromRequest(result.exception.getMessage());
-                callback.updateFromRequest(result);
-            } else if (result.resultValue != null)
-            {
-                callback.updateFromRequest(result);
-            }
-            callback.finishRequest();
+            callback.finishRequest(this.taskType);
         }
-    }*/
+    }
 }

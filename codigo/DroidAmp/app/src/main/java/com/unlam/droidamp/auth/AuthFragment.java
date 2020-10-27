@@ -1,5 +1,6 @@
 package com.unlam.droidamp.auth;
 
+import android.os.AsyncTask;
 import android.util.Log;
 
 import com.unlam.droidamp.activities.login.asynctasks.LoginTask;
@@ -27,7 +28,7 @@ public class AuthFragment extends NetworkFragment {
     public void startLogin(User user, Auth auth) {
         cancelTask();
         loginTask = new LoginTask(this.callback, user, auth);
-        loginTask.execute(NetworkHandler.API_ENDPOINT + "login");
+        loginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, NetworkHandler.API_ENDPOINT + "login");
     }
 
     /**
@@ -36,14 +37,14 @@ public class AuthFragment extends NetworkFragment {
     public void startRegister(User user, Auth auth) {
         cancelTask();
         registerTask = new RegisterTask(this.callback, user, auth);
-        registerTask.execute(NetworkHandler.API_ENDPOINT + "register");
+        registerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, NetworkHandler.API_ENDPOINT + "register");
     }
 
     public void startRefreshToken(Auth auth)
     {
         cancelTask();
         tokenTask = new TokenTask(this.callback, auth);
-        tokenTask.execute(NetworkHandler.API_ENDPOINT + "refresh");
+        tokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, NetworkHandler.API_ENDPOINT + "refresh");
     }
 
     /**

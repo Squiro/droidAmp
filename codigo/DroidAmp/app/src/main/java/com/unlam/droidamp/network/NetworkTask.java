@@ -1,7 +1,6 @@
 package com.unlam.droidamp.network;
 
 import android.os.AsyncTask;
-import android.util.Log;
 
 import com.unlam.droidamp.interfaces.RequestCallback;
 
@@ -10,8 +9,8 @@ import java.net.URL;
 
 public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> {
 
-    private RequestCallback<NetworkTask.Result> callback;
-    private int taskType;
+    protected RequestCallback<NetworkTask.Result> callback;
+    protected int taskType;
     public static final int TYPE_EVENT_TASK = 0;
     public static final int TYPE_LOGIN_TASK = 1;
     public static final int TYPE_REGISTER_TASK = 2;
@@ -33,15 +32,18 @@ public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> 
     public class Result {
         public String resultValue;
         public Exception exception;
+        public int taskType;
         public boolean success;
 
-        public Result(String resultValue, boolean success) {
+        public Result(String resultValue, boolean success, int taskType) {
             this.resultValue = resultValue;
             this.success = success;
+            this.taskType = taskType;
         }
-        public Result(Exception exception, boolean success) {
+        public Result(Exception exception, boolean success, int taskType) {
             this.exception = exception;
             this.success = success;
+            this.taskType = taskType;
         }
     }
 
@@ -79,10 +81,10 @@ public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> 
                     // Create json object from response string
                     JSONObject responseJson = new JSONObject(resultString);
                     processResponse(responseJson);
-                    result = new Result(resultString, true);
+                    result = new Result(resultString, true, this.taskType);
                 }
             } catch(Exception e) {
-                    result = new Result(e, false);
+                    result = new Result(e, false, this.taskType);
             }
         }
         return result;
