@@ -1,6 +1,7 @@
 package com.unlam.droidamp.activities.main.fragments;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -73,8 +74,9 @@ public class MusicResolverFragment extends Fragment {
      */
     public void startMusicResolverTask(Context context) {
         cancelTask();
+        Log.i("Log", "MusicResolver Task Starting");
         musicResolverTask = new MusicResolverTask(this.callback, context, this.album);
-        musicResolverTask.execute();
+        musicResolverTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /**

@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
@@ -73,6 +74,7 @@ public class AlbumActivity extends BaseActivity implements MusicResolverCallback
 
     @Override
     public void updateFromMusicResolver(ArrayList<Album> result) {
+        Log.i("Log", "Album Resolver Finished");
         this.pgBarAlbums.setVisibility(View.INVISIBLE);
         this.albumList =  result;
         mAlbumAdapter = new AlbumAdapter(albumList, new BtnListener() {

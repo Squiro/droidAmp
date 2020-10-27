@@ -1,6 +1,7 @@
 package com.unlam.droidamp.models.event;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.network.NetworkFragment;
@@ -22,9 +23,9 @@ public class NetworkEventFragment extends NetworkFragment {
      */
     public void startEventTask(Event event, Auth auth) {
         //cancelTask();
+        Log.i("Log", "Event Task Starting");
         eventTask = new EventTask(this.callback, event, auth);
         eventTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, NetworkHandler.API_ENDPOINT + "event");
-        //eventTask.execute();
     }
 
     /**

@@ -77,7 +77,7 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        this.currentPosition = 0;
+        this.currentPosition = -1;
         this.albumID = getIntent().getExtras().getString(AlbumActivity.ALBUM_ID_KEY);
         this.album = getIntent().getExtras().getString(AlbumActivity.ALBUM_KEY);
         this.artist = getIntent().getExtras().getString(AlbumActivity.ARTIST_KEY);

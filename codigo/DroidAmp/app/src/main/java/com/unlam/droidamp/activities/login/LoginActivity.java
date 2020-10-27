@@ -150,18 +150,11 @@ public class LoginActivity extends BaseActivity {
             case NetworkTask.TYPE_EVENT_TASK:
                 if (networkEventFragment != null)
                 {
+                    Log.i("Log", "Event Task Finished");
                     networkEventFragment.cancelTask();
                 }
                 break;
         }
-    }
-
-    private <T> void startActivity(Class<T> clazz, boolean finishCurrent)
-    {
-        Intent activity = new Intent(this, clazz);
-        startActivity(activity);
-        if (finishCurrent)
-            this.finish();
     }
 
     public boolean validateInputs()

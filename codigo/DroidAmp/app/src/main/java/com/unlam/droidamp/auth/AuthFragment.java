@@ -27,6 +27,7 @@ public class AuthFragment extends NetworkFragment {
      */
     public void startLogin(User user, Auth auth) {
         cancelTask();
+        Log.i("Log", "Login Task Starting");
         loginTask = new LoginTask(this.callback, user, auth);
         loginTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, NetworkHandler.API_ENDPOINT + "login");
     }
@@ -36,6 +37,7 @@ public class AuthFragment extends NetworkFragment {
      */
     public void startRegister(User user, Auth auth) {
         cancelTask();
+        Log.i("Log", "Register Task Starting");
         registerTask = new RegisterTask(this.callback, user, auth);
         registerTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, NetworkHandler.API_ENDPOINT + "register");
     }
@@ -43,6 +45,7 @@ public class AuthFragment extends NetworkFragment {
     public void startRefreshToken(Auth auth)
     {
         cancelTask();
+        Log.i("Log", "Refresh Task Starting");
         tokenTask = new TokenTask(this.callback, auth);
         tokenTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, NetworkHandler.API_ENDPOINT + "refresh");
     }

@@ -108,19 +108,12 @@ public class BatteryActivity extends BaseActivity {
         checkTokens();
     }
 
-    private <T> void startActivity(Class<T> clazz)
-    {
-        Intent activity = new Intent(this, clazz);
-        startActivity(activity);
-        this.finish();
-    }
-
     public void checkTokens()
     {
         // If token isn't expired start the mainActivity
         if (!auth.checkIfTokenExpired())
         {
-            startActivity(AlbumActivity.class);
+            startActivity(AlbumActivity.class, true);
         }
         else
         {
@@ -134,13 +127,13 @@ public class BatteryActivity extends BaseActivity {
     public void updateFromRequest(NetworkTask.Result result) {
         if (result.success)
         {
-            startActivity(AlbumActivity.class);
+            startActivity(AlbumActivity.class, true);
             this.networkEventFragment.startEventTask(new Event(Event.TYPE_TOKEN, Event.DESCRIPTION_TOKEN), auth);
         }
         else
         {
             Log.i("Log", result.exception.getMessage());
-            startActivity(LoginActivity.class);
+            startActivity(LoginActivity.class, true);
         }
         progressBar.setVisibility(View.INVISIBLE);
     }
@@ -158,6 +151,7 @@ public class BatteryActivity extends BaseActivity {
             case NetworkTask.TYPE_EVENT_TASK:
                 if (networkEventFragment != null)
                 {
+                    Log.i("Log", "Event Task Finished");
                     networkEventFragment.cancelTask();
                 }
                 break;

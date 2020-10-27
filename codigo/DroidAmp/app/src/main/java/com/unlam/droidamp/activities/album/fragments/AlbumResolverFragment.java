@@ -1,6 +1,7 @@
 package com.unlam.droidamp.activities.album.fragments;
 
 import android.content.Context;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
 
@@ -68,8 +69,9 @@ public class AlbumResolverFragment extends Fragment {
      */
     public void start(Context context) {
         cancelTask();
+        Log.i("Log", "AlbumResolver Task Starting");
         albumResolverTask = new AlbumResolverTask(this.callback, context);
-        albumResolverTask.execute();
+        albumResolverTask.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
     }
 
     /**

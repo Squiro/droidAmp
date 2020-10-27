@@ -1,9 +1,5 @@
 package com.unlam.droidamp.activities.register;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,12 +7,11 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.unlam.droidamp.R;
+import com.unlam.droidamp.activities.album.AlbumActivity;
 import com.unlam.droidamp.activities.base.BaseActivity;
-import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.auth.AuthFragment;
-import com.unlam.droidamp.interfaces.RequestCallback;
 import com.unlam.droidamp.models.User;
-import com.unlam.droidamp.network.BroadcastConnectivity;
+import com.unlam.droidamp.models.event.Event;
 import com.unlam.droidamp.network.NetworkTask;
 import com.unlam.droidamp.utilities.InputValidatorHelper;
 
@@ -33,14 +28,11 @@ public class RegisterActivity extends BaseActivity {
 
     private AuthFragment authFragment;
     private boolean registerInProgress;
-    private Auth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        this.auth = new Auth(this);
 
         // -------- UI ELEMENTS --------
         txtNombre = findViewById(R.id.txtNombre);
@@ -89,8 +81,9 @@ public class RegisterActivity extends BaseActivity {
     public void updateFromRequest(NetworkTask.Result result) {
         if (result.success)
         {
-
             Log.i("Log", result.resultValue);
+            this.startActivity(AlbumActivity.class, true);
+            networkEventFragment.startEventTask(new Event(Event.TYPE_REGISTER, Event.DESCRIPTION_REGISTER), this.auth);
         }
         else
         {
@@ -111,6 +104,7 @@ public class RegisterActivity extends BaseActivity {
             case NetworkTask.TYPE_EVENT_TASK:
                 if (networkEventFragment != null)
                 {
+                    Log.i("Log", "Event Task Finished");
                     networkEventFragment.cancelTask();
                 }
                 break;

@@ -2,9 +2,11 @@ package com.unlam.droidamp.activities.base;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.net.ConnectivityManager;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.models.event.NetworkEventFragment;
@@ -51,7 +53,16 @@ public class BaseActivity extends AppCompatActivity implements RequestCallback<N
     public void finishRequest(int taskType) {
         if (networkEventFragment != null)
         {
+            Log.i("Log", "Event Task Finished");
             networkEventFragment.cancelTask();
         }
+    }
+
+    protected  <T> void startActivity(Class<T> clazz, boolean finishCurrent)
+    {
+        Intent activity = new Intent(this, clazz);
+        startActivity(activity);
+        if (finishCurrent)
+            this.finish();
     }
 }
