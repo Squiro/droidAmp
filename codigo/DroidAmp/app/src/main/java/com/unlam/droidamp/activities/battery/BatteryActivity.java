@@ -1,7 +1,6 @@
 package com.unlam.droidamp.activities.battery;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
@@ -9,7 +8,6 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
-import android.net.ConnectivityManager;
 import android.os.BatteryManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -22,16 +20,15 @@ import android.widget.Toast;
 
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.activities.album.AlbumActivity;
+import com.unlam.droidamp.activities.base.BaseActivity;
 import com.unlam.droidamp.activities.login.LoginActivity;
-import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.auth.AuthFragment;
-import com.unlam.droidamp.interfaces.RequestCallback;
-import com.unlam.droidamp.network.BroadcastConnectivity;
+import com.unlam.droidamp.models.event.Event;
 import com.unlam.droidamp.network.NetworkTask;
 
 import java.util.ArrayList;
 
-public class BatteryActivity extends AppCompatActivity implements RequestCallback<NetworkTask.Result> {
+public class BatteryActivity extends BaseActivity {
 
     private TextView batteryPercentage;
     private TextView batteryState;
@@ -39,10 +36,8 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
     private Intent batteryStatus;
     private ProgressBar progressBar;
 
-    private Auth auth;
+    //private Auth auth;
     private AuthFragment authFragment;
-    private BroadcastConnectivity broadcastConnectivity;
-
     public static final int MULTIPLE_PERMISSIONS = 10;
 
     String[] permissions= new String[]{
@@ -78,13 +73,10 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
 
         // ----- AUTH -----
         // Instantiate auth class
-        this.auth = new Auth(this);
+        //this.auth = new Auth(this);
 
         // Instantiate auth fragment
         authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager());
-
-        this.broadcastConnectivity = new BroadcastConnectivity(this);
-        this.registerReceiver(broadcastConnectivity, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     public boolean isCharging(int status) {
@@ -97,12 +89,6 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
         int scale = batteryStatus.getIntExtra(BatteryManager.EXTRA_SCALE, -1);
         // Return battery percentage
         return level * 100 / (float)scale;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        this.unregisterReceiver(broadcastConnectivity);
     }
 
     private View.OnClickListener btnOkGenialListener = new View.OnClickListener()
@@ -140,6 +126,7 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
         {
             // Otherwise, try to refresh them
             authFragment.startRefreshToken(auth);
+            this.networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), auth);
         }
     }
 
@@ -148,6 +135,7 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
         if (result.success)
         {
             startActivity(AlbumActivity.class);
+            this.networkEventFragment.startEventTask(new Event(Event.TYPE_TOKEN, Event.DESCRIPTION_TOKEN), auth);
         }
         else
         {
@@ -158,14 +146,21 @@ public class BatteryActivity extends AppCompatActivity implements RequestCallbac
     }
 
     @Override
-    public BroadcastConnectivity getBroadcastConnectivity() {
-        return this.broadcastConnectivity;
-    }
+    public void finishRequest(int taskType) {
+        switch (taskType)
+        {
+            case NetworkTask.TYPE_TOKEN_TASK:
+                if (authFragment != null) {
+                    authFragment.cancelTask();
+                }
+                break;
 
-    @Override
-    public void finishRequest() {
-        if (authFragment != null) {
-            authFragment.cancelTask();
+            case NetworkTask.TYPE_EVENT_TASK:
+                if (networkEventFragment != null)
+                {
+                    networkEventFragment.cancelTask();
+                }
+                break;
         }
     }
 

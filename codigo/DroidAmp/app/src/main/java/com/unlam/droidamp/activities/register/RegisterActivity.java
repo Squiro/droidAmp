@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.unlam.droidamp.R;
+import com.unlam.droidamp.activities.base.BaseActivity;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.auth.AuthFragment;
 import com.unlam.droidamp.interfaces.RequestCallback;
@@ -19,7 +20,7 @@ import com.unlam.droidamp.network.BroadcastConnectivity;
 import com.unlam.droidamp.network.NetworkTask;
 import com.unlam.droidamp.utilities.InputValidatorHelper;
 
-public class RegisterActivity extends AppCompatActivity implements RequestCallback<NetworkTask.Result> {
+public class RegisterActivity extends BaseActivity {
 
     private TextView txtError;
     private TextView txtNombre;
@@ -30,20 +31,14 @@ public class RegisterActivity extends AppCompatActivity implements RequestCallba
     private TextView txtComision;
     private Button btnRegister;
 
-
     private AuthFragment authFragment;
-
     private boolean registerInProgress;
     private Auth auth;
-    private BroadcastConnectivity broadcastConnectivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_register);
-
-        this.broadcastConnectivity = new BroadcastConnectivity(this);
-        this.registerReceiver(broadcastConnectivity, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
 
         this.auth = new Auth(this);
 
@@ -64,12 +59,6 @@ public class RegisterActivity extends AppCompatActivity implements RequestCallba
         // We instantiate the network fragment that will handle the register action from the user in background
         authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager());
         this.registerInProgress = false;
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        this.unregisterReceiver(broadcastConnectivity);
     }
 
     // Listener for login button
@@ -110,17 +99,22 @@ public class RegisterActivity extends AppCompatActivity implements RequestCallba
     }
 
     @Override
-    public BroadcastConnectivity getBroadcastConnectivity() {
-        return this.broadcastConnectivity;
-    }
-
-    @Override
-    public void finishRequest() {
-        if (authFragment != null)
+    public void finishRequest(int taskType) {
+        switch (taskType)
         {
-            authFragment.cancelTask();
+            case NetworkTask.TYPE_TOKEN_TASK:
+                if (authFragment != null) {
+                    authFragment.cancelTask();
+                }
+                break;
+
+            case NetworkTask.TYPE_EVENT_TASK:
+                if (networkEventFragment != null)
+                {
+                    networkEventFragment.cancelTask();
+                }
+                break;
         }
-        Log.i("Log", "Request finished");
     }
 
     public boolean validateInputs()

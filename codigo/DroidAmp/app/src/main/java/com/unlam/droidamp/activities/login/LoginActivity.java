@@ -1,10 +1,6 @@
 package com.unlam.droidamp.activities.login;
 
-import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
-import android.net.Network;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -15,20 +11,16 @@ import android.widget.TextView;
 
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.activities.album.AlbumActivity;
-import com.unlam.droidamp.activities.main.MainActivity;
+import com.unlam.droidamp.activities.base.BaseActivity;
 import com.unlam.droidamp.activities.register.RegisterActivity;
-import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.auth.AuthFragment;
-import com.unlam.droidamp.interfaces.RequestCallback;
+import com.unlam.droidamp.models.event.Event;
 import com.unlam.droidamp.models.User;
 import com.unlam.droidamp.network.NetworkTask;
 import com.unlam.droidamp.utilities.Encryption;
-import com.unlam.droidamp.network.BroadcastConnectivity;
 import com.unlam.droidamp.utilities.InputValidatorHelper;
-import com.unlam.droidamp.utilities.TextValidator;
 
-
-public class LoginActivity extends AppCompatActivity implements RequestCallback<NetworkTask.Result> {
+public class LoginActivity extends BaseActivity {
     // UI elements
     private EditText txtEmail;
     private EditText txtPassword;
@@ -40,9 +32,7 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
     // Network related properties
     private AuthFragment authFragment;
     private boolean logginIn;
-    private BroadcastConnectivity broadcastConnectivity;
-
-    private Auth auth;
+    //private Auth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,7 +44,7 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
         enc.generateKey();
 
         // Instantiate auth class
-        this.auth = new Auth(this);
+        //this.auth = new Auth(this);
 
         // -------- UI ELEMENTS --------
 
@@ -78,15 +68,7 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
         this.logginIn = false;
         // Instantiate auth fragment
         authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager());
-
-        broadcastConnectivity = new BroadcastConnectivity(this);
-        this.registerReceiver(broadcastConnectivity, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        this.unregisterReceiver(broadcastConnectivity);
+        //networkEventFragment = NetworkEventFragment.getInstance(NetworkEventFragment.class, getSupportFragmentManager());
     }
 
     // Listener for login button
@@ -118,16 +100,18 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
                 User user = new User(txtEmail.getText().toString(), txtPassword.getText().toString());
                 authFragment.startLogin(user, auth);
                 logginIn = true;
+                this.networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), this.auth);
             }
         }
     }
     @Override
     public void updateFromRequest(NetworkTask.Result result) {
-        Log.i("Log", "UpdateFromRequest");
+        Log.i("Log", "LOGIN ------- UpdateFromRequest");
 
         if (result.success)
         {
             startActivity(AlbumActivity.class, true);
+            this.networkEventFragment.startEventTask(new Event(Event.TYPE_LOGIN, "User logged in"), this.auth);
         }
         else
         {
@@ -144,23 +128,31 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
             {
                 txtError.setText(result.exception.toString());
             }
-            //txtError.setText(result.exception.getMessage());
             Log.i("Log", "Not successful");
         }
         progressBar.setVisibility(View.INVISIBLE);
     }
 
     @Override
-    public BroadcastConnectivity getBroadcastConnectivity() {
-        return this.broadcastConnectivity;
-    }
+    public void finishRequest(int taskType) {
+        Log.i("Log", "Finish REQUEST " + taskType);
+        switch (taskType)
+        {
+            case NetworkTask.TYPE_LOGIN_TASK:
 
-    @Override
-    public void finishRequest() {
-        logginIn = false;
+                logginIn = false;
 
-        if (authFragment != null) {
-            authFragment.cancelTask();
+                if (authFragment != null) {
+                    authFragment.cancelTask();
+                }
+                break;
+
+            case NetworkTask.TYPE_EVENT_TASK:
+                if (networkEventFragment != null)
+                {
+                    networkEventFragment.cancelTask();
+                }
+                break;
         }
     }
 
@@ -170,22 +162,6 @@ public class LoginActivity extends AppCompatActivity implements RequestCallback<
         startActivity(activity);
         if (finishCurrent)
             this.finish();
-    }
-
-    private void setValidationListeners()
-    {
-        // Email
-        txtEmail.addTextChangedListener(new TextValidator(txtEmail)
-        {
-            @Override
-            public void validate(TextView textView, String text)
-            {
-                if (!InputValidatorHelper.isValidEmail(txtEmail.getText().toString()))
-                {
-                    txtError.setText(R.string.invalid_email);
-                }
-            }
-        });
     }
 
     public boolean validateInputs()

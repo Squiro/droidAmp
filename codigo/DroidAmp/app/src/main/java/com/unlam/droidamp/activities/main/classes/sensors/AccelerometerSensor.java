@@ -8,7 +8,7 @@ import android.hardware.SensorManager;
 
 import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
 import com.unlam.droidamp.auth.Auth;
-import com.unlam.droidamp.models.Event;
+import com.unlam.droidamp.models.event.Event;
 
 import java.util.Locale;
 

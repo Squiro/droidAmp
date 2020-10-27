@@ -7,7 +7,7 @@ import android.hardware.SensorEvent;
 
 import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
 import com.unlam.droidamp.auth.Auth;
-import com.unlam.droidamp.models.Event;
+import com.unlam.droidamp.models.event.Event;
 
 public class ProximitySensor extends DroidAmpSensor {
     // Constants

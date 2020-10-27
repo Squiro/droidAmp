@@ -1,28 +1,25 @@
 package com.unlam.droidamp.activities.album;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
-import android.content.IntentFilter;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.activities.album.fragments.AlbumResolverFragment;
+import com.unlam.droidamp.activities.base.BaseActivity;
 import com.unlam.droidamp.activities.main.MainActivity;
 import com.unlam.droidamp.interfaces.BtnListener;
 import com.unlam.droidamp.interfaces.MusicResolverCallback;
 import com.unlam.droidamp.models.Album;
-import com.unlam.droidamp.network.BroadcastConnectivity;
+import com.unlam.droidamp.models.event.Event;
 
 import java.util.ArrayList;
 
-public class AlbumActivity extends AppCompatActivity implements MusicResolverCallback<ArrayList<Album>> {
+public class AlbumActivity extends BaseActivity implements MusicResolverCallback<ArrayList<Album>> {
 
     // UI Elements
     private ProgressBar pgBarAlbums;
@@ -31,7 +28,6 @@ public class AlbumActivity extends AppCompatActivity implements MusicResolverCal
     private AlbumResolverFragment albumResolverFragment;
 
     private ArrayList<Album> albumList;
-    private BroadcastConnectivity broadcastConnectivity;
     public static final String ALBUM_KEY = "album";
     public static final String ALBUM_ID_KEY = "album_id";
     public static final String ARTIST_KEY = "artist";
@@ -43,14 +39,9 @@ public class AlbumActivity extends AppCompatActivity implements MusicResolverCal
 
         pgBarAlbums = findViewById(R.id.pgBarAlbums);
         albumResolverFragment = AlbumResolverFragment.getInstance(getSupportFragmentManager());
-        registerBroadcastConnectivity();
+        // AlbumResolverFragment starts its background task onAttach, so... we better fire this event right now
+        this.networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), auth);
         setUpRecyclerView();
-    }
-
-    public void registerBroadcastConnectivity()
-    {
-        broadcastConnectivity = new BroadcastConnectivity(this);
-        this.registerReceiver(broadcastConnectivity, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
 
     public void setUpRecyclerView()
@@ -68,12 +59,6 @@ public class AlbumActivity extends AppCompatActivity implements MusicResolverCal
             }
         });
         rvAlbums.setAdapter(mAlbumAdapter);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        this.unregisterReceiver(broadcastConnectivity);
     }
 
     public void playAlbum(int position)
@@ -99,11 +84,6 @@ public class AlbumActivity extends AppCompatActivity implements MusicResolverCal
         });
         rvAlbums.setAdapter(mAlbumAdapter);
         mAlbumAdapter.notifyDataSetChanged();
-    }
-
-    @Override
-    public BroadcastConnectivity getBroadcastConnectivity() {
-        return broadcastConnectivity;
     }
 
     @Override

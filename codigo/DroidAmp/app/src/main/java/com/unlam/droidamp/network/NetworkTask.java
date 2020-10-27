@@ -11,10 +11,18 @@ import java.net.URL;
 public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> {
 
     private RequestCallback<NetworkTask.Result> callback;
+    private int taskType;
+    public static final int TYPE_EVENT_TASK = 0;
+    public static final int TYPE_LOGIN_TASK = 1;
+    public static final int TYPE_REGISTER_TASK = 2;
+    public static final int TYPE_TOKEN_TASK = 3;
+    public static final int TYPE_ALBUMRESOLVER_TASK = 4;
+    public static final int TYPE_MUSICRESOLVER_TASK = 5;
 
-    public NetworkTask(RequestCallback<NetworkTask.Result> callback)
+    public NetworkTask(RequestCallback<NetworkTask.Result> callback, int taskType)
     {
         this.callback = callback;
+        this.taskType = taskType;
     }
 
     /**
@@ -102,7 +110,7 @@ public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> 
             {
                 callback.updateFromRequest(result);
             }
-            callback.finishRequest();
+            callback.finishRequest(taskType);
         }
     }
 
@@ -110,10 +118,8 @@ public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> 
      * Override to add special behavior for cancelled AsyncTask.
      */
     @Override
-    protected void onCancelled(NetworkTask.Result result) {
-
-        Log.i("Log", "Task cancelled");
-        callback.finishRequest();
+    protected void onCancelled() {
+        callback.finishRequest(taskType);
     }
 
 }

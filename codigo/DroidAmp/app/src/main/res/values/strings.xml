@@ -24,4 +24,6 @@
     <string name="batteryMore">"También te informamos que tu batería..."</string>
     <string name="btnOkGenial">"Ok genial, llevame a la app."</string>
     <string name="sharedPreferencesFile">com.unlam.droidAmp.sharedPref</string>
+
+
 </resources>

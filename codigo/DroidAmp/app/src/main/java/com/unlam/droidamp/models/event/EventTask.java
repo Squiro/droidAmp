@@ -1,6 +1,5 @@
-package com.unlam.droidamp.activities.main.asynctask;
+package com.unlam.droidamp.models.event;
 
-import com.unlam.droidamp.models.Event;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.interfaces.RequestCallback;
 import com.unlam.droidamp.network.NetworkHandler;
@@ -16,7 +15,7 @@ public class EventTask extends NetworkTask {
     private Event event;
 
     public EventTask(RequestCallback<NetworkTask.Result> callback, Event event, Auth auth) {
-        super(callback);
+        super(callback, TYPE_EVENT_TASK);
         this.auth = auth;
         this.event = event;
     }
@@ -34,4 +33,24 @@ public class EventTask extends NetworkTask {
     public void processResponse(JSONObject responseJson) {
 
     }
+
+    /**
+     * Override onPostExecute from parent class.
+     * We won't really update the UI based on the result of an EventTask...
+     */
+    /*@Override
+    protected void onPostExecute(NetworkTask.Result result) {
+        if (result != null && callback != null)
+        {
+            if (result.exception != null)
+            {
+                //callback.updateFromRequest(result.exception.getMessage());
+                callback.updateFromRequest(result);
+            } else if (result.resultValue != null)
+            {
+                callback.updateFromRequest(result);
+            }
+            callback.finishRequest();
+        }
+    }*/
 }

@@ -5,9 +5,9 @@ import android.content.SharedPreferences;
 import android.hardware.SensorEvent;
 import com.unlam.droidamp.activities.main.MainActivity;
 import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
-import com.unlam.droidamp.activities.main.fragments.NetworkEventFragment;
+import com.unlam.droidamp.models.event.NetworkEventFragment;
 import com.unlam.droidamp.auth.Auth;
-import com.unlam.droidamp.models.Event;
+import com.unlam.droidamp.models.event.Event;
 
 public class DroidAmpSensor {
 

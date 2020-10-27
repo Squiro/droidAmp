@@ -1,7 +1,4 @@
 package com.unlam.droidamp.auth;
-
-import android.util.Log;
-
 import com.unlam.droidamp.interfaces.RequestCallback;
 import com.unlam.droidamp.network.NetworkHandler;
 import com.unlam.droidamp.network.NetworkTask;
@@ -15,7 +12,7 @@ public class TokenTask extends NetworkTask {
     private Auth auth;
 
     public TokenTask(RequestCallback<NetworkTask.Result> callback, Auth auth) {
-        super(callback);
+        super(callback, TYPE_TOKEN_TASK);
         this.auth = auth;
     }
 

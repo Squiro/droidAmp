@@ -56,7 +56,6 @@ public class AlbumResolverFragment extends Fragment {
         callback = null;
     }
 
-
     @Override
     public void onDestroy() {
         // Cancel task when Fragment is destroyed.

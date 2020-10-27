@@ -17,7 +17,7 @@ public class LoginTask extends NetworkTask {
     private Auth auth;
 
     public LoginTask(RequestCallback<NetworkTask.Result> callback, User user, Auth auth) {
-        super(callback);
+        super(callback, TYPE_LOGIN_TASK);
         this.user = user;
         this.email = email;
 
@@ -27,9 +27,7 @@ public class LoginTask extends NetworkTask {
 
     @Override
     public String request(URL url) throws Exception {
-        JSONObject data = user.toJSONObject();//new JSONObject();
-        //data.put("email", email);
-        //data.put("password", password);
+        JSONObject data = user.toJSONObject();
         data.put("env", "PROD");
         return NetworkHandler.handleConnection(url, NetworkHandler.REQUEST_TYPE_POST, data, null);
     }

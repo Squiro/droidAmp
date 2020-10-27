@@ -1,11 +1,11 @@
 package com.unlam.droidamp.activities.main;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.activities.album.AlbumActivity;
+import com.unlam.droidamp.activities.base.BaseActivity;
 import com.unlam.droidamp.activities.main.classes.EventAdapter;
 import com.unlam.droidamp.activities.main.classes.sensors.AccelerometerSensor;
 import com.unlam.droidamp.activities.main.classes.sensors.LightSensor;
@@ -14,27 +14,21 @@ import com.unlam.droidamp.activities.main.classes.sensors.DroidAmpSensor;
 import com.unlam.droidamp.activities.main.fragments.MusicResolverFragment;
 import com.unlam.droidamp.auth.Auth;
 import com.unlam.droidamp.interfaces.MusicResolverCallback;
-import com.unlam.droidamp.interfaces.RequestCallback;
 import com.unlam.droidamp.activities.main.classes.MediaAdapter;
 import com.unlam.droidamp.models.MusicFile;
 import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
-import com.unlam.droidamp.activities.main.fragments.NetworkEventFragment;
+import com.unlam.droidamp.models.event.NetworkEventFragment;
 import com.unlam.droidamp.interfaces.BtnListener;
-import com.unlam.droidamp.network.BroadcastConnectivity;
 import com.unlam.droidamp.network.NetworkTask;
 
 import android.content.Context;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
-import android.net.ConnectivityManager;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -43,7 +37,7 @@ import java.util.ArrayList;
 import java.util.Timer;
 import java.util.TimerTask;
 
-public class MainActivity extends AppCompatActivity implements SensorEventListener, RequestCallback<NetworkTask.Result>, MusicResolverCallback<ArrayList<MusicFile>> {
+public class MainActivity extends BaseActivity implements SensorEventListener, MusicResolverCallback<ArrayList<MusicFile>> {
     // UI Elements
     private ProgressBar pgBarMain;
     private RecyclerView rvMusicFiles;
@@ -66,7 +60,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     // Network fragment
     private  NetworkEventFragment networkEventFragment;
     private Auth auth;
-    private BroadcastConnectivity broadcastConnectivity;
 
     // Audio reproduction
     private ArrayList<MusicFile> musicFiles;
@@ -96,7 +89,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         setListeners();
         instantiateFragments();
         setUpRecyclerViews();
-        registerBroadcastConnectivity();
         getSensors();
 
         txtAlbum.setText(this.album);
@@ -175,12 +167,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         rvMusicFiles.setAdapter(mAdapter);
     }
 
-    public void registerBroadcastConnectivity()
-    {
-        broadcastConnectivity = new BroadcastConnectivity(this);
-        this.registerReceiver(broadcastConnectivity, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
-    }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -195,12 +181,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mSensorManager.unregisterListener(this, mAccelerometer);
         mSensorManager.unregisterListener(this, mProximity);
         mSensorManager.unregisterListener(this, mLight);
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-        this.unregisterReceiver(broadcastConnectivity);
     }
 
     public void playMusicFile(int position)
@@ -267,7 +247,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void updateFromMusicResolver(ArrayList<MusicFile> result)
     {
         this.musicFiles =  result;
-        Log.i("Log", "MAIN ACTIVITY --- UPDATE");
         mAdapter = new MediaAdapter(musicFiles, new BtnListener() {
             // OnClick handler for the music files
             @Override
@@ -303,16 +282,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     }
 
     @Override
-    public BroadcastConnectivity getBroadcastConnectivity() {
-        return broadcastConnectivity;
-    }
-
-    @Override
     public void finishRequest() {
-        if (networkEventFragment != null) {
-            networkEventFragment.cancelTask();
-        }
-
         if (musicResolverFragment != null) {
             musicResolverFragment.cancelTask();
         }

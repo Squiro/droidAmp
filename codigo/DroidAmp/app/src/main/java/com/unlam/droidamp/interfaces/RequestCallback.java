@@ -5,7 +5,14 @@ public interface RequestCallback<T> {
 
     interface ResponseCode {
         int BAD_REQUEST = 400;
+        int EXPIRED_TOKEN = 401;
+        int SERVER_ERROR = 500;
     }
+
+    /**
+     * Get the BroadcastConnectivity instance form the activity.
+     */
+    BroadcastConnectivity getBroadcastConnectivity();
 
     /**
      * Indicates that the callback handler needs to update its appearance or information based on
@@ -14,13 +21,8 @@ public interface RequestCallback<T> {
     void updateFromRequest(T result);
 
     /**
-     * Get the BroadcastConnectivity instance form the activity.
-     */
-    BroadcastConnectivity getBroadcastConnectivity();
-
-    /**
      * Indicates that the register operation has finished. This method is called even if the
      * register hasn't completed successfully.
      */
-    void finishRequest();
+    void finishRequest(int taskType);
 }
