@@ -58,7 +58,7 @@ public class MusicResolverTask extends AsyncTask<Void, Integer, ArrayList<MusicF
                     String data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
                     int track = cursor.getInt((cursor.getColumnIndex((MediaStore.Audio.Media.TRACK))));
 
-                    result.add(new MusicFile(id, title, data, track));
+                    result.add(new MusicFile(id, title, data, track, context));
                 }
             }
             cursor.close();
@@ -71,6 +71,7 @@ public class MusicResolverTask extends AsyncTask<Void, Integer, ArrayList<MusicF
     @Override
     protected void onPostExecute(ArrayList<MusicFile> result) {
         this.context = null;
+
         if (result != null && callback != null)
         {
             callback.updateFromMusicResolver(result);

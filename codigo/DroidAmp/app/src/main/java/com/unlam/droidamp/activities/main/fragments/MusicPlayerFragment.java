@@ -9,6 +9,8 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.unlam.droidamp.models.MusicFile;
+
 public class MusicPlayerFragment extends Fragment {
 
     private static final String TAG = "MusicPlayerFragment";
@@ -102,11 +104,28 @@ public class MusicPlayerFragment extends Fragment {
 
     public void changeVolume()
     {
-        if (currVolume >= maxVolume)
-            currVolume = 0;
-        currVolume += 5;
-        Toast.makeText(this.getContext(), "Volumen actual: " + (maxVolume-currVolume), Toast.LENGTH_LONG).show();
-        float log1= (float) (Math.log(maxVolume-currVolume)/Math.log(maxVolume));
-        mediaPlayer.setVolume(log1, log1);
+        if (isPlaying)
+        {
+            if (currVolume >= maxVolume)
+                currVolume = 0;
+            currVolume += 20;
+            Toast.makeText(this.getContext(), "Volumen actual: " + (maxVolume-currVolume), Toast.LENGTH_LONG).show();
+            float log1= (float) (Math.log(maxVolume-currVolume)/Math.log(maxVolume));
+            mediaPlayer.setVolume(log1, log1);
+        }
+    }
+
+    public static boolean isPlaying()
+    {
+        return isPlaying;
+    }
+
+    public static MediaPlayer getMediaPlayer() {
+        return mediaPlayer;
+    }
+
+    public String getCurrentTime()
+    {
+        return MusicFile.formateMilliSeccond(mediaPlayer.getCurrentPosition());
     }
 }

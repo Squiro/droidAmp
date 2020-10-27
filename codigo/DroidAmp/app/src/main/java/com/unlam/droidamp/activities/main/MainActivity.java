@@ -40,6 +40,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Timer;
+import java.util.TimerTask;
 
 public class MainActivity extends AppCompatActivity implements SensorEventListener, RequestCallback<NetworkTask.Result>, MusicResolverCallback<ArrayList<MusicFile>> {
     // UI Elements
@@ -53,6 +55,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     private TextView txtNowPlaying;
     private TextView txtAlbum;
     private TextView txtArtist;
+    private TextView txtCurrentTime;
     private ImageButton btnPlay;
     private ImageButton btnNext;
     private ImageButton btnPrev;
@@ -107,9 +110,11 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         this.txtNowPlaying = findViewById(R.id.txtNowPlaying);
         this.txtAlbum = findViewById(R.id.txtAlbum);
         this.txtArtist = findViewById(R.id.txtArtist);
+        this.txtCurrentTime = findViewById(R.id.txtCurrentTime);
         this.btnNext = findViewById(R.id.btnNext);
         this.btnPlay = findViewById(R.id.btnPlay);
         this.btnPrev = findViewById(R.id.btnPrev);
+        txtNowPlaying.setSelected(true);
     }
 
     public void getSensors()
@@ -204,6 +209,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         MusicFile song = musicFiles.get(this.currentPosition);
         txtNowPlaying.setText(song.getTitle());
         musicPlayerFragment.start(song.getPath());
+        setTimerTask();
     }
 
     public void playNext()
@@ -218,6 +224,32 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         if (this.currentPosition <= 0)
             this.currentPosition = this.musicFiles.size();
         this.playMusicFile(this.currentPosition-1);
+    }
+
+    public void setTimerTask()
+    {
+        final Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (MusicPlayerFragment.getMediaPlayer() != null ) {
+                            txtCurrentTime.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                    txtCurrentTime.setText(musicPlayerFragment.getCurrentTime());
+                                }
+                            });
+                        } else {
+                            timer.cancel();
+                            timer.purge();
+                        }
+                    }
+                });
+            }
+        }, 0, 1000);
     }
 
     public void getEventList()
@@ -235,6 +267,7 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
     public void updateFromMusicResolver(ArrayList<MusicFile> result)
     {
         this.musicFiles =  result;
+        Log.i("Log", "MAIN ACTIVITY --- UPDATE");
         mAdapter = new MediaAdapter(musicFiles, new BtnListener() {
             // OnClick handler for the music files
             @Override
@@ -246,7 +279,6 @@ public class MainActivity extends AppCompatActivity implements SensorEventListen
         mAdapter.notifyDataSetChanged();
         // Hide the progress bar
         this.pgBarMain.setVisibility(View.INVISIBLE);
-
     }
 
     @Override

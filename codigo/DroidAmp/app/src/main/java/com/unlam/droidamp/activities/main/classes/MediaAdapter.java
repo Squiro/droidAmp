@@ -1,5 +1,6 @@
 package com.unlam.droidamp.activities.main.classes;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,6 +33,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
         // each data item is just a string in this case
         public TextView txtTitle;
         public TextView txtTrackNumber;
+        public TextView txtDuration;
         public ImageButton btnPlay;
         public BtnListener btnListener;
 
@@ -39,6 +41,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
             super(itemView);
             txtTitle = itemView.findViewById(R.id.txtTitle);
             txtTrackNumber = itemView.findViewById(R.id.txtTrack);
+            txtDuration = itemView.findViewById(R.id.txtDuration);
             btnPlay = itemView.findViewById(R.id.btnPlay);
 
             btnPlay.setOnClickListener(new View.OnClickListener(){
@@ -68,7 +71,7 @@ public class MediaAdapter extends RecyclerView.Adapter<MediaAdapter.ViewHolder> 
         // - replace the contents of the view with that element
         holder.txtTitle.setText(mDataset.get(position).getTitle());
         holder.txtTrackNumber.setText(mDataset.get(position).getTrack().toString() + ".");
-
+        holder.txtDuration.setText(mDataset.get(position).getDuration());
     }
 
     // Return the size of your dataset (invoked by the layout manager)

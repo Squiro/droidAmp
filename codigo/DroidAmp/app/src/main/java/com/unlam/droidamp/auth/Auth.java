@@ -60,7 +60,7 @@ public class Auth {
         catch (Exception e)
         {
             //Catch format exceptions or things like that
-            return false;
+            return true;
         }
     }
 
