@@ -11,6 +11,7 @@ import com.unlam.droidamp.network.NetworkHandler;
 
 public class AuthFragment extends NetworkFragment {
 
+    public static final String TAG = "AuthFragment";
     private RegisterTask registerTask;
     private LoginTask loginTask;
     private TokenTask tokenTask;

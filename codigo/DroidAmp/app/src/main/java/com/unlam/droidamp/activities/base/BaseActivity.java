@@ -32,7 +32,7 @@ public class BaseActivity extends AppCompatActivity implements RequestCallback<N
         setContentView(R.layout.activity_base);
 
         this.auth = new Auth(this);
-        this.networkEventFragment = NetworkEventFragment.getInstance(NetworkEventFragment.class, getSupportFragmentManager());
+        this.networkEventFragment = NetworkEventFragment.getInstance(NetworkEventFragment.class, getSupportFragmentManager(), NetworkEventFragment.TAG);
         this.broadcastConnectivity = new BroadcastConnectivity(this);
         this.registerReceiver(broadcastConnectivity, new IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION));
     }
@@ -59,6 +59,7 @@ public class BaseActivity extends AppCompatActivity implements RequestCallback<N
                 this.networkEventFragment.startEventTask(new Event(Event.TYPE_TOKEN, Event.DESCRIPTION_TOKEN), this.auth);
             }
             else {
+                Log.i("Log", result.resultValue);
                 startActivity(LoginActivity.class, true);
             }
         }

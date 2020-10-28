@@ -9,6 +9,7 @@ import com.unlam.droidamp.network.NetworkHandler;
 
 public class NetworkEventFragment extends NetworkFragment {
 
+    public static final String TAG = "NetworkEventFragment";
     private EventTask eventTask;
 
     @Override

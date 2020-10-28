@@ -76,7 +76,7 @@ public class BatteryActivity extends BaseActivity {
         //this.auth = new Auth(this);
 
         // Instantiate auth fragment
-        authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager());
+        authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager(), AuthFragment.TAG);
     }
 
     public boolean isCharging(int status) {
@@ -133,7 +133,7 @@ public class BatteryActivity extends BaseActivity {
         }
         else
         {
-            Log.i("Log", result.exception.getMessage());
+            Log.i("Log", result.resultValue);
             startActivity(LoginActivity.class, true);
         }
         progressBar.setVisibility(View.INVISIBLE);

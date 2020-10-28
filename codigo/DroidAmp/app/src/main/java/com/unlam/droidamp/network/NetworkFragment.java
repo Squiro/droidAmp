@@ -18,13 +18,13 @@ public class NetworkFragment extends Fragment {
      * Static initializer for NetworkFragment that sets the URL of the host it will be downloading
      * from.
      */
-    public static <T extends NetworkFragment> T getInstance (Class<T> mClass, FragmentManager fragmentManager) {
+    public static <T extends NetworkFragment> T getInstance (Class<T> mClass, FragmentManager fragmentManager, String tag) {
         try {
             // Recover NetworkFragment in case we are re-creating the Activity due to a config change.
             // This is necessary because NetworkFragment might have a task that began running before
             // the config change occurred and has not finished yet.
             // The NetworkFragment is recoverable because it calls setRetainInstance(true).
-            T networkFragment = (T) fragmentManager.findFragmentByTag(NetworkFragment.TAG);
+            T networkFragment = (T) fragmentManager.findFragmentByTag(tag);
             if (networkFragment == null) {
                 networkFragment = mClass.newInstance();
                 fragmentManager.beginTransaction().add(networkFragment, TAG).commit();

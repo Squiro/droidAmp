@@ -91,12 +91,19 @@ public class NetworkTask extends AsyncTask<String, Integer, NetworkTask.Result> 
 
                 if (resultString != null) {
                     // Create json object from response string
-                    JSONObject responseJson = new JSONObject(resultString);
-                    processResponse(responseJson);
-                    result = new Result(resultString, true, this.taskType);
+                    JSONObject responseJson = new JSONObject(resultString);                    
+                    String successStr = responseJson.get("success").toString();
+
+                    if (Boolean.parseBoolean(successStr))    
+                    {                                  
+                        processResponse(responseJson);
+                        result = new Result(resultString, true, this.taskType);
+                    }
+                    else 
+                        result = new Result(responseJson.get("msg").toString(), false, this.taskType);
                 }
             } catch(Exception e) {
-                    result = new Result(e, false, this.taskType);
+                result = new Result(e.toString(), false, this.taskType);
             }
         }
         return result;

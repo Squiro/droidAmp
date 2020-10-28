@@ -20,6 +20,7 @@ public class NetworkHandler {
 
     private static final int READ_TIMEOUT = 5000;
     private static final int CONNECT_TIMEOUT = 5000;
+    private static final int STREAM_LENGTH = 1500;
 
     public static final String REQUEST_TYPE_POST = "POST";
     public static final String REQUEST_TYPE_GET = "GET";
@@ -60,14 +61,15 @@ public class NetworkHandler {
             {
                 // Retrieve the error stream
                 stream = connection.getErrorStream();
-                Log.i("Log", NetworkHandler.readStream(stream, 500));
-                throw new Exception(Integer.toString(responseCode));
+                //Log.i("Log", NetworkHandler.readStream(stream, STREAM_LENGTH));
+                //throw new Exception(Integer.toString(responseCode));
             }
 
             if (stream != null) {
-                // Converts Stream to String with max length of 500.
-                result = NetworkHandler.readStream(stream, 500);
+                // Converts Stream to String with max length of STREAM_LENGTH.
+                result = NetworkHandler.readStream(stream, STREAM_LENGTH);                
             }
+
         }
         finally {
             // Close Stream and disconnect HTTPS connection.

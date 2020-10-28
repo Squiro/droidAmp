@@ -32,7 +32,7 @@ public class DroidAmpSensor {
         this.auth = auth;
         this.mainActivity =  (MainActivity) context;
         this.musicPlayerFragment = musicPlayerFragment;//MusicPlayerFragment.getInstance(mainActivity.getSupportFragmentManager());
-        this.networkEventFragment = NetworkEventFragment.getInstance(NetworkEventFragment.class, mainActivity.getSupportFragmentManager());
+        this.networkEventFragment = NetworkEventFragment.getInstance(NetworkEventFragment.class, mainActivity.getSupportFragmentManager(), NetworkEventFragment.TAG);
         this.sensorType = sensorType;
         this.sharedPreferences = sharedPreferences;
         this.editor = sharedPreferences.edit();

@@ -49,7 +49,7 @@ public class RegisterActivity extends BaseActivity {
 
         // -------- NETWORK FRAGMENT --------
         // We instantiate the network fragment that will handle the register action from the user in background
-        authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager());
+        authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager(), AuthFragment.TAG);
         this.registerInProgress = false;
     }
 
@@ -79,15 +79,15 @@ public class RegisterActivity extends BaseActivity {
 
     @Override
     public void updateFromRequest(NetworkTask.Result result) {
+        Log.i("Log", result.resultValue);
         if (result.success)
         {
-            Log.i("Log", result.resultValue);
             this.startActivity(AlbumActivity.class, true);
             networkEventFragment.startEventTask(new Event(Event.TYPE_REGISTER, Event.DESCRIPTION_REGISTER), this.auth);
         }
         else
         {
-            Log.i("Log", result.exception.toString());
+            txtError.setText(result.resultValue);
         }
     }
 

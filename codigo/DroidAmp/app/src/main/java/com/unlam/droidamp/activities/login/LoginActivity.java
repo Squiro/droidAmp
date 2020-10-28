@@ -32,7 +32,6 @@ public class LoginActivity extends BaseActivity {
     // Network related properties
     private AuthFragment authFragment;
     private boolean logginIn;
-    //private Auth auth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +41,6 @@ public class LoginActivity extends BaseActivity {
         // Generate encryption key first time run
         Encryption enc = new Encryption();
         enc.generateKey();
-
-        // Instantiate auth class
-        //this.auth = new Auth(this);
 
         // -------- UI ELEMENTS --------
 
@@ -67,8 +63,7 @@ public class LoginActivity extends BaseActivity {
         // -------- NETWORK FRAGMENT --------
         this.logginIn = false;
         // Instantiate auth fragment
-        authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager());
-        //networkEventFragment = NetworkEventFragment.getInstance(NetworkEventFragment.class, getSupportFragmentManager());
+        authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager(), AuthFragment.TAG);
     }
 
     // Listener for login button
@@ -115,7 +110,8 @@ public class LoginActivity extends BaseActivity {
         }
         else
         {
-            try
+            txtError.setText(result.resultValue);
+            /*try
             {
                 int responseCode = Integer.parseInt(result.exception.toString());
 
@@ -128,7 +124,7 @@ public class LoginActivity extends BaseActivity {
             {
                 txtError.setText(result.exception.toString());
             }
-            Log.i("Log", "Not successful");
+            Log.i("Log", "Not successful");*/
         }
         progressBar.setVisibility(View.INVISIBLE);
     }
