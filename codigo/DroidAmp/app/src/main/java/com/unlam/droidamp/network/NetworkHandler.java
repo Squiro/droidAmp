@@ -4,6 +4,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.DataOutputStream;
@@ -21,6 +22,7 @@ public class NetworkHandler {
     private static final int READ_TIMEOUT = 5000;
     private static final int CONNECT_TIMEOUT = 5000;
     private static final int STREAM_LENGTH = 1500;
+    private static final String ENVINRONMENT = "PROD";
 
     public static final String REQUEST_TYPE_POST = "POST";
     public static final String REQUEST_TYPE_GET = "GET";
@@ -50,7 +52,7 @@ public class NetworkHandler {
             connection.connect();
 
             int responseCode = connection.getResponseCode();
-            Log.i("Log", "Connection response");
+            Log.i("Log", "Connection response code: ");
             Log.i("Log", Integer.toString(responseCode));
 
             if (responseCode == HttpsURLConnection.HTTP_OK || responseCode == HttpsURLConnection.HTTP_CREATED)
@@ -61,13 +63,12 @@ public class NetworkHandler {
             {
                 // Retrieve the error stream
                 stream = connection.getErrorStream();
-                //Log.i("Log", NetworkHandler.readStream(stream, STREAM_LENGTH));
-                //throw new Exception(Integer.toString(responseCode));
             }
 
             if (stream != null) {
                 // Converts Stream to String with max length of STREAM_LENGTH.
-                result = NetworkHandler.readStream(stream, STREAM_LENGTH);                
+                result = NetworkHandler.readStream(stream, STREAM_LENGTH);
+                Log.i("Log", "Connection msg: " + result);
             }
 
         }
@@ -83,9 +84,11 @@ public class NetworkHandler {
         return result;
     }
 
-    public static void writePayload(HttpURLConnection connection, JSONObject payload) throws IOException {
+    public static void writePayload(HttpURLConnection connection, JSONObject payload) throws IOException, JSONException {
         // We get the outputstream from the connection
         DataOutputStream connectionOutputstream = new DataOutputStream(connection.getOutputStream());
+
+        payload.put("env", ENVINRONMENT);
 
         // Write json object to output stream
         connectionOutputstream.writeBytes(payload.toString());

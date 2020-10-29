@@ -24,7 +24,6 @@ public class RegisterTask extends NetworkTask {
     @Override
     public String request(URL url) throws Exception {
         JSONObject data = user.toJSONObject();
-        data.put("env", "TEST");
         return NetworkHandler.handleConnection(url, NetworkHandler.REQUEST_TYPE_POST, data, null);
     }
 
