@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.unlam.droidamp.R;
@@ -25,6 +26,7 @@ public class RegisterActivity extends BaseActivity {
     private TextView txtDNI;
     private TextView txtComision;
     private Button btnRegister;
+    private ProgressBar pgBarRegister;
 
     private AuthFragment authFragment;
     private boolean registerInProgress;
@@ -43,6 +45,7 @@ public class RegisterActivity extends BaseActivity {
         txtComision = findViewById(R.id.txtComision);
         txtError = findViewById(R.id.txtError);
         btnRegister = findViewById(R.id.btnRegister);
+        pgBarRegister = findViewById(R.id.pgBarRegister);
 
         // -------- LISTENERS --------
         btnRegister.setOnClickListener(btnRegisterListener);
@@ -73,6 +76,7 @@ public class RegisterActivity extends BaseActivity {
                 // Execute the async login.
                 authFragment.startRegister(user, auth);
                 registerInProgress = true;
+                pgBarRegister.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -80,6 +84,7 @@ public class RegisterActivity extends BaseActivity {
     @Override
     public void updateFromRequest(NetworkTask.Result result) {
         Log.i("Log", result.resultValue);
+        pgBarRegister.setVisibility(View.INVISIBLE);
         if (result.success)
         {
             this.startActivity(AlbumActivity.class, true);

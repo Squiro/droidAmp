@@ -19,9 +19,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".activities.base.BaseActivity"></activity>
         <activity android:name=".activities.album.AlbumActivity" />
-        <activity android:name=".activities.register.RegisterActivity" />
+        <activity
+            android:name=".activities.register.RegisterActivity"
+            android:windowSoftInputMode="stateHidden|adjustResize"/>
         <activity
             android:name=".activities.battery.BatteryActivity"
             android:noHistory="true">
