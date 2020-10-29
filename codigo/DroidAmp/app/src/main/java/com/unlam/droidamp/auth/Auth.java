@@ -22,7 +22,7 @@ public class Auth {
     private Encryption enc;
 
     // Static fields
-    public static final long TOKEN_EXPIRE_TIME_MINUTES = 1;
+    public static final long TOKEN_EXPIRE_TIME_MINUTES = 30;
     public static final String PARAM_REFRESH_TOKEN = "refreshToken";
     public static final String PARAM_AUTH_TOKEN = "authToken";
     public static final String PARAM_REFRESH_TIMESTAMP = "refreshTimeStamp";

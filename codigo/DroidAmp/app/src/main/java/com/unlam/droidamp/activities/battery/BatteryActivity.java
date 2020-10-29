@@ -71,10 +71,6 @@ public class BatteryActivity extends BaseActivity {
 
         batteryPercentage.setText(getBatteryPct().toString() + "%");
 
-        // ----- AUTH -----
-        // Instantiate auth class
-        //this.auth = new Auth(this);
-
         // Instantiate auth fragment
         authFragment = AuthFragment.getInstance(AuthFragment.class, getSupportFragmentManager(), AuthFragment.TAG);
     }
@@ -110,9 +106,8 @@ public class BatteryActivity extends BaseActivity {
 
     public void checkTokens()
     {
-        startActivity(AlbumActivity.class, true);
-        // If token isn't expired start the mainActivity
-        /*if (!auth.checkIfTokenExpired())
+       // If token isn't expired start the album activity
+        if (!auth.checkIfTokenExpired())
         {
             startActivity(AlbumActivity.class, true);
         }
@@ -120,7 +115,7 @@ public class BatteryActivity extends BaseActivity {
         {
             // Otherwise, try to refresh them
             authFragment.startRefreshToken(auth);
-        }*/
+        }
     }
 
     @Override
