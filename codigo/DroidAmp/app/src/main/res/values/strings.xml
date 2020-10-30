@@ -20,10 +20,11 @@
     <string name="no_connection"><u>No hay conexión a internet.</u></string>
 
 
-    <string name="welcome">"¡Hola! ¿Sabías que tu porcentaje de batería ahora mismo es de...?"</string>
-    <string name="batteryMore">"También te informamos que tu batería..."</string>
-    <string name="btnOkGenial">"Ok genial, llevame a la app."</string>
+    <string name="welcome">"El porcentaje de carga de tu batería es: "</string>
+    <string name="batteryMore">"La batería se encuentra: "</string>
+    <string name="btnOkGenial">"Continuar a la App."</string>
     <string name="sharedPreferencesFile">com.unlam.droidAmp.sharedPref</string>
+    <string name="yourAlbums">Tus álbumes</string>
 
 
 </resources>

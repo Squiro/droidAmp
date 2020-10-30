@@ -65,9 +65,9 @@ public class BatteryActivity extends BaseActivity {
         int status = batteryStatus.getIntExtra(BatteryManager.EXTRA_STATUS, -1);
 
         if (isCharging(status))
-            batteryState.setText("se está cargando.");
+            batteryState.setText("cargándose.");
         else
-            batteryState.setText("se está descargando.");
+            batteryState.setText("descargándose.");
 
         batteryPercentage.setText(getBatteryPct().toString() + "%");
 
