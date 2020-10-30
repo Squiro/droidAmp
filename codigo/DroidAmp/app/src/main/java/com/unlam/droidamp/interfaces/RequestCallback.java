@@ -3,12 +3,6 @@ import com.unlam.droidamp.network.BroadcastConnectivity;
 
 public interface RequestCallback<T> {
 
-    interface ResponseCode {
-        int BAD_REQUEST = 400;
-        int EXPIRED_TOKEN = 401;
-        int SERVER_ERROR = 500;
-    }
-
     /**
      * Get the BroadcastConnectivity instance form the activity.
      */

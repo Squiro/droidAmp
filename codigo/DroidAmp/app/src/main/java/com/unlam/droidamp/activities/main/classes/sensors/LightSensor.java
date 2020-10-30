@@ -36,6 +36,7 @@ public class LightSensor extends DroidAmpSensor {
                 mLastLightChangeTime = curTime;
             }
         }
-        saveEventInSharedPref("Light sensor value: " + value);
+        this.lastEventMsg = "Light sensor value: " + value;
+        saveEventInSharedPref(this.lastEventMsg);
     }
 }

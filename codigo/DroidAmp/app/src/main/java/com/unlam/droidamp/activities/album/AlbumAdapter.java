@@ -1,6 +1,5 @@
 package com.unlam.droidamp.activities.album;
 
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;

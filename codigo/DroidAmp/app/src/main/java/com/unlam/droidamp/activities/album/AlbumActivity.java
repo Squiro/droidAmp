@@ -67,7 +67,6 @@ public class AlbumActivity extends BaseActivity implements MusicResolverCallback
         activity.putExtra(ALBUM_KEY, albumList.get(position).getAlbum());
         activity.putExtra(ARTIST_KEY, albumList.get(position).getArtist());
         startActivity(activity);
-        //this.finish();
     }
 
     @Override

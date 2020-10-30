@@ -17,6 +17,7 @@ public class DroidAmpSensor {
     protected int sensorType;
     protected MainActivity mainActivity;
     protected String sensorKey;
+    protected String lastEventMsg;
 
     // SharedPref
     private SharedPreferences sharedPreferences;
@@ -52,6 +53,10 @@ public class DroidAmpSensor {
     public String getSensorEventFromSharedPref()
     {
         return sharedPreferences.getString(sensorKey, "");
+    }
+
+    public String getLastEvent() {
+        return lastEventMsg;
     }
 
     public void sendEvent(Event event)

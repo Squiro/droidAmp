@@ -58,8 +58,6 @@ public class LoginActivity extends BaseActivity {
         btnLogin.setOnClickListener(btnLoginListener);
         txtRegister.setOnClickListener(txtRegisterListener);
 
-        //setValidationListeners();
-
         // -------- NETWORK FRAGMENT --------
         this.logginIn = false;
         // Instantiate auth fragment
@@ -95,7 +93,6 @@ public class LoginActivity extends BaseActivity {
                 User user = new User(txtEmail.getText().toString(), txtPassword.getText().toString());
                 authFragment.startLogin(user, auth);
                 logginIn = true;
-                this.networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), this.auth);
             }
         }
     }
@@ -106,25 +103,13 @@ public class LoginActivity extends BaseActivity {
         if (result.success)
         {
             startActivity(AlbumActivity.class, true);
+            // Register execution of background event
+            networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), this.auth);
             this.networkEventFragment.startEventTask(new Event(Event.TYPE_LOGIN, Event.DESCRIPTION_LOGIN), this.auth);
         }
         else
         {
             txtError.setText(result.resultValue);
-            /*try
-            {
-                int responseCode = Integer.parseInt(result.exception.toString());
-
-                if (responseCode == ResponseCode.BAD_REQUEST)
-                {
-                    txtError.setText(R.string.invalid_email_or_pass);
-                }
-            }
-            catch (Exception e)
-            {
-                txtError.setText(result.exception.toString());
-            }
-            Log.i("Log", "Not successful");*/
         }
         progressBar.setVisibility(View.INVISIBLE);
     }
@@ -135,8 +120,6 @@ public class LoginActivity extends BaseActivity {
         switch (taskType)
         {
             case NetworkTask.TYPE_LOGIN_TASK:
-                // Register execution of background event
-                networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), auth);
                 logginIn = false;
 
                 if (authFragment != null) {

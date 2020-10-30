@@ -48,7 +48,8 @@ public class AccelerometerSensor extends DroidAmpSensor {
                 sendEvent(new Event(Event.TYPE_SENSOR, "Accelerometer shake detected"));
                 mainActivity.playNext();
             }
-            saveEventInSharedPref("Accelerometer sensor value: " + String.format(Locale.ENGLISH, "%.4f", acceleration) + "m/s^2");
+            this.lastEventMsg = "Accelerometer sensor value: " + String.format(Locale.ENGLISH, "%.4f", acceleration) + "m/s^2";
+            saveEventInSharedPref(this.lastEventMsg);
         }
     }
 }

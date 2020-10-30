@@ -89,6 +89,7 @@ public class RegisterActivity extends BaseActivity {
         {
             this.startActivity(AlbumActivity.class, true);
             networkEventFragment.startEventTask(new Event(Event.TYPE_REGISTER, Event.DESCRIPTION_REGISTER), this.auth);
+            networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), this.auth);
         }
         else
         {

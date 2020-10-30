@@ -32,7 +32,7 @@ public class BatteryActivity extends BaseActivity {
 
     private TextView batteryPercentage;
     private TextView batteryState;
-    private Button btnOkGenial;
+    private Button btnContinuar;
     private Intent batteryStatus;
     private ProgressBar progressBar;
 
@@ -54,10 +54,10 @@ public class BatteryActivity extends BaseActivity {
 
         batteryPercentage = findViewById(R.id.txtBatteryPercent);
         batteryState = findViewById(R.id.txtBatteryState);
-        btnOkGenial = findViewById(R.id.btnOkGenial);
+        btnContinuar = findViewById(R.id.btnContinuar);
         progressBar = findViewById(R.id.pgBarBattery);
         // We set an on click listener for the button
-        btnOkGenial.setOnClickListener(btnOkGenialListener);
+        btnContinuar.setOnClickListener(btnContinuarListener);
 
         IntentFilter ifilter = new IntentFilter(Intent.ACTION_BATTERY_CHANGED);
         batteryStatus = this.registerReceiver(null, ifilter);
@@ -87,14 +87,14 @@ public class BatteryActivity extends BaseActivity {
         return level * 100 / (float)scale;
     }
 
-    private View.OnClickListener btnOkGenialListener = new View.OnClickListener()
+    private View.OnClickListener btnContinuarListener = new View.OnClickListener()
     {
         // This method will be executed once the button is clicked
         public void onClick(View v)
         {
         if (checkPermissions())
         {
-            afterPermissionCheck();;
+            afterPermissionCheck();
         }
         }
     };

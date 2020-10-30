@@ -79,11 +79,11 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
         this.album = getIntent().getExtras().getString(AlbumActivity.ALBUM_KEY);
         this.artist = getIntent().getExtras().getString(AlbumActivity.ARTIST_KEY);
 
+        getSensors();
         fetchUI();
         setListeners();
         instantiateFragments();
         setUpRecyclerViews();
-        getSensors();
 
         // UI setup and other stuff
         txtAlbum.setText(this.album);
@@ -129,7 +129,7 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
     public void setUpRecyclerViews()
     {
         // ----- RECYCLER VIEW FOR EVENTS -----
-        eventList = new ArrayList<>();
+        getEventListFromSharedPref();
         eventRecycler = findViewById(R.id.rvEvents);
         eventRecycler.setHasFixedSize(true);
         eventRecycler.setLayoutManager(new LinearLayoutManager(this));
@@ -225,13 +225,27 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
         }, 0, 1000);
     }
 
-    public void getEventList()
+    public void getEventListFromSharedPref()
     {
         eventList = new ArrayList<>();
         for (DroidAmpSensor sensor: sensorList)
         {
             eventList.add(sensor.getSensorEventFromSharedPref());
         }
+    }
+
+    public void getEventList()
+    {
+        eventList = new ArrayList<>();
+        for (DroidAmpSensor sensor: sensorList)
+        {
+            eventList.add(sensor.getLastEvent());
+        }
+        updateEventRecycler();
+    }
+
+    public void updateEventRecycler()
+    {
         eventAdapter = new EventAdapter(eventList);
         eventRecycler.setAdapter(eventAdapter);
         eventAdapter.notifyDataSetChanged();

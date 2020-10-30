@@ -27,6 +27,7 @@ public class ProximitySensor extends DroidAmpSensor {
             this.musicPlayerFragment.play();
             sendEvent(new Event(Event.TYPE_SENSOR, "Proximity sensor detected near"));
         }
-        saveEventInSharedPref("Proximity sensor value: " + value);
+        this.lastEventMsg = "Proximity sensor value: " + value;
+        saveEventInSharedPref(this.lastEventMsg);
     }
 }

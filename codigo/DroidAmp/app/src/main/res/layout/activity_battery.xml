@@ -78,7 +78,7 @@
         app:layout_constraintVertical_bias="0.0" />
 
     <Button
-        android:id="@+id/btnOkGenial"
+        android:id="@+id/btnContinuar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="72dp"
@@ -96,7 +96,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnOkGenial" />
+        app:layout_constraintTop_toBottomOf="@+id/btnContinuar" />
 
     <ImageView
         android:id="@+id/logo"
