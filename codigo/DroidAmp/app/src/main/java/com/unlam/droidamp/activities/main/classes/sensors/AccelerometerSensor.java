@@ -14,7 +14,7 @@ import java.util.Locale;
 
 public class AccelerometerSensor extends DroidAmpSensor {
     // Constants
-    private static final float SHAKE_THRESHOLD = 12.5f; // m/S**2
+    private static final float SHAKE_THRESHOLD = 10.5f; // m/S**2
     private static final int MIN_TIME_BETWEEN_SHAKES_MILLISECS = 1000;
     private long mLastShakeTime;
 

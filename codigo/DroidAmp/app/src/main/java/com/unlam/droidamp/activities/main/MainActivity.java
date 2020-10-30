@@ -176,10 +176,13 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
     public void playMusicFile(int position)
     {
         this.currentPosition = position;
-        MusicFile song = musicFiles.get(this.currentPosition);
-        txtNowPlaying.setText(song.getTitle());
-        musicPlayerFragment.start(song.getPath());
-        setTimerTask();
+        if (musicFiles.size() > 0)
+        {
+            MusicFile song = musicFiles.get(this.currentPosition);
+            txtNowPlaying.setText(song.getTitle());
+            musicPlayerFragment.start(song.getPath());
+            setTimerTask();
+        }
     }
 
     public void playNext()
