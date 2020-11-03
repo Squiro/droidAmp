@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
+import android.util.Log;
 
 import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
 import com.unlam.droidamp.auth.Auth;
@@ -30,8 +31,15 @@ public class LightSensor extends DroidAmpSensor {
 
         if ((curTime - mLastLightChangeTime) > MIN_TIME_BETWEEN_DETECTION_MILLISECS) {
             if (value <= LIGHT_THRESHOLD) {
-                // Detected near
-                this.musicPlayerFragment.changeVolume();
+
+                try {
+                    // Detected near
+                    this.musicPlayerFragment.changeVolume();
+                }
+                catch (Exception e)
+                {
+                    Log.i("Log", e.toString());
+                }
                 sendEvent(new Event(Event.TYPE_SENSOR, "Light sensor detected change"));
                 mLastLightChangeTime = curTime;
             }

@@ -5,6 +5,7 @@ import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorManager;
+import android.util.Log;
 
 import com.unlam.droidamp.activities.main.fragments.MusicPlayerFragment;
 import com.unlam.droidamp.auth.Auth;
@@ -44,9 +45,15 @@ public class AccelerometerSensor extends DroidAmpSensor {
                     Math.pow(z, 2)) - SensorManager.GRAVITY_EARTH;
 
             if (acceleration > SHAKE_THRESHOLD) {
+                try {
+                    mainActivity.playNext();
+                }
+                catch (Exception e)
+                {
+                    Log.i("Log", e.toString());
+                }
                 mLastShakeTime = curTime;
                 sendEvent(new Event(Event.TYPE_SENSOR, "Accelerometer shake detected"));
-                mainActivity.playNext();
             }
             this.lastEventMsg = "Accelerometer sensor value: " + String.format(Locale.ENGLISH, "%.4f", acceleration) + "m/s^2";
             saveEventInSharedPref(this.lastEventMsg);

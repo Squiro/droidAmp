@@ -10,6 +10,7 @@ import android.util.Log;
 import java.nio.ByteBuffer;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.security.Key;
 import java.security.KeyStore;
 import java.security.SecureRandom;
 import java.util.Arrays;
@@ -63,9 +64,22 @@ public class Encryption {
        }
     }
 
-    private java.security.Key getSecretKey(Context context) throws Exception
+    private java.security.Key getSecretKey(Context context)
     {
-        return keyStore.getKey(KEY_ALIAS, null);
+        Key key = null;
+        synchronized (keyStore)
+        {
+            try
+            {
+                key = keyStore.getKey(KEY_ALIAS, null);
+            }
+            catch (Exception e)
+            {
+                Log.i("Exception", e.toString());
+            }
+
+        }
+        return key;
     }
 
     public String encrypt(Context context, String rawData)

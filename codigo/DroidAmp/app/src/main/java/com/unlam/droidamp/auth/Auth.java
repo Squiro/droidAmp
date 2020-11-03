@@ -46,11 +46,19 @@ public class Auth {
 
     public String getToken() throws NullPointerException
     {
+        String decryptedToken = null;
         synchronized (enc)
         {
-            String token = sharedPreferences.getString(PARAM_AUTH_TOKEN, "");
-            return enc.decrypt(this.context, token.getBytes(StandardCharsets.UTF_8));
+            try {
+                String token = sharedPreferences.getString(PARAM_AUTH_TOKEN, "");
+                decryptedToken = enc.decrypt(this.context, token.getBytes(StandardCharsets.UTF_8));
+            }
+            catch (Exception e)
+            {
+                Log.i("Exception", e.toString());
+            }
         }
+        return decryptedToken;
     }
 
     public Boolean checkIfTokenExpired()

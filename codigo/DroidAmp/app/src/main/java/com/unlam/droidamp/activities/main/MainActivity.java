@@ -31,6 +31,7 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Timer;
@@ -75,20 +76,32 @@ public class MainActivity extends BaseActivity implements SensorEventListener, M
         setContentView(R.layout.activity_main);
 
         this.currentPosition = -1;
-        this.albumID = getIntent().getExtras().getString(AlbumActivity.ALBUM_ID_KEY);
-        this.album = getIntent().getExtras().getString(AlbumActivity.ALBUM_KEY);
-        this.artist = getIntent().getExtras().getString(AlbumActivity.ARTIST_KEY);
 
+        getAlbumData();
+        instantiateFragments();
         getSensors();
         fetchUI();
         setListeners();
-        instantiateFragments();
         setUpRecyclerViews();
 
         // UI setup and other stuff
         txtAlbum.setText(this.album);
         txtArtist.setText(this.artist);
         txtNowPlaying.setSelected(true);
+    }
+
+    public void getAlbumData()
+    {
+        try
+        {
+            this.albumID = getIntent().getExtras().getString(AlbumActivity.ALBUM_ID_KEY);
+            this.album = getIntent().getExtras().getString(AlbumActivity.ALBUM_KEY);
+            this.artist = getIntent().getExtras().getString(AlbumActivity.ARTIST_KEY);
+        } catch (Exception e)
+        {
+            Log.i("Exception", e.toString());
+            Toast.makeText(this, "Hubo un error al obtener los datos del album.", Toast.LENGTH_LONG).show();
+        }
     }
 
     public void fetchUI()

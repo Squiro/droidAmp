@@ -1,13 +1,9 @@
 package com.unlam.droidamp.network;
 
 import android.os.AsyncTask;
-import android.util.Log;
-
 import com.unlam.droidamp.auth.Auth;
-import com.unlam.droidamp.auth.TokenTask;
+
 import com.unlam.droidamp.interfaces.RequestCallback;
-import com.unlam.droidamp.models.event.Event;
-import com.unlam.droidamp.models.event.EventTask;
 
 import org.json.JSONObject;
 import java.net.URL;

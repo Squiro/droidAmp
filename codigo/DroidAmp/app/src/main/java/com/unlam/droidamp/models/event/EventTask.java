@@ -35,8 +35,12 @@ public class EventTask extends NetworkTask {
         }
         Log.i("Log", "After token check");
         String token = auth.getToken();
-        JSONObject payload = event.toJSONObject();
-        return NetworkHandler.handleConnection(url, NetworkHandler.REQUEST_TYPE_POST, payload, token);
+        if (token != null)
+        {
+            JSONObject payload = event.toJSONObject();
+            return NetworkHandler.handleConnection(url, NetworkHandler.REQUEST_TYPE_POST, payload, token);
+        }
+        return null;
     }
 
     @Override
