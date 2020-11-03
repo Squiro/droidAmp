@@ -25,6 +25,7 @@
     <string name="btnOkGenial">"Continuar a la App."</string>
     <string name="sharedPreferencesFile">com.unlam.droidAmp.sharedPref</string>
     <string name="yourAlbums">Tus álbumes</string>
+    <string name="noAlbum">"DroidAmp no pudo encontrar ningún album. Asegurate de que tu dispositivo tenga al menos uno."</string>
 
 
 </resources>

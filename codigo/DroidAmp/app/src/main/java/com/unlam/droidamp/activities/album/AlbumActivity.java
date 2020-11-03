@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.unlam.droidamp.R;
 import com.unlam.droidamp.activities.album.fragments.AlbumResolverFragment;
@@ -27,6 +28,7 @@ public class AlbumActivity extends BaseActivity implements MusicResolverCallback
     private RecyclerView rvAlbums;
     private RecyclerView.Adapter mAlbumAdapter;
     private AlbumResolverFragment albumResolverFragment;
+    private TextView lblNoAlbum;
 
     private ArrayList<Album> albumList;
     public static final String ALBUM_KEY = "album";
@@ -39,6 +41,7 @@ public class AlbumActivity extends BaseActivity implements MusicResolverCallback
         setContentView(R.layout.activity_album);
 
         pgBarAlbums = findViewById(R.id.pgBarAlbums);
+        lblNoAlbum = findViewById(R.id.lblNoAlbum);
         albumResolverFragment = AlbumResolverFragment.getInstance(getSupportFragmentManager());
         setUpRecyclerView();
     }
@@ -74,18 +77,26 @@ public class AlbumActivity extends BaseActivity implements MusicResolverCallback
         Log.i("Log", "Album Resolver Finished");
         // Post background event
         this.networkEventFragment.startEventTask(new Event(Event.TYPE_BACKGROUND, Event.DESCRIPTION_BACKGROUND), auth);
-
         this.pgBarAlbums.setVisibility(View.INVISIBLE);
-        this.albumList =  result;
-        mAlbumAdapter = new AlbumAdapter(albumList, new BtnListener() {
-            // OnClick handler for the music files
-            @Override
-            public void onClick(View v, int position) {
-                playAlbum(position);
-            }
-        });
-        rvAlbums.setAdapter(mAlbumAdapter);
-        mAlbumAdapter.notifyDataSetChanged();
+
+        if (result.size() > 0)
+        {
+            this.albumList =  result;
+            mAlbumAdapter = new AlbumAdapter(albumList, new BtnListener() {
+                // OnClick handler for the music files
+                @Override
+                public void onClick(View v, int position) {
+                    playAlbum(position);
+                }
+            });
+            rvAlbums.setAdapter(mAlbumAdapter);
+            mAlbumAdapter.notifyDataSetChanged();
+            lblNoAlbum.setVisibility(View.INVISIBLE);
+        }
+        else
+        {
+            lblNoAlbum.setVisibility(View.VISIBLE);
+        }
     }
 
     @Override

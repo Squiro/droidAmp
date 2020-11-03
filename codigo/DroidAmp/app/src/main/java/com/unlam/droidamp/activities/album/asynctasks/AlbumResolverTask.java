@@ -31,12 +31,9 @@ public class AlbumResolverTask extends AsyncTask<Void, Integer, ArrayList<Album>
 
         if (!isCancelled()) {
             try {
-                String[] projection = new String[]{MediaStore.Audio.Albums.ALBUM_ID,  MediaStore.Audio.Albums.ALBUM, MediaStore.Audio.Albums.ARTIST};
-                Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, projection, null, null, null);
-                traverseCursor(result, cursor);
-                cursor = context.getContentResolver().query(MediaStore.Audio.Albums.INTERNAL_CONTENT_URI, projection, null, null, null);
-                traverseCursor(result, cursor);
-
+                String[] projection = new String[]{MediaStore.Audio.Albums._ID,  MediaStore.Audio.Albums.ALBUM, MediaStore.Audio.Albums.ARTIST};
+                searchInExternal(projection, result);
+                searchInInternal(projection, result);
             } catch(Exception e) {
                 Log.i("Exception", e.toString());
             }
@@ -44,11 +41,36 @@ public class AlbumResolverTask extends AsyncTask<Void, Integer, ArrayList<Album>
         return result;
     }
 
+    private void searchInExternal(String[] projection, ArrayList<Album> result)
+    {
+        try {
+            Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Albums.EXTERNAL_CONTENT_URI, projection, null, null, null);
+            traverseCursor(result, cursor);
+
+        } catch(Exception e) {
+            Log.i("Exception", e.toString());
+        }
+    }
+
+    private void searchInInternal(String[] projection, ArrayList<Album> result)
+    {
+        try {
+            Cursor cursor = context.getContentResolver().query(MediaStore.Audio.Albums.INTERNAL_CONTENT_URI, projection, null, null, null);
+            traverseCursor(result, cursor);
+        } catch(Exception e) {
+            Log.i("Exception", e.toString());
+        }
+    }
+
     private void traverseCursor(ArrayList<Album> result, Cursor cursor)
     {
         if (cursor != null) {
+            cursor.moveToFirst();
+            for (String s :cursor.getColumnNames()) {
+                Log.d("COLUMNS","Column = " +s);
+            }
             while (cursor.moveToNext()) {
-                String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM_ID));
+                String id = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums._ID));
                 String album = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ALBUM));
                 String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Albums.ARTIST));
 
